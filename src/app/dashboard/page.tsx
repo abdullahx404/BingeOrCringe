@@ -124,7 +124,7 @@ export default async function DashboardPage({ searchParams }: Props) {
     <div className={styles.page}>
       {/* ── Sticky header ────────────────────────────── */}
       <header className={styles.header}>
-        <div className={`container ${styles.headerInner}`}>
+        <div className={styles.headerInner}>
           <Link href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
@@ -136,11 +136,12 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Suspense>
           </div>
 
-          <NavLinks isLoggedIn displayName={displayName} />
-
-          <form action={logOut}>
-            <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-          </form>
+          <div className={styles.headerRight}>
+            <NavLinks isLoggedIn displayName={displayName} />
+            <form action={logOut}>
+              <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
+            </form>
+          </div>
         </div>
       </header>
 

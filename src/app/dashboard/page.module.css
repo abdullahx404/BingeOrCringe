@@ -4,7 +4,7 @@
   flex-direction: column;
 }
 
-/* Header */
+/* Header — full width, equal side padding */
 .header {
   position: sticky;
   top: 0;
@@ -20,6 +20,8 @@
   align-items: center;
   height: 60px;
   gap: var(--space-4);
+  padding: 0 var(--space-6);
+  width: 100%;
 }
 
 .logo {
@@ -27,12 +29,10 @@
   align-items: center;
   gap: var(--space-2);
   text-decoration: none;
-}
-
-.logoIcon {
-  color: var(--accent-light);
   flex-shrink: 0;
 }
+
+.logoIcon { color: var(--accent-light); flex-shrink: 0; }
 
 .logoText {
   font-family: var(--font-display);
@@ -41,34 +41,18 @@
   color: var(--text-primary);
 }
 
-.headerNav {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-/* Search bar occupies the center space */
+/* Search fills all middle space */
 .headerSearch {
   flex: 1;
-  max-width: 480px;
-  margin: 0 var(--space-4);
+  min-width: 0;
 }
 
+/* Right group pushed to far right */
 .headerRight {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-left: auto;
-}
-
-.userBadge {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* Main */
@@ -115,25 +99,31 @@
   }
 }
 
-/* Rank card — full card with border wrapping poster + info + actions */
+/* Rank card — glass effect */
 .rankCard {
   display: flex;
   flex-direction: column;
   gap: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
   overflow: hidden;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
 }
 
 .rankCard:hover {
-  border-color: var(--border-default);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
 }
 
 .rankCardExpanded {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 0 1px rgba(108, 99, 255, 0.25);
+  border-color: rgba(108, 99, 255, 0.5) !important;
+  box-shadow: 0 0 0 1px rgba(108, 99, 255, 0.25), 0 12px 40px rgba(0, 0, 0, 0.4) !important;
 }
 
 .posterLink {
@@ -271,14 +261,30 @@
 .cardActions {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--space-2);
+  padding-top: var(--space-1);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: var(--space-1);
 }
 
+/* Edit button — highlighted to feel clickable */
 .editBtn {
-  color: var(--text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  text-decoration: none;
 }
 
 .editBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
   color: var(--text-primary);
 }
 

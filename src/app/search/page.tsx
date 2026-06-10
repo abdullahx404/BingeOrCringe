@@ -9,6 +9,7 @@ import {
 } from '@/lib/tmdb/client';
 import type { TmdbSearchMovie, TmdbSearchTv } from '@/lib/tmdb/types';
 import { createClient } from '@/lib/supabase/server';
+import { logOut } from '@/lib/auth/actions';
 import SearchResultCard from '@/components/search/SearchResultCard';
 import SearchInput from '@/components/search/SearchInput';
 import NavLinks from '@/components/nav/NavLinks';
@@ -137,25 +138,28 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className={styles.page}>
       {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
-        <div className={`container ${styles.headerInner}`}>
-          {/* Logo → always /search */}
+        {/* No .container — full width with equal padding from CSS */}
+        <div className={styles.headerInner}>
           <a href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </a>
 
-          {/* Search bar */}
           <div className={styles.headerSearch}>
             <Suspense>
               <SearchInput />
             </Suspense>
           </div>
 
-          {/* Browse + List nav — Browse active on /search */}
-          <NavLinks
-            isLoggedIn={!!user}
-            displayName={displayName}
-          />
+          {/* Browse + List nav + logout */}
+          <div className={styles.headerLinks}>
+            <NavLinks isLoggedIn={!!user} displayName={displayName} />
+            {user && (
+              <form action={logOut}>
+                <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
+              </form>
+            )}
+          </div>
         </div>
       </header>
 

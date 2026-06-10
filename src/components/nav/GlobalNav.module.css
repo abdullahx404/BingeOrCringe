@@ -8,11 +8,14 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Full-width nav — equal padding on both sides, no max-width cap */
 .navInner {
   display: flex;
   align-items: center;
   height: 60px;
   gap: var(--space-4);
+  padding: 0 var(--space-6);
+  width: 100%;
 }
 
 .logo {
@@ -32,37 +35,23 @@
   color: var(--text-primary);
 }
 
+/* Search bar grows to fill all space between logo and right group */
 .search {
   flex: 1;
-  max-width: 480px;
+  min-width: 0;
 }
 
-.right {
+/* Right group pushed to far right */
+.rightGroup {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-left: auto;
   flex-shrink: 0;
 }
 
-.logoutForm {
-  flex-shrink: 0;
-}
-
-.username {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  text-decoration: none;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition: color var(--transition-fast);
-}
-
-.username:hover { color: var(--text-primary); }
+.logoutForm { flex-shrink: 0; }
 
 @media (max-width: 640px) {
   .logoText { display: none; }
-  .search { max-width: none; }
+  .navInner { padding: 0 var(--space-3); }
 }

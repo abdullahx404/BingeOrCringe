@@ -23,32 +23,29 @@ export default async function GlobalNav() {
 
   return (
     <nav className={styles.nav}>
-      <div className={`container ${styles.navInner}`}>
-        {/* Logo → always goes to /search */}
+      {/* No .container — full width with equal padding from CSS */}
+      <div className={styles.navInner}>
         <Link href="/search" className={styles.logo}>
           <Clapperboard size={20} className={styles.logoIcon} />
           <span className={styles.logoText}>BingeOrCringe</span>
         </Link>
 
-        {/* Center search bar */}
+        {/* Search grows to fill all available middle space */}
         <div className={styles.search}>
           <Suspense fallback={null}>
             <SearchInput />
           </Suspense>
         </div>
 
-        {/* Right — pathname-aware Browse + List + username */}
-        <NavLinks
-          isLoggedIn={!!user}
-          displayName={displayName}
-        />
-
-        {/* Logout outside NavLinks so it can stay a server form */}
-        {user && (
-          <form action={logOut} className={styles.logoutForm}>
-            <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-          </form>
-        )}
+        {/* Right group: Browse + List + username + Logout */}
+        <div className={styles.rightGroup}>
+          <NavLinks isLoggedIn={!!user} displayName={displayName} />
+          {user && (
+            <form action={logOut} className={styles.logoutForm}>
+              <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
+            </form>
+          )}
+        </div>
       </div>
     </nav>
   );
