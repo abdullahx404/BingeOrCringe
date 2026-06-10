@@ -1,52 +1,58 @@
-export const TIERS = ['goated', 'binge', 'mid', 'cringe', 'trash'] as const;
+export type TierType = 'goated' | 'binge' | 'mid' | 'cringe' | 'trash';
 
-export type Tier = (typeof TIERS)[number];
+export interface TierConfig {
+  label: string;
+  /** Lucide icon component name */
+  icon: string;
+  color: string;
+  bgColor: string;
+  description: string;
+}
 
-export const TIER_CONFIG: Record<
-  Tier,
-  { label: string; emoji: string; color: string; bgColor: string; description: string }
-> = {
+export const TIERS: TierType[] = ['goated', 'binge', 'mid', 'cringe', 'trash'];
+
+export const TIER_CONFIG: Record<TierType, TierConfig> = {
   goated: {
     label: 'Goated',
-    emoji: '🐐',
+    icon: 'Crown',
     color: '#FFD700',
-    bgColor: 'rgba(255, 215, 0, 0.12)',
-    description: 'Masterpiece. Peak cinema. No debate.',
+    bgColor: 'rgba(255, 215, 0, 0.08)',
+    description: 'Absolute cinema. Watch it twice.',
   },
   binge: {
     label: 'Binge',
-    emoji: '🍿',
-    color: '#22C55E',
-    bgColor: 'rgba(34, 197, 94, 0.12)',
-    description: 'Solid watch. Would recommend.',
+    icon: 'Play',
+    color: '#4ADE80',
+    bgColor: 'rgba(74, 222, 128, 0.08)',
+    description: 'Easy recommend. You know what it is.',
   },
   mid: {
     label: 'Mid',
-    emoji: '😐',
-    color: '#9CA3AF',
-    bgColor: 'rgba(156, 163, 175, 0.12)',
-    description: 'It exists. Nothing special.',
+    icon: 'Minus',
+    color: '#94A3B8',
+    bgColor: 'rgba(148, 163, 184, 0.08)',
+    description: 'It exists. You watched it.',
   },
   cringe: {
     label: 'Cringe',
-    emoji: '😬',
-    color: '#F97316',
-    bgColor: 'rgba(249, 115, 22, 0.12)',
-    description: 'Bad, but you watched it anyway.',
+    icon: 'ThumbsDown',
+    color: '#FB923C',
+    bgColor: 'rgba(251, 146, 60, 0.08)',
+    description: 'Hard to sit through. You did it though.',
   },
   trash: {
     label: 'Trash',
-    emoji: '🗑️',
+    icon: 'Trash2',
     color: '#EF4444',
-    bgColor: 'rgba(239, 68, 68, 0.12)',
-    description: 'Absolute waste of time.',
+    bgColor: 'rgba(239, 68, 68, 0.08)',
+    description: 'Genuinely awful. No notes.',
   },
 };
 
-export function isValidTier(value: string): value is Tier {
-  return TIERS.includes(value as Tier);
+export function isValidTier(value: string): value is TierType {
+  return TIERS.includes(value as TierType);
 }
 
-export function getTierConfig(tier: Tier) {
+export function getTierConfig(tier: TierType): TierConfig {
   return TIER_CONFIG[tier];
 }

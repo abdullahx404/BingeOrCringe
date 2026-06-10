@@ -1,6 +1,36 @@
+import { Crown, Play, Minus, ThumbsDown, Trash2, Search, Tag, Globe, Clapperboard } from 'lucide-react';
 import styles from './page.module.css';
 import { TIER_CONFIG, TIERS } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
+
+const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
+
+const STEPS = [
+  {
+    step: '01',
+    Icon: Search,
+    title: 'Search Any Title',
+    desc: 'Find any movie, show, season, or episode. The search is fast and the database is massive.',
+  },
+  {
+    step: '02',
+    Icon: Crown,
+    title: 'Pick a Tier',
+    desc: 'Drop it where it belongs — Goated, Binge, Mid, Cringe, or Trash. No overthinking.',
+  },
+  {
+    step: '03',
+    Icon: Tag,
+    title: 'Tag the Vibe',
+    desc: 'Add optional tags like Brainrot, Peak Fiction, or Emotional Damage for extra context.',
+  },
+  {
+    step: '04',
+    Icon: Globe,
+    title: 'Share Your List',
+    desc: 'Make your collection public. Let people know what actually slaps and what to avoid.',
+  },
+];
 
 export default function HomePage() {
   return (
@@ -8,7 +38,10 @@ export default function HomePage() {
       {/* ── Hero ─────────────────────────────────────────── */}
       <section className={styles.hero}>
         <div className={`container ${styles.heroInner}`}>
-          <div className={styles.heroBadge}>🎬 Movie Rankings, Reimagined</div>
+          <div className={styles.heroBadge}>
+            <Clapperboard size={14} />
+            Movie Rankings, Reimagined
+          </div>
 
           <h1 className={styles.heroTitle}>
             Stop Rating.
@@ -17,8 +50,8 @@ export default function HomePage() {
           </h1>
 
           <p className={styles.heroSub}>
-            Forget 3.7 stars out of 5. Rank movies into tiers that actually say something —
-            <strong> Goated, Binge, Mid, Cringe, or Trash.</strong>
+            3.7 stars tells you nothing.{' '}
+            <strong>Goated, Binge, Mid, Cringe, or Trash</strong> — now that's an actual opinion.
           </p>
 
           <div className={styles.heroCta}>
@@ -26,7 +59,7 @@ export default function HomePage() {
               Start Ranking Free
             </a>
             <a href="/search" className="btn btn-secondary btn-lg">
-              Browse Movies
+              Browse Titles
             </a>
           </div>
 
@@ -34,6 +67,7 @@ export default function HomePage() {
           <div className={styles.tierStrip}>
             {TIERS.map((tier) => {
               const cfg = TIER_CONFIG[tier];
+              const Icon = TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS];
               return (
                 <div
                   key={tier}
@@ -44,56 +78,32 @@ export default function HomePage() {
                     borderColor: `${cfg.color}30`,
                   }}
                 >
-                  <span className={styles.tierEmoji}>{cfg.emoji}</span>
-                  <span className={styles.tierLabel}>{cfg.label}</span>
+                  {Icon && <Icon size={14} />}
+                  <span className={styles.tierLabel}>{cfg.label.toUpperCase()}</span>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Background gradient glow */}
         <div className={styles.heroGlow} aria-hidden="true" />
       </section>
 
       {/* ── How It Works ────────────────────────────────── */}
       <section className={styles.howSection}>
         <div className="container">
-          <p className={styles.sectionEyebrow}>Simple as that</p>
-          <h2 className={styles.sectionTitle}>How BingeOrCringe Works</h2>
+          <p className={styles.sectionEyebrow}>How it works</p>
+          <h2 className={styles.sectionTitle}>Four Steps. That&apos;s It.</h2>
 
           <div className={styles.stepsGrid}>
-            {[
-              {
-                step: '01',
-                icon: '🔍',
-                title: 'Search Any Title',
-                desc: 'Search from millions of movies, shows, seasons, and episodes powered by TMDB.',
-              },
-              {
-                step: '02',
-                icon: '🐐',
-                title: 'Pick Your Tier',
-                desc: 'Is it Goated, Binge-worthy, Mid, Cringe, or straight Trash? You decide.',
-              },
-              {
-                step: '03',
-                icon: '🏷️',
-                title: 'Add Vibes',
-                desc: 'Tag it with Brainrot, Peak Fiction, Emotional Damage — or keep it simple.',
-              },
-              {
-                step: '04',
-                icon: '🌐',
-                title: 'Share Your List',
-                desc: 'Make your collection public and let others discover what to watch (or avoid).',
-              },
-            ].map((item) => (
-              <div key={item.step} className={`card ${styles.stepCard}`}>
-                <span className={styles.stepNumber}>{item.step}</span>
-                <span className={styles.stepIcon}>{item.icon}</span>
-                <h3 className={styles.stepTitle}>{item.title}</h3>
-                <p className={styles.stepDesc}>{item.desc}</p>
+            {STEPS.map(({ step, Icon, title, desc }) => (
+              <div key={step} className={`card ${styles.stepCard}`}>
+                <span className={styles.stepNumber}>{step}</span>
+                <div className={styles.stepIconWrap}>
+                  <Icon size={20} />
+                </div>
+                <h3 className={styles.stepTitle}>{title}</h3>
+                <p className={styles.stepDesc}>{desc}</p>
               </div>
             ))}
           </div>
@@ -103,10 +113,10 @@ export default function HomePage() {
       {/* ── Tags Preview ────────────────────────────────── */}
       <section className={styles.tagsSection}>
         <div className="container">
-          <p className={styles.sectionEyebrow}>Express yourself</p>
-          <h2 className={styles.sectionTitle}>Add Vibes with Tags</h2>
+          <p className={styles.sectionEyebrow}>Go deeper</p>
+          <h2 className={styles.sectionTitle}>Tag the Vibe</h2>
           <p className={styles.sectionDesc}>
-            Go beyond tiers — add tags that capture the actual feeling of watching something.
+            Tiers not enough? Add tags for when you need to say <em>exactly</em> what kind of watch it was.
           </p>
 
           <div className={styles.tagsCloud}>
@@ -123,18 +133,21 @@ export default function HomePage() {
       <section className={styles.tiersSection}>
         <div className="container">
           <p className={styles.sectionEyebrow}>The tier system</p>
-          <h2 className={styles.sectionTitle}>5 Tiers. No Debates.</h2>
+          <h2 className={styles.sectionTitle}>Five Tiers. No Debates.</h2>
 
           <div className={styles.tiersGrid}>
             {TIERS.map((tier) => {
               const cfg = TIER_CONFIG[tier];
+              const Icon = TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS];
               return (
                 <div
                   key={tier}
                   className={styles.tierCard}
                   style={{ borderColor: `${cfg.color}25` }}
                 >
-                  <div className={styles.tierCardEmoji}>{cfg.emoji}</div>
+                  <div className={styles.tierCardIcon} style={{ color: cfg.color }}>
+                    {Icon && <Icon size={28} />}
+                  </div>
                   <h3 className={styles.tierCardName} style={{ color: cfg.color }}>
                     {cfg.label}
                   </h3>
@@ -152,10 +165,10 @@ export default function HomePage() {
           <div className={styles.ctaBanner}>
             <h2 className={styles.ctaTitle}>Ready to rank?</h2>
             <p className={styles.ctaDesc}>
-              Create your free account and start ranking movies the way you actually talk about them.
+              Make a free account. Start ranking. Your list, your rules.
             </p>
             <a href="/signup" className="btn btn-primary btn-lg">
-              Get Started — It&apos;s Free
+              Get Started — Free
             </a>
           </div>
         </div>
@@ -165,21 +178,9 @@ export default function HomePage() {
       <footer className={styles.footer}>
         <div className={`container ${styles.footerInner}`}>
           <div className={styles.footerLogo}>
-            <span className={styles.logoMark}>🎬</span>
+            <Clapperboard size={20} className={styles.logoMark} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </div>
-          <p className={styles.footerNote}>
-            Movie data provided by{' '}
-            <a
-              href="https://www.themoviedb.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.footerLink}
-            >
-              TMDB
-            </a>
-            . This product uses the TMDB API but is not endorsed or certified by TMDB.
-          </p>
           <p className={styles.footerCopy}>&copy; {new Date().getFullYear()} BingeOrCringe</p>
         </div>
       </footer>

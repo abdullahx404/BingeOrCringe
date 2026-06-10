@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { Tv, Star, Crown } from 'lucide-react';
 import { getSeason, tmdbImage } from '@/lib/tmdb/client';
 import styles from './page.module.css';
 
@@ -53,7 +54,10 @@ export default async function SeasonPage({ params }: Props) {
                 {season.vote_average > 0 && (
                   <>
                     <span className={styles.dot}>·</span>
-                    <span>⭐ {season.vote_average.toFixed(1)}</span>
+                    <span className={styles.ratingInline}>
+                      <Star size={12} fill="currentColor" />
+                      {season.vote_average.toFixed(1)}
+                    </span>
                   </>
                 )}
               </div>
@@ -80,7 +84,9 @@ export default async function SeasonPage({ params }: Props) {
                       {still ? (
                         <Image src={still} alt={ep.name} fill className={styles.stillImg} />
                       ) : (
-                        <div className={styles.stillPlaceholder}>📺</div>
+                        <div className={styles.stillPlaceholder}>
+                          <Tv size={24} strokeWidth={1} />
+                        </div>
                       )}
                       {ep.runtime && (
                         <span className={styles.runtime}>{ep.runtime}m</span>
@@ -93,7 +99,10 @@ export default async function SeasonPage({ params }: Props) {
                         <span className={styles.epNum}>E{ep.episode_number}</span>
                         <span className={styles.epTitle}>{ep.name}</span>
                         {ep.vote_average > 0 && (
-                          <span className={styles.epRating}>⭐ {ep.vote_average.toFixed(1)}</span>
+                          <span className={styles.epRating}>
+                            <Star size={10} fill="currentColor" />
+                            {ep.vote_average.toFixed(1)}
+                          </span>
                         )}
                       </div>
                       {ep.air_date && (
@@ -110,6 +119,7 @@ export default async function SeasonPage({ params }: Props) {
                         className="btn btn-ghost btn-sm"
                         onClick={(e) => e.stopPropagation()}
                       >
+                        <Crown size={13} />
                         Rank
                       </Link>
                     </div>

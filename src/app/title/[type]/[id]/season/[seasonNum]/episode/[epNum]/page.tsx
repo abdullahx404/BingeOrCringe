@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { User, Star, Crown } from 'lucide-react';
 import { getEpisode, tmdbImage } from '@/lib/tmdb/client';
 import styles from './page.module.css';
 
@@ -80,7 +81,10 @@ export default async function EpisodePage({ params }: Props) {
                 {ep.vote_average > 0 && (
                   <>
                     <span className={styles.dot}>·</span>
-                    <span>⭐ {ep.vote_average.toFixed(1)}</span>
+                    <span className={styles.ratingInline}>
+                      <Star size={12} fill="currentColor" />
+                      {ep.vote_average.toFixed(1)}
+                    </span>
                     <span className={styles.voteCount}>({ep.vote_count.toLocaleString()})</span>
                   </>
                 )}
@@ -91,7 +95,8 @@ export default async function EpisodePage({ params }: Props) {
               {/* Rank CTA */}
               <div className={styles.rankCta}>
                 <Link href="/login" className="btn btn-primary">
-                  🐐 Rank This Episode
+                  <Crown size={16} />
+                  Rank This Episode
                 </Link>
                 <p className={styles.rankHint}>Log in to add to your collection</p>
               </div>
@@ -110,7 +115,9 @@ export default async function EpisodePage({ params }: Props) {
                           {photo ? (
                             <Image src={photo} alt={person.name} fill className={styles.castImg} />
                           ) : (
-                            <div className={styles.castPlaceholder}>👤</div>
+                            <div className={styles.castPlaceholder}>
+                              <User size={28} strokeWidth={1.2} />
+                            </div>
                           )}
                         </div>
                         <p className={styles.castName}>{person.name}</p>

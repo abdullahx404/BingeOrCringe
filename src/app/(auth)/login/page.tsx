@@ -70,7 +70,7 @@ function LoginForm() {
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h1 className={styles.title}>Welcome back</h1>
-        <p className={styles.subtitle}>Log in to see your rankings and tier lists.</p>
+        <p className={styles.subtitle}>Your rankings are waiting. Log back in.</p>
       </div>
 
       {/* Google OAuth */}

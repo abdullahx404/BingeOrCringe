@@ -139,7 +139,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  color: var(--text-muted);
 }
 
 .runtime {
@@ -187,6 +187,16 @@
   font-size: var(--text-xs);
   color: #FFD700;
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ratingInline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #FFD700;
 }
 
 .epDate {

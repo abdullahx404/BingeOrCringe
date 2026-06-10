@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
+import { SearchX, TrendingUp, AlertCircle, Clapperboard } from 'lucide-react';
 import {
   searchMulti,
   getTrending,
@@ -13,14 +14,13 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Search',
-  description: 'Search millions of movies and TV shows. Rank them into tiers.',
+  description: 'Search movies and TV shows. Drop them in a tier.',
 };
 
 interface Props {
   searchParams: { q?: string };
 }
 
-/* ─── Results section ─────────────────────────────────── */
 async function SearchResults({ query }: { query: string }) {
   try {
     const data = await searchMulti(query);
@@ -31,14 +31,14 @@ async function SearchResults({ query }: { query: string }) {
           ? normalizeMovie(r as TmdbSearchMovie)
           : normalizeTv(r as TmdbSearchTv)
       )
-      .filter((r) => r.posterPath); // skip results with no poster
+      .filter((r) => r.posterPath);
 
     if (results.length === 0) {
       return (
         <div className={styles.emptyState}>
-          <span className={styles.emptyIcon}>🔍</span>
+          <SearchX size={40} className={styles.emptyIcon} strokeWidth={1.5} />
           <h2 className={styles.emptyTitle}>No results for &ldquo;{query}&rdquo;</h2>
-          <p className={styles.emptyDesc}>Try a different title, or check your spelling.</p>
+          <p className={styles.emptyDesc}>Check the spelling or try a different title.</p>
         </div>
       );
     }
@@ -58,14 +58,13 @@ async function SearchResults({ query }: { query: string }) {
   } catch {
     return (
       <div className={styles.errorState}>
-        <span>⚠️</span>
-        <p>Search is temporarily unavailable. Please try again.</p>
+        <AlertCircle size={20} />
+        <p>Search is unavailable right now. Try again in a moment.</p>
       </div>
     );
   }
 }
 
-/* ─── Trending section ────────────────────────────────── */
 async function TrendingSection() {
   try {
     const data = await getTrending();
@@ -81,7 +80,8 @@ async function TrendingSection() {
     return (
       <section className={styles.section}>
         <h2 className={styles.sectionTitle}>
-          <span>🔥</span> Trending This Week
+          <TrendingUp size={20} />
+          Trending This Week
         </h2>
         <div className={styles.grid}>
           {titles.map((t) => (
@@ -93,14 +93,13 @@ async function TrendingSection() {
   } catch {
     return (
       <div className={styles.errorState}>
-        <span>⚠️</span>
-        <p>Could not load trending titles. Please try again.</p>
+        <AlertCircle size={20} />
+        <p>Could not load trending titles. Try refreshing.</p>
       </div>
     );
   }
 }
 
-/* ─── Skeleton grid ───────────────────────────────────── */
 function GridSkeleton() {
   return (
     <div className={styles.grid}>
@@ -115,17 +114,15 @@ function GridSkeleton() {
   );
 }
 
-/* ─── Page ────────────────────────────────────────────── */
 export default function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
 
   return (
     <div className={styles.page}>
-      {/* Minimal header */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
           <a href="/" className={styles.logo}>
-            <span>🎬</span>
+            <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </a>
           <div className={styles.headerLinks}>
@@ -135,7 +132,6 @@ export default function SearchPage({ searchParams }: Props) {
         </div>
       </header>
 
-      {/* Search bar */}
       <div className={styles.searchBar}>
         <div className="container">
           <Suspense>
@@ -144,7 +140,6 @@ export default function SearchPage({ searchParams }: Props) {
         </div>
       </div>
 
-      {/* Results */}
       <main className={styles.main}>
         <div className="container">
           <Suspense fallback={<GridSkeleton />}>

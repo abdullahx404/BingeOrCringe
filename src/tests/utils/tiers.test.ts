@@ -23,7 +23,7 @@ describe('Tiers Constants', () => {
     for (const tier of TIERS) {
       expect(TIER_CONFIG[tier]).toBeDefined();
       expect(TIER_CONFIG[tier].label).toBeTruthy();
-      expect(TIER_CONFIG[tier].emoji).toBeTruthy();
+      expect(TIER_CONFIG[tier].icon).toBeTruthy();
       expect(TIER_CONFIG[tier].color).toMatch(/^#/);
       expect(TIER_CONFIG[tier].bgColor).toBeTruthy();
       expect(TIER_CONFIG[tier].description).toBeTruthy();
@@ -42,7 +42,7 @@ describe('Tiers Constants', () => {
     it('should return false for invalid tier values', () => {
       expect(isValidTier('amazing')).toBe(false);
       expect(isValidTier('ok')).toBe(false);
-      expect(isValidTier('Goated')).toBe(false); // case-sensitive
+      expect(isValidTier('Goated')).toBe(false);
       expect(isValidTier('')).toBe(false);
       expect(isValidTier('GOATED')).toBe(false);
     });
@@ -52,14 +52,14 @@ describe('Tiers Constants', () => {
     it('should return the correct config for goated', () => {
       const cfg = getTierConfig('goated');
       expect(cfg.label).toBe('Goated');
-      expect(cfg.emoji).toBe('🐐');
+      expect(cfg.icon).toBe('Crown');
       expect(cfg.color).toBe('#FFD700');
     });
 
     it('should return the correct config for trash', () => {
       const cfg = getTierConfig('trash');
       expect(cfg.label).toBe('Trash');
-      expect(cfg.emoji).toBe('🗑️');
+      expect(cfg.icon).toBe('Trash2');
       expect(cfg.color).toBe('#EF4444');
     });
   });

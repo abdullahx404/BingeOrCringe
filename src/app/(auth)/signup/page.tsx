@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { Mail } from 'lucide-react';
 import { signUp, signInWithGoogle } from '@/lib/auth/actions';
 import {
   validateUsername,
@@ -108,11 +109,12 @@ export default function SignupPage() {
   if (success) {
     return (
       <div className={styles.card}>
-        <div className={styles.successIcon}>📧</div>
-        <h1 className={styles.title}>Check your email!</h1>
+        <div className={styles.successIcon}>
+          <Mail size={40} strokeWidth={1.5} />
+        </div>
+        <h1 className={styles.title}>Check your inbox</h1>
         <p className={styles.subtitle}>
-          We sent a confirmation link to <strong>{fields.email}</strong>. Click it to activate your
-          account.
+          We sent a confirmation link to <strong>{fields.email}</strong>. Click it to activate your account.
         </p>
         <Link href="/login" className={`btn btn-secondary ${styles.backBtn}`}>
           Back to Login
@@ -126,7 +128,7 @@ export default function SignupPage() {
       {/* Header */}
       <div className={styles.cardHeader}>
         <h1 className={styles.title}>Create account</h1>
-        <p className={styles.subtitle}>Start ranking movies the way you actually talk about them.</p>
+        <p className={styles.subtitle}>Rank what you watch. Your taste, your rules.</p>
       </div>
 
       {/* Google OAuth */}

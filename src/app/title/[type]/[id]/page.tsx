@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { Film, Tv, Star, Crown } from 'lucide-react';
 import {
   getMovie,
   getTvShow,
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       return { title: show.name, description: show.overview };
     }
   } catch {}
-  return { title: 'Title Not Found' };
+  return { title: 'Not Found' };
 }
 
 export default async function TitlePage({ params }: Props) {
@@ -44,16 +45,12 @@ export default async function TitlePage({ params }: Props) {
 
       return (
         <div className={styles.page}>
-          {/* Back nav */}
           <div className={styles.backNav}>
             <div className="container">
-              <Link href="/search" className={styles.backLink}>
-                ← Back to Search
-              </Link>
+              <Link href="/search" className={styles.backLink}>← Back to Search</Link>
             </div>
           </div>
 
-          {/* Backdrop */}
           {backdrop && (
             <div className={styles.backdrop}>
               <Image src={backdrop} alt="" fill className={styles.backdropImg} priority />
@@ -61,10 +58,8 @@ export default async function TitlePage({ params }: Props) {
             </div>
           )}
 
-          {/* Hero */}
           <div className={styles.hero}>
             <div className={`container ${styles.heroInner}`}>
-              {/* Poster */}
               <div className={styles.posterWrap}>
                 {poster ? (
                   <Image
@@ -75,17 +70,16 @@ export default async function TitlePage({ params }: Props) {
                     priority
                   />
                 ) : (
-                  <div className={styles.posterPlaceholder}>🎬</div>
+                  <div className={styles.posterPlaceholder}>
+                    <Film size={48} strokeWidth={1} />
+                  </div>
                 )}
               </div>
 
-              {/* Meta */}
               <div className={styles.meta}>
                 <div className={styles.metaBadges}>
                   <span className={styles.typePill}>Movie</span>
-                  {movie.status && (
-                    <span className={styles.statusPill}>{movie.status}</span>
-                  )}
+                  {movie.status && <span className={styles.statusPill}>{movie.status}</span>}
                 </div>
 
                 <h1 className={styles.title}>{movie.title}</h1>
@@ -98,7 +92,13 @@ export default async function TitlePage({ params }: Props) {
                   {year && <span>{year}</span>}
                   {runtime && <><span className={styles.dot}>·</span><span>{runtime}</span></>}
                   {movie.vote_average > 0 && (
-                    <><span className={styles.dot}>·</span><span>⭐ {movie.vote_average.toFixed(1)}</span></>
+                    <>
+                      <span className={styles.dot}>·</span>
+                      <span className={styles.rating}>
+                        <Star size={12} fill="currentColor" />
+                        {movie.vote_average.toFixed(1)}
+                      </span>
+                    </>
                   )}
                 </div>
 
@@ -114,10 +114,10 @@ export default async function TitlePage({ params }: Props) {
                   <p className={styles.overview}>{movie.overview}</p>
                 )}
 
-                {/* Rank CTA — will be interactive in Phase 4 */}
                 <div className={styles.rankCta}>
                   <Link href="/login" className="btn btn-primary">
-                    🐐 Rank This Movie
+                    <Crown size={16} />
+                    Rank This Movie
                   </Link>
                   <p className={styles.rankHint}>Log in to add to your collection</p>
                 </div>
@@ -133,8 +133,6 @@ export default async function TitlePage({ params }: Props) {
     const poster = tmdbImage(show.poster_path, 'w500');
     const backdrop = tmdbImage(show.backdrop_path, 'w1280');
     const year = show.first_air_date ? show.first_air_date.slice(0, 4) : '';
-
-    // Filter out season 0 (specials) from main list
     const mainSeasons = show.seasons.filter((s) => s.season_number > 0);
 
     return (
@@ -158,7 +156,9 @@ export default async function TitlePage({ params }: Props) {
               {poster ? (
                 <Image src={poster} alt={`${show.name} poster`} fill className={styles.posterImg} priority />
               ) : (
-                <div className={styles.posterPlaceholder}>📺</div>
+                <div className={styles.posterPlaceholder}>
+                  <Tv size={48} strokeWidth={1} />
+                </div>
               )}
             </div>
 
@@ -180,15 +180,19 @@ export default async function TitlePage({ params }: Props) {
                 <span className={styles.dot}>·</span>
                 <span>{show.number_of_episodes} Episodes</span>
                 {show.vote_average > 0 && (
-                  <><span className={styles.dot}>·</span><span>⭐ {show.vote_average.toFixed(1)}</span></>
+                  <>
+                    <span className={styles.dot}>·</span>
+                    <span className={styles.rating}>
+                      <Star size={12} fill="currentColor" />
+                      {show.vote_average.toFixed(1)}
+                    </span>
+                  </>
                 )}
               </div>
 
               {show.genres.length > 0 && (
                 <div className={styles.genres}>
-                  {show.genres.map((g) => (
-                    <span key={g.id} className="tag">{g.name}</span>
-                  ))}
+                  {show.genres.map((g) => <span key={g.id} className="tag">{g.name}</span>)}
                 </div>
               )}
 
@@ -196,7 +200,8 @@ export default async function TitlePage({ params }: Props) {
 
               <div className={styles.rankCta}>
                 <Link href="/login" className="btn btn-primary">
-                  🐐 Rank This Show
+                  <Crown size={16} />
+                  Rank This Show
                 </Link>
                 <p className={styles.rankHint}>Log in to add to your collection</p>
               </div>
@@ -204,7 +209,6 @@ export default async function TitlePage({ params }: Props) {
           </div>
         </div>
 
-        {/* Seasons list */}
         {mainSeasons.length > 0 && (
           <div className={styles.seasonsSection}>
             <div className="container">
@@ -222,7 +226,9 @@ export default async function TitlePage({ params }: Props) {
                         {sPoster ? (
                           <Image src={sPoster} alt={season.name} fill className={styles.posterImg} />
                         ) : (
-                          <div className={styles.posterPlaceholder} style={{ fontSize: '1.5rem' }}>📺</div>
+                          <div className={styles.posterPlaceholder} style={{ fontSize: '1.5rem' }}>
+                            <Tv size={20} strokeWidth={1} />
+                          </div>
                         )}
                       </div>
                       <div className={styles.seasonInfo}>

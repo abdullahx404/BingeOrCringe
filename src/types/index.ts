@@ -2,7 +2,7 @@
  * Shared TypeScript types for BingeOrCringe
  */
 
-import type { Tier } from '@/lib/utils/tiers';
+import type { TierType as Tier } from '@/lib/utils/tiers';
 import type { Tag } from '@/lib/utils/tags';
 
 export type MediaType = 'movie' | 'tv' | 'season' | 'episode';

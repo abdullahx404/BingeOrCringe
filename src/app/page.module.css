@@ -171,8 +171,15 @@
   font-family: var(--font-display);
 }
 
-.stepIcon {
-  font-size: 2rem;
+.stepIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: rgba(108, 99, 255, 0.1);
+  color: var(--accent-light);
 }
 
 .stepTitle {
@@ -263,8 +270,10 @@
   box-shadow: var(--shadow-md);
 }
 
-.tierCardEmoji {
-  font-size: 2.5rem;
+.tierCardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tierCardName {
@@ -330,7 +339,7 @@
 }
 
 .logoMark {
-  font-size: 1.5rem;
+  color: var(--accent-light);
 }
 
 .logoText {
@@ -338,18 +347,6 @@
   font-weight: 800;
   font-size: var(--text-xl);
   color: var(--text-primary);
-}
-
-.footerNote {
-  font-size: var(--text-sm);
-  color: var(--text-muted);
-  max-width: 500px;
-}
-
-.footerLink {
-  color: var(--accent-light);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .footerCopy {

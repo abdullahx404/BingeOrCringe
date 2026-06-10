@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { Film, Globe, Lock, Info, Clapperboard } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { logOut } from '@/lib/auth/actions';
 import styles from './page.module.css';
@@ -13,17 +14,14 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Middleware already handles redirect, this is a safety net
   if (!user) redirect('/login');
 
-  // Fetch profile
   const { data: profile } = await supabase
     .from('profiles')
     .select('username, display_name, avatar_url, is_public')
     .eq('id', user.id)
     .single();
 
-  // Fetch ranking count
   const { count: rankingCount } = await supabase
     .from('rankings')
     .select('*', { count: 'exact', head: true })
@@ -31,11 +29,11 @@ export default async function DashboardPage() {
 
   return (
     <div className={styles.page}>
-      {/* Header bar */}
+      {/* Header */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
           <div className={styles.logo}>
-            <span>🎬</span>
+            <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </div>
 
@@ -52,19 +50,19 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      {/* Main content */}
+      {/* Main */}
       <main className={styles.main}>
         <div className="container">
-          {/* Welcome section */}
+          {/* Welcome */}
           <div className={styles.welcome}>
             <div className={styles.welcomeText}>
               <h1 className={styles.welcomeTitle}>
-                Hey, {profile?.display_name ?? 'there'} 👋
+                Hey, {profile?.display_name ?? 'there'}
               </h1>
               <p className={styles.welcomeSub}>
                 {rankingCount === 0
-                  ? "You haven't ranked anything yet. Go find something to rate!"
-                  : `You've ranked ${rankingCount} title${rankingCount !== 1 ? 's' : ''} so far. Keep going!`}
+                  ? "Nothing ranked yet. Go search something and drop it in a tier."
+                  : `${rankingCount} title${rankingCount !== 1 ? 's' : ''} ranked. Keep going.`}
               </p>
             </div>
 
@@ -75,7 +73,9 @@ export default async function DashboardPage() {
               </div>
               <div className={styles.statChip}>
                 <span className={styles.statValue}>
-                  {profile?.is_public ? '🌐' : '🔒'}
+                  {profile?.is_public
+                    ? <Globe size={20} />
+                    : <Lock size={20} />}
                 </span>
                 <span className={styles.statLabel}>
                   {profile?.is_public ? 'Public' : 'Private'}
@@ -84,21 +84,24 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Empty state — Phase 4 will fill this with actual rankings */}
+          {/* Empty state */}
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>🎬</div>
+            <div className={styles.emptyIcon}>
+              <Film size={48} strokeWidth={1.2} />
+            </div>
             <h2 className={styles.emptyTitle}>Your collection is empty</h2>
             <p className={styles.emptyDesc}>
-              Search for a movie or show and give it a tier — Goated, Binge, Mid, Cringe, or Trash.
+              Search for a movie or show and rank it — Goated, Binge, Mid, Cringe, or Trash.
             </p>
             <a href="/search" className="btn btn-primary">
-              Search Movies
+              Search Titles
             </a>
           </div>
 
-          {/* Coming in future phases notice */}
+          {/* Phase notice */}
           <div className={styles.phaseNotice}>
-            <p>🚧 Full collection view, tier filters, and quick-edit coming in Phase 5.</p>
+            <Info size={14} />
+            <p>Full collection view, tier filters, and quick-edit coming soon.</p>
           </div>
         </div>
       </main>
