@@ -1,0 +1,28 @@
+.btn {
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.btn:hover {
+  color: var(--color-error);
+}
+
+.confirming {
+  color: var(--color-error) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.08) !important;
+}
+
+.spinner {
+  display: block;
+  width: 13px;
+  height: 13px;
+  border: 2px solid var(--border-default);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

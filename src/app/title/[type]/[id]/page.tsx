@@ -8,6 +8,8 @@ import {
   getTvShow,
   tmdbImage,
 } from '@/lib/tmdb/client';
+import { createClient } from '@/lib/supabase/server';
+import RankButton from '@/components/rankings/RankButton';
 import styles from './page.module.css';
 
 interface Props {
@@ -32,6 +34,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TitlePage({ params }: Props) {
   const id = parseInt(params.id);
   if (isNaN(id) || !['movie', 'tv'].includes(params.type)) notFound();
+
+  // Get current user (if logged in)
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Get existing ranking for this title if logged in
+  let existingRanking = null;
+  if (user) {
+    const { data } = await supabase
+      .from('rankings')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('tmdb_id', id)
+      .eq('media_type', params.type)
+      .is('season_number', null)
+      .is('episode_number', null)
+      .single();
+    existingRanking = data;
+  }
 
   try {
     if (params.type === 'movie') {
@@ -115,11 +136,26 @@ export default async function TitlePage({ params }: Props) {
                 )}
 
                 <div className={styles.rankCta}>
-                  <Link href="/login" className="btn btn-primary">
-                    <Crown size={16} />
-                    Rank This Movie
-                  </Link>
-                  <p className={styles.rankHint}>Log in to add to your collection</p>
+                  {user ? (
+                    <RankButton
+                      media={{
+                        tmdb_id: id,
+                        media_type: 'movie',
+                        title: movie.title,
+                        poster_path: movie.poster_path,
+                        year,
+                      }}
+                      existing={existingRanking}
+                    />
+                  ) : (
+                    <>
+                      <Link href="/login" className="btn btn-primary">
+                        <Crown size={16} />
+                        Rank This Movie
+                      </Link>
+                      <p className={styles.rankHint}>Log in to rank</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -199,11 +235,26 @@ export default async function TitlePage({ params }: Props) {
               {show.overview && <p className={styles.overview}>{show.overview}</p>}
 
               <div className={styles.rankCta}>
-                <Link href="/login" className="btn btn-primary">
-                  <Crown size={16} />
-                  Rank This Show
-                </Link>
-                <p className={styles.rankHint}>Log in to add to your collection</p>
+                {user ? (
+                  <RankButton
+                    media={{
+                      tmdb_id: id,
+                      media_type: 'tv',
+                      title: show.name,
+                      poster_path: show.poster_path,
+                      year,
+                    }}
+                    existing={existingRanking}
+                  />
+                ) : (
+                  <>
+                    <Link href="/login" className="btn btn-primary">
+                      <Crown size={16} />
+                      Rank This Show
+                    </Link>
+                    <p className={styles.rankHint}>Log in to rank</p>
+                  </>
+                )}
               </div>
             </div>
           </div>

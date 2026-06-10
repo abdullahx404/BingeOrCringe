@@ -1,0 +1,207 @@
+'use client';
+
+import { useEffect, useRef, useState, useTransition } from 'react';
+import { X, Crown, ChevronDown } from 'lucide-react';
+import { createRanking, updateRanking } from '@/lib/rankings/actions';
+import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
+import { TAGS } from '@/lib/utils/tags';
+import type { TierType } from '@/lib/utils/tiers';
+import type { Ranking } from '@/types';
+import styles from './RankModal.module.css';
+
+// Lucide icon map for tier icons
+import { Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
+const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
+
+interface Props {
+  /** The media item to rank */
+  media: {
+    tmdb_id: number;
+    media_type: 'movie' | 'tv' | 'season' | 'episode';
+    season_number?: number;
+    episode_number?: number;
+    title: string;
+    poster_path: string | null;
+    year: string | null;
+  };
+  /** Existing ranking if already ranked — enables edit mode */
+  existing?: Ranking | null;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+export default function RankModal({ media, existing, onClose, onSuccess }: Props) {
+  const [selectedTier, setSelectedTier] = useState<TierType | null>(
+    existing?.tier ?? null
+  );
+  const [selectedTags, setSelectedTags] = useState<string[]>(existing?.tags ?? []);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Close on Escape key
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
+  // Prevent body scroll while open
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
+
+  function toggleTag(tag: string) {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  }
+
+  function handleSubmit() {
+    if (!selectedTier) {
+      setError('Pick a tier to save this ranking.');
+      return;
+    }
+    setError(null);
+
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append('tmdb_id', String(media.tmdb_id));
+      formData.append('media_type', media.media_type);
+      formData.append('title', media.title);
+      formData.append('tier', selectedTier);
+      formData.append('tags', JSON.stringify(selectedTags));
+      if (media.poster_path) formData.append('poster_path', media.poster_path);
+      if (media.year) formData.append('year', media.year);
+      if (media.season_number != null) formData.append('season_number', String(media.season_number));
+      if (media.episode_number != null) formData.append('episode_number', String(media.episode_number));
+
+      const action = existing ? updateRanking.bind(null, existing.id) : createRanking;
+      const result = await action(formData);
+
+      if (result.error) {
+        setError(result.error);
+      } else {
+        onSuccess?.();
+        onClose();
+      }
+    });
+  }
+
+  return (
+    <div
+      className={styles.overlay}
+      ref={overlayRef}
+      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Rank ${media.title}`}
+    >
+      <div className={styles.modal}>
+        {/* Header */}
+        <div className={styles.header}>
+          <div className={styles.headerTitle}>
+            <Crown size={16} className={styles.headerIcon} />
+            <span>{existing ? 'Edit Ranking' : 'Rank This'}</span>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className={styles.closeBtn}
+            aria-label="Close"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Media info */}
+        <div className={styles.mediaInfo}>
+          <p className={styles.mediaTitle}>{media.title}</p>
+          {media.year && <span className={styles.mediaYear}>{media.year}</span>}
+          <span className={styles.mediaType}>
+            {media.media_type === 'movie' ? 'Movie' : media.media_type === 'tv' ? 'TV Show' : media.media_type === 'season' ? 'Season' : 'Episode'}
+          </span>
+        </div>
+
+        {/* Tier selector */}
+        <div className={styles.section}>
+          <p className={styles.sectionLabel}>Tier</p>
+          <div className={styles.tierGrid}>
+            {TIERS.map((tier) => {
+              const cfg = TIER_CONFIG[tier];
+              const Icon = TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS];
+              const isSelected = selectedTier === tier;
+              return (
+                <button
+                  key={tier}
+                  type="button"
+                  onClick={() => setSelectedTier(tier)}
+                  className={styles.tierBtn}
+                  style={{
+                    color: isSelected ? cfg.color : undefined,
+                    borderColor: isSelected ? cfg.color : undefined,
+                    background: isSelected ? cfg.bgColor : undefined,
+                  }}
+                  aria-pressed={isSelected}
+                >
+                  {Icon && <Icon size={16} />}
+                  <span>{cfg.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {selectedTier && (
+            <p className={styles.tierDesc}>{TIER_CONFIG[selectedTier].description}</p>
+          )}
+        </div>
+
+        {/* Tags */}
+        <div className={styles.section}>
+          <p className={styles.sectionLabel}>
+            Tags <span className={styles.optional}>(optional)</span>
+          </p>
+          <div className={styles.tagsGrid}>
+            {TAGS.map((tag) => {
+              const isSelected = selectedTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
+                  className={`${styles.tagBtn} ${isSelected ? styles.tagBtnSelected : ''}`}
+                >
+                  {tag}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Error */}
+        {error && <p className={styles.error} role="alert">{error}</p>}
+
+        {/* Actions */}
+        <div className={styles.actions}>
+          <button type="button" onClick={onClose} className="btn btn-ghost">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isPending || !selectedTier}
+            className="btn btn-primary"
+          >
+            {isPending
+              ? 'Saving…'
+              : existing
+              ? 'Update Ranking'
+              : 'Save Ranking'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
