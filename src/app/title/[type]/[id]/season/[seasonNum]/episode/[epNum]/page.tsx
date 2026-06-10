@@ -2,10 +2,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { User, Star, Crown, ArrowLeft } from 'lucide-react';
+import { User, Star, Crown } from 'lucide-react';
 import { getEpisode, tmdbImage } from '@/lib/tmdb/client';
 import { createClient } from '@/lib/supabase/server';
 import RankButton from '@/components/rankings/RankButton';
+import GlobalNav from '@/components/nav/GlobalNav';
 import styles from './page.module.css';
 
 interface Props {
@@ -55,17 +56,7 @@ export default async function EpisodePage({ params }: Props) {
 
     return (
       <div className={styles.page}>
-        <div className={styles.backNav}>
-          <div className="container">
-            <Link
-              href={`/title/tv/${tvId}/season/${seasonNum}`}
-              className={styles.backLink}
-            >
-              <ArrowLeft size={16} />
-              Back to Season {seasonNum}
-            </Link>
-          </div>
-        </div>
+        <GlobalNav />
 
         <div className={styles.hero}>
           <div className="container">
@@ -130,9 +121,9 @@ export default async function EpisodePage({ params }: Props) {
                     existing={existingRanking}
                   />
                 ) : (
-                  <Link href="/login" className="btn btn-primary">
+                  <Link href={`/login?next=/title/tv/${tvId}/season/${seasonNum}/episode/${epNum}`} className="btn btn-primary">
                     <Crown size={16} />
-                    Rank This Episode
+                    Log in to Rank
                   </Link>
                 )}
               </div>

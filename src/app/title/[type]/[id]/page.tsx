@@ -10,6 +10,9 @@ import {
 } from '@/lib/tmdb/client';
 import { createClient } from '@/lib/supabase/server';
 import RankButton from '@/components/rankings/RankButton';
+import GlobalNav from '@/components/nav/GlobalNav';
+import { TIER_CONFIG } from '@/lib/utils/tiers';
+import type { TierType } from '@/lib/utils/tiers';
 import styles from './page.module.css';
 
 interface Props {
@@ -35,11 +38,10 @@ export default async function TitlePage({ params }: Props) {
   const id = parseInt(params.id);
   if (isNaN(id) || !['movie', 'tv'].includes(params.type)) notFound();
 
-  // Get current user (if logged in)
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Get existing ranking for this title if logged in
+  // Get existing show/movie ranking for this user
   let existingRanking = null;
   if (user) {
     const { data } = await supabase
@@ -54,7 +56,11 @@ export default async function TitlePage({ params }: Props) {
     existingRanking = data;
   }
 
+  // Build the redirect URL for the login link
+  const loginHref = `/login?next=/title/${params.type}/${id}`;
+
   try {
+    /* ── Movie ──────────────────────────────────────── */
     if (params.type === 'movie') {
       const movie = await getMovie(id);
       const poster = tmdbImage(movie.poster_path, 'w500');
@@ -66,11 +72,7 @@ export default async function TitlePage({ params }: Props) {
 
       return (
         <div className={styles.page}>
-          <div className={styles.backNav}>
-            <div className="container">
-              <Link href="/search" className={styles.backLink}>← Back to Search</Link>
-            </div>
-          </div>
+          <GlobalNav />
 
           {backdrop && (
             <div className={styles.backdrop}>
@@ -148,13 +150,11 @@ export default async function TitlePage({ params }: Props) {
                       existing={existingRanking}
                     />
                   ) : (
-                    <>
-                      <Link href="/login" className="btn btn-primary">
-                        <Crown size={16} />
-                        Rank This Movie
-                      </Link>
-                      <p className={styles.rankHint}>Log in to rank</p>
-                    </>
+                    /* Single clear CTA for guests */
+                    <Link href={loginHref} className="btn btn-primary">
+                      <Crown size={16} />
+                      Log in to Rank
+                    </Link>
                   )}
                 </div>
               </div>
@@ -171,13 +171,28 @@ export default async function TitlePage({ params }: Props) {
     const year = show.first_air_date ? show.first_air_date.slice(0, 4) : '';
     const mainSeasons = show.seasons.filter((s) => s.season_number > 0);
 
+    // Fetch user's season rankings for this show so we can badge them
+    let seasonRankings: Record<number, { tier: string; tags: string[] }> = {};
+    if (user) {
+      const { data: sRankings } = await supabase
+        .from('rankings')
+        .select('season_number, tier, tags')
+        .eq('user_id', user.id)
+        .eq('tmdb_id', id)
+        .eq('media_type', 'season')
+        .is('episode_number', null);
+      if (sRankings) {
+        for (const sr of sRankings) {
+          if (sr.season_number != null) {
+            seasonRankings[sr.season_number] = { tier: sr.tier, tags: sr.tags ?? [] };
+          }
+        }
+      }
+    }
+
     return (
       <div className={styles.page}>
-        <div className={styles.backNav}>
-          <div className="container">
-            <Link href="/search" className={styles.backLink}>← Back to Search</Link>
-          </div>
-        </div>
+        <GlobalNav />
 
         {backdrop && (
           <div className={styles.backdrop}>
@@ -247,13 +262,10 @@ export default async function TitlePage({ params }: Props) {
                     existing={existingRanking}
                   />
                 ) : (
-                  <>
-                    <Link href="/login" className="btn btn-primary">
-                      <Crown size={16} />
-                      Rank This Show
-                    </Link>
-                    <p className={styles.rankHint}>Log in to rank</p>
-                  </>
+                  <Link href={loginHref} className="btn btn-primary">
+                    <Crown size={16} />
+                    Log in to Rank
+                  </Link>
                 )}
               </div>
             </div>
@@ -267,6 +279,11 @@ export default async function TitlePage({ params }: Props) {
               <div className={styles.seasonsList}>
                 {mainSeasons.map((season) => {
                   const sPoster = tmdbImage(season.poster_path, 'w342');
+                  const userSeasonRank = seasonRankings[season.season_number];
+                  const tierCfg = userSeasonRank
+                    ? TIER_CONFIG[userSeasonRank.tier as TierType]
+                    : null;
+
                   return (
                     <Link
                       key={season.id}
@@ -283,7 +300,22 @@ export default async function TitlePage({ params }: Props) {
                         )}
                       </div>
                       <div className={styles.seasonInfo}>
-                        <span className={styles.seasonName}>{season.name}</span>
+                        <div className={styles.seasonNameRow}>
+                          <span className={styles.seasonName}>{season.name}</span>
+                          {/* Show the user's ranking tier badge if they've ranked this season */}
+                          {tierCfg && (
+                            <span
+                              className={styles.seasonTierBadge}
+                              style={{
+                                color: tierCfg.color,
+                                background: tierCfg.bgColor,
+                                borderColor: `${tierCfg.color}40`,
+                              }}
+                            >
+                              {tierCfg.label}
+                            </span>
+                          )}
+                        </div>
                         <span className={styles.seasonMeta}>
                           {season.episode_count} episode{season.episode_count !== 1 ? 's' : ''}
                           {season.air_date && ` · ${season.air_date.slice(0, 4)}`}

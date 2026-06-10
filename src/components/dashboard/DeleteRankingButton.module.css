@@ -7,10 +7,41 @@
   color: var(--color-error);
 }
 
-.confirming {
+/* Inline confirm row */
+.confirmRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-md);
+  padding: 1px 4px;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.confirmLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-error);
+  white-space: nowrap;
+  padding: 0 2px;
+}
+
+.confirmYes {
   color: var(--color-error) !important;
-  border-color: rgba(239, 68, 68, 0.3) !important;
-  background: rgba(239, 68, 68, 0.08) !important;
+  padding: 2px !important;
+}
+
+.confirmYes:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+}
+
+.confirmNo {
+  color: var(--text-muted) !important;
+  padding: 2px !important;
+}
+
+.confirmNo:hover {
+  color: var(--text-secondary) !important;
 }
 
 .spinner {

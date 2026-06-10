@@ -47,6 +47,10 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
 export async function logIn(formData: FormData): Promise<ApiResponse<null>> {
   const email = (formData.get('email') as string ?? '').trim();
   const password = (formData.get('password') as string ?? '');
+  // Optional redirect target (e.g. after clicking "Log in to rank" on a title page)
+  const next = (formData.get('next') as string | null)?.trim() || '/dashboard';
+  // Safety check — only allow relative paths to prevent open-redirect
+  const safeNext = next.startsWith('/') ? next : '/dashboard';
 
   // Server-side validation
   const emailValidation = validateEmail(email);
@@ -68,7 +72,7 @@ export async function logIn(formData: FormData): Promise<ApiResponse<null>> {
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect(safeNext);
 }
 
 /* ─── Google OAuth ─────────────────────────────────────────── */

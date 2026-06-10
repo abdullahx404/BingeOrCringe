@@ -61,6 +61,9 @@ function LoginForm() {
       const formData = new FormData();
       formData.append('email', fields.email.trim());
       formData.append('password', fields.password);
+      // Pass the redirect target so the server action can send the user back
+      const nextUrl = searchParams.get('next') ?? '';
+      if (nextUrl) formData.append('next', nextUrl);
       const result = await logIn(formData);
       if (result?.error) setServerError(result.error);
     });
