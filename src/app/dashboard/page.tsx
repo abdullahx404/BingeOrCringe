@@ -2,8 +2,8 @@ import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Film, Clapperboard, Trash2, Edit2 } from 'lucide-react';
-import { Crown, Play, Minus, ThumbsDown } from 'lucide-react';
+import { Film, Clapperboard, Edit2 } from 'lucide-react';
+import { Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { logOut } from '@/lib/auth/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
@@ -15,6 +15,7 @@ import DeleteRankingButton from '@/components/dashboard/DeleteRankingButton';
 import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
 import SearchInput from '@/components/search/SearchInput';
 import TvGroupAccordion, { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
+import NavLinks from '@/components/nav/NavLinks';
 import styles from './page.module.css';
 
 export const metadata = { title: 'My Collection' };
@@ -25,9 +26,7 @@ interface Props {
   searchParams: { tier?: string };
 }
 
-type TvGroupMap = Map<number, TvGroupData>;
-
-function buildTvGroups(tvRelated: Ranking[]): TvGroupMap {
+function buildTvGroups(tvRelated: Ranking[]): Map<number, TvGroupData> {
   const map = new Map<number, TvGroupData>();
   for (const r of tvRelated) {
     if (!map.has(r.tmdb_id)) {
@@ -67,7 +66,6 @@ export default async function DashboardPage({ searchParams }: Props) {
     .eq('id', user.id)
     .single();
 
-  // Fetch ALL rankings (filter at render time)
   const { data: allRaw } = await supabase
     .from('rankings')
     .select('*')
@@ -76,22 +74,19 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   const allRankings: Ranking[] = allRaw ?? [];
 
-  // Count per tier for tabs
   const countByTier: Record<string, number> = {};
   for (const r of allRankings) {
     countByTier[r.tier] = (countByTier[r.tier] ?? 0) + 1;
   }
 
-  // Separate movies from TV-related
   const movieRankings = allRankings.filter((r) => r.media_type === 'movie');
   const tvRelated = allRankings.filter((r) =>
     ['tv', 'season', 'episode'].includes(r.media_type)
   );
 
-  // Group TV by show (tmdb_id)
   const tvGroupMap = buildTvGroups(tvRelated);
 
-  // For groups without a show-level ranking, fetch show info from TMDB
+  // Fetch show info from TMDB for groups without a show-level ranking
   await Promise.all(
     Array.from(tvGroupMap.values())
       .filter((g) => !g.showRanking)
@@ -111,8 +106,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   const tvGroups = Array.from(tvGroupMap.values());
 
-  // Active tier filter
-  const validTier = (searchParams.tier as TierType | undefined);
+  const validTier = searchParams.tier as TierType | undefined;
   const isTierValid = validTier && TIERS.includes(validTier);
 
   const filteredMovies = isTierValid
@@ -128,15 +122,18 @@ export default async function DashboardPage({ searchParams }: Props) {
       )
     : tvGroups;
 
-  const hasContent = filteredMovies.length > 0 || filteredTvGroups.length > 0;
+  const hasMovies = filteredMovies.length > 0;
+  const hasTv     = filteredTvGroups.length > 0;
+  const hasContent = hasMovies || hasTv;
   const totalRanked = allRankings.length;
+  const displayName = profile?.display_name ?? user.email ?? '';
 
   return (
     <div className={styles.page}>
-      {/* ── Header ──────────────────────────────────────── */}
+      {/* ── Sticky header ────────────────────────────── */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
-          {/* Logo → Browse */}
+          {/* Logo → /search */}
           <Link href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
@@ -149,16 +146,13 @@ export default async function DashboardPage({ searchParams }: Props) {
             </Suspense>
           </div>
 
-          <div className={styles.headerRight}>
-            {/* Browse button before username */}
-            <Link href="/search" className="btn btn-ghost btn-sm">Browse</Link>
-            <span className={styles.userBadge}>
-              {profile?.display_name ?? user.email}
-            </span>
-            <form action={logOut}>
-              <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-            </form>
-          </div>
+          {/* Browse + List (active underline) + username */}
+          <NavLinks isLoggedIn displayName={displayName} />
+
+          {/* Logout (server form) */}
+          <form action={logOut}>
+            <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
+          </form>
         </div>
       </header>
 
@@ -172,7 +166,7 @@ export default async function DashboardPage({ searchParams }: Props) {
               </h1>
               <p className={styles.welcomeSub}>
                 {totalRanked === 0
-                  ? 'Nothing ranked yet — go search something and drop it in a tier.'
+                  ? 'Nothing ranked yet — search something and drop it in a tier.'
                   : `${totalRanked} ranking${totalRanked !== 1 ? 's' : ''} total`}
               </p>
             </div>
@@ -186,12 +180,9 @@ export default async function DashboardPage({ searchParams }: Props) {
             total={totalRanked}
           />
 
-          {/* Collection */}
           {!hasContent ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>
-                <Film size={48} strokeWidth={1.2} />
-              </div>
+              <div className={styles.emptyIcon}><Film size={48} strokeWidth={1.2} /></div>
               <h2 className={styles.emptyTitle}>
                 {isTierValid
                   ? `No ${TIER_CONFIG[validTier!].label} titles yet`
@@ -205,14 +196,24 @@ export default async function DashboardPage({ searchParams }: Props) {
               <Link href="/search" className="btn btn-primary">Search Titles</Link>
             </div>
           ) : (
-            /* Single unified grid — movies + TV accordion cards side by side */
-            <div className={styles.grid}>
-              {filteredMovies.map((ranking) => (
-                <MovieCard key={ranking.id} ranking={ranking} />
-              ))}
-              {filteredTvGroups.map((group) => (
-                <TvGroupAccordion key={group.tmdbId} group={group} />
-              ))}
+            <div className={styles.collectionWrap}>
+              {/* ── Movies — poster grid ────────────────── */}
+              {hasMovies && (
+                <div className={styles.grid}>
+                  {filteredMovies.map((ranking) => (
+                    <MovieCard key={ranking.id} ranking={ranking} />
+                  ))}
+                </div>
+              )}
+
+              {/* ── TV Shows — horizontal accordion cards ── */}
+              {hasTv && (
+                <div className={styles.tvSection}>
+                  {filteredTvGroups.map((group) => (
+                    <TvGroupAccordion key={group.tmdbId} group={group} />
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -221,7 +222,7 @@ export default async function DashboardPage({ searchParams }: Props) {
   );
 }
 
-/* ── Movie Card ───────────────────────────────────────────── */
+/* ── Movie Card component ───────────────────────────────── */
 function MovieCard({ ranking }: { ranking: Ranking }) {
   const cfg = TIER_CONFIG[ranking.tier as TierType];
   const Icon = cfg ? TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS] : null;
@@ -230,6 +231,7 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
 
   return (
     <div className={styles.rankCard}>
+      {/* Poster */}
       <Link href={href} className={styles.posterLink}>
         <div className={styles.poster}>
           {poster ? (
@@ -245,6 +247,7 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
               <Film size={28} strokeWidth={1} />
             </div>
           )}
+          {/* Tier badge overlay */}
           {cfg && (
             <div
               className={styles.tierBadge}
@@ -257,28 +260,31 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
         </div>
       </Link>
 
-      <div className={styles.cardInfo}>
-        <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
-        <div className={styles.cardMeta}>
-          {ranking.year && <span>{ranking.year}</span>}
-          <span className={styles.mediaTypePill}>Movie</span>
-        </div>
-        {ranking.tags && (ranking.tags as string[]).length > 0 ? (
-          <div className={styles.tags}>
-            {(ranking.tags as string[]).slice(0, 3).map((tag) => (
-              <span key={tag} className={styles.tag}>{tag}</span>
-            ))}
+      {/* Info + actions in ONE contained block */}
+      <div className={styles.cardBody}>
+        <div className={styles.cardInfo}>
+          <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
+          <div className={styles.cardMeta}>
+            {ranking.year && <span>{ranking.year}</span>}
+            <span className={styles.mediaTypePill}>Movie</span>
           </div>
-        ) : (
-          <div className={styles.tagsPlaceholder} />
-        )}
-      </div>
+          {ranking.tags && (ranking.tags as string[]).length > 0 ? (
+            <div className={styles.tags}>
+              {(ranking.tags as string[]).slice(0, 3).map((tag) => (
+                <span key={tag} className={styles.tag}>{tag}</span>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.tagsPlaceholder} />
+          )}
+        </div>
 
-      <div className={styles.cardActions}>
-        <Link href={href} className={`btn btn-ghost btn-sm ${styles.editBtn}`}>
-          <Edit2 size={13} />
-        </Link>
-        <DeleteRankingButton id={ranking.id} title={ranking.title} />
+        <div className={styles.cardActions}>
+          <Link href={href} className={`btn btn-ghost btn-sm ${styles.editBtn}`} title="Edit ranking">
+            <Edit2 size={13} />
+          </Link>
+          <DeleteRankingButton id={ranking.id} title={ranking.title} />
+        </div>
       </div>
     </div>
   );

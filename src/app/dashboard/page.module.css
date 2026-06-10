@@ -119,7 +119,15 @@
 .rankCard {
   display: flex;
   flex-direction: column;
+  gap: 0;
+}
+
+/* cardBody: wraps info + actions so they feel attached to the card */
+.cardBody {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-2);
+  padding: var(--space-2) var(--space-1) var(--space-1);
 }
 
 .posterLink {

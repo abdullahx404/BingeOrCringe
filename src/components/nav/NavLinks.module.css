@@ -1,0 +1,56 @@
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.navLink {
+  position: relative;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 2px;
+  transition: color var(--transition-fast);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--accent);
+  opacity: 0;
+  transform: scaleX(0.5);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.navLink:hover {
+  color: var(--text-primary);
+}
+
+.navLink.active {
+  color: var(--text-primary);
+}
+
+.navLink.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.username {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.username:hover { color: var(--text-primary); }

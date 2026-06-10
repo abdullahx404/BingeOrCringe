@@ -45,6 +45,10 @@
   flex-shrink: 0;
 }
 
+.logoutForm {
+  flex-shrink: 0;
+}
+
 .username {
   font-size: var(--text-sm);
   color: var(--text-secondary);

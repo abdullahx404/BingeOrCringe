@@ -11,6 +11,7 @@ import type { TmdbSearchMovie, TmdbSearchTv } from '@/lib/tmdb/types';
 import { createClient } from '@/lib/supabase/server';
 import SearchResultCard from '@/components/search/SearchResultCard';
 import SearchInput from '@/components/search/SearchInput';
+import NavLinks from '@/components/nav/NavLinks';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -118,39 +119,43 @@ function GridSkeleton() {
 export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
 
-  // Auth check — show My List if logged in
+  // Auth check
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
+
+  let displayName: string | null = null;
+  if (user) {
+    const { data: prof } = await supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .single();
+    displayName = prof?.display_name ?? null;
+  }
 
   return (
     <div className={styles.page}>
       {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
-          {/* Logo */}
-          <a href="/" className={styles.logo}>
+          {/* Logo → always /search */}
+          <a href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </a>
 
-          {/* Search bar — inline in header */}
+          {/* Search bar */}
           <div className={styles.headerSearch}>
             <Suspense>
               <SearchInput />
             </Suspense>
           </div>
 
-          {/* Nav links — auth-aware */}
-          <div className={styles.headerLinks}>
-            {user ? (
-              <a href="/dashboard" className="btn btn-primary btn-sm">My List</a>
-            ) : (
-              <>
-                <a href="/login" className="btn btn-ghost btn-sm">Log In</a>
-                <a href="/signup" className="btn btn-primary btn-sm">Sign Up</a>
-              </>
-            )}
-          </div>
+          {/* Browse + List nav — Browse active on /search */}
+          <NavLinks
+            isLoggedIn={!!user}
+            displayName={displayName}
+          />
         </div>
       </header>
 
