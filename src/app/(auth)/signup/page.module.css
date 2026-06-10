@@ -1,0 +1,149 @@
+/* ─── Shared card styles (used by both signup & login) ─── */
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-10) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  animation: fadeInUp 0.4s ease;
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: var(--space-8) var(--space-5);
+    border-radius: var(--radius-lg);
+  }
+}
+
+/* Header */
+.cardHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-1);
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* OAuth button */
+.oauthBtn {
+  width: 100%;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+/* Divider */
+.divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.dividerText {
+  padding: 0 var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Error banner */
+.errorBanner {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-error);
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.inputError {
+  border-color: var(--color-error) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+
+.hint {
+  font-size: var(--text-xs);
+  color: var(--color-success);
+}
+
+/* Submit button */
+.submitBtn {
+  width: 100%;
+  margin-top: var(--space-2);
+  padding: var(--space-4);
+  font-size: var(--text-base);
+}
+
+/* Switch auth link */
+.switchAuth {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.switchLink {
+  color: var(--accent-light);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+.switchLink:hover {
+  color: var(--text-primary);
+}
+
+/* Success state */
+.successIcon {
+  font-size: 3rem;
+  text-align: center;
+}
+
+.backBtn {
+  width: 100%;
+  text-align: center;
+}
+
+/* Forgot password link */
+.forgotLink {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: right;
+  display: block;
+  transition: color var(--transition-fast);
+}
+
+.forgotLink:hover {
+  color: var(--accent-light);
+}
