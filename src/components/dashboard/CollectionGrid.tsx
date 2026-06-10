@@ -15,8 +15,6 @@ import styles from '../../app/dashboard/page.module.css';
 
 const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 
-const ICON_SIZE = 17;
-
 interface Props {
   movies: Ranking[];
   tvGroups: TvGroupData[];
@@ -30,41 +28,49 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
 
   return (
     <div className={styles.rankCard}>
-      <Link href={href} className={styles.posterLink}>
-        <div className={styles.poster}>
-          {poster ? (
-            <Image src={poster} alt={ranking.title} fill sizes="260px" className={styles.posterImg} />
-          ) : (
-            <div className={styles.posterPlaceholder}><Film size={32} strokeWidth={1} /></div>
-          )}
-          {cfg && (
-            <div
-              className={styles.tierBadge}
-              style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
-            >
-              {Icon && <Icon size={11} />}
-              <span>{cfg.label}</span>
-            </div>
-          )}
-        </div>
-      </Link>
+      {/* ── Poster with overlay actions ── */}
+      <div className={styles.posterWrapper}>
+        <Link href={href} className={styles.posterLink}>
+          <div className={styles.poster}>
+            {poster ? (
+              <Image src={poster} alt={ranking.title} fill sizes="260px" className={styles.posterImg} />
+            ) : (
+              <div className={styles.posterPlaceholder}><Film size={32} strokeWidth={1} /></div>
+            )}
+            {/* Tier badge — bottom-left */}
+            {cfg && (
+              <div
+                className={styles.tierBadge}
+                style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
+              >
+                {Icon && <Icon size={11} />}
+                <span>{cfg.label}</span>
+              </div>
+            )}
+          </div>
+        </Link>
 
+        {/* Edit / Delete — top-right glass overlay, revealed on hover */}
+        <div className={styles.overlayActions}>
+          <Link href={href} className={styles.overlayBtn} title="Edit ranking">
+            <Edit2 size={14} />
+          </Link>
+          <DeleteRankingButton
+            id={ranking.id}
+            title={ranking.title}
+            btnClassName={styles.overlayDeleteBtn}
+          />
+        </div>
+      </div>
+
+      {/* ── Card body ── */}
       <div className={styles.cardBody}>
-        {/* Title */}
         <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
 
-        {/* Year + type */}
+        {/* Year + type — no expand for movies */}
         <div className={styles.cardMeta}>
           {ranking.year && <span>{ranking.year}</span>}
           <span className={styles.mediaTypePill}>Movie</span>
-        </div>
-
-        {/* ── Actions row (above tags) ── */}
-        <div className={styles.cardActions}>
-          <Link href={href} className={styles.editBtn} title="Edit ranking">
-            <Edit2 size={ICON_SIZE} />
-          </Link>
-          <DeleteRankingButton id={ranking.id} title={ranking.title} />
         </div>
 
         {/* Tags */}
@@ -101,54 +107,60 @@ function TvPosterCard({
 
   return (
     <div className={`${styles.rankCard} ${isExpanded ? styles.rankCardExpanded : ''}`}>
-      <Link href={showHref} className={styles.posterLink}>
-        <div className={styles.poster}>
-          {poster ? (
-            <Image src={poster} alt={group.showTitle} fill sizes="260px" className={styles.posterImg} />
-          ) : (
-            <div className={styles.posterPlaceholder}><Tv size={32} strokeWidth={1} /></div>
-          )}
-          {cfg && (
-            <div
-              className={styles.tierBadge}
-              style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
-            >
-              {Icon && <Icon size={11} />}
-              <span>{cfg.label}</span>
-            </div>
-          )}
-        </div>
-      </Link>
+      {/* ── Poster with overlay actions ── */}
+      <div className={styles.posterWrapper}>
+        <Link href={showHref} className={styles.posterLink}>
+          <div className={styles.poster}>
+            {poster ? (
+              <Image src={poster} alt={group.showTitle} fill sizes="260px" className={styles.posterImg} />
+            ) : (
+              <div className={styles.posterPlaceholder}><Tv size={32} strokeWidth={1} /></div>
+            )}
+            {cfg && (
+              <div
+                className={styles.tierBadge}
+                style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
+              >
+                {Icon && <Icon size={11} />}
+                <span>{cfg.label}</span>
+              </div>
+            )}
+          </div>
+        </Link>
 
+        {/* Edit / Delete overlay (only if show itself is ranked) */}
+        {group.showRanking && (
+          <div className={styles.overlayActions}>
+            <Link href={showHref} className={styles.overlayBtn} title="Edit ranking">
+              <Edit2 size={14} />
+            </Link>
+            <DeleteRankingButton
+              id={group.showRanking.id}
+              title={group.showTitle}
+              btnClassName={styles.overlayDeleteBtn}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* ── Card body ── */}
       <div className={styles.cardBody}>
-        {/* Title */}
         <Link href={showHref} className={styles.cardTitle}>{group.showTitle}</Link>
 
-        {/* Year + type */}
+        {/* Year + type + expand chevron (inline) */}
         <div className={styles.cardMeta}>
           {group.showYear && <span>{group.showYear}</span>}
           <span className={styles.mediaTypePill}>TV</span>
-        </div>
 
-        {/* ── Actions row (above tags, below date) ── */}
-        <div className={styles.cardActions}>
-          {group.showRanking && (
-            <>
-              <Link href={showHref} className={styles.editBtn} title="Edit ranking">
-                <Edit2 size={ICON_SIZE} />
-              </Link>
-              <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} />
-            </>
-          )}
-          {/* Expand chevron */}
+          {/* Expand chevron — in same row as date, pushed to the right */}
           {innerCount > 0 && (
             <button
               type="button"
-              className={`${styles.expandBtn} ${isExpanded ? styles.expandBtnActive : ''}`}
+              className={`${styles.expandBtnInline} ${isExpanded ? styles.expandBtnInlineActive : ''}`}
               onClick={(e) => { e.preventDefault(); onToggle(); }}
-              title={isExpanded ? 'Collapse' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked`}
+              title={isExpanded ? 'Collapse' : `${innerCount} season/episode ranked`}
             >
-              {isExpanded ? <ChevronUp size={ICON_SIZE} /> : <ChevronDown size={ICON_SIZE} />}
+              {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             </button>
           )}
         </div>

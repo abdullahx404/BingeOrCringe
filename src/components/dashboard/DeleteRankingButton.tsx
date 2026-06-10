@@ -8,9 +8,10 @@ import styles from './DeleteRankingButton.module.css';
 interface Props {
   id: string;
   title: string;
+  btnClassName?: string; // optional — caller can supply glass-style class
 }
 
-export default function DeleteRankingButton({ id, title }: Props) {
+export default function DeleteRankingButton({ id, title, btnClassName }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -26,11 +27,11 @@ export default function DeleteRankingButton({ id, title }: Props) {
       <button
         type="button"
         onClick={() => setShowModal(true)}
-        className={styles.btn}
+        className={btnClassName ?? styles.btn}
         aria-label={`Remove ${title} from collection`}
         title="Remove from collection"
       >
-        <Trash2 size={17} />
+        <Trash2 size={14} />
       </button>
 
       {showModal && (

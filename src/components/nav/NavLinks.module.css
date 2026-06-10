@@ -1,4 +1,5 @@
-.right {
+/* ── Desktop navigation links ── */
+.desktopLinks {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -29,13 +30,9 @@
   transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
-.navLink:hover {
-  color: var(--text-primary);
-}
+.navLink:hover { color: var(--text-primary); }
 
-.navLink.active {
-  color: var(--text-primary);
-}
+.navLink.active { color: var(--text-primary); }
 
 .navLink.active::after {
   opacity: 1;
@@ -54,3 +51,89 @@
 }
 
 .username:hover { color: var(--text-primary); }
+
+/* ── Mobile hamburger ── */
+.hamburgerWrapper {
+  position: relative;
+  display: none; /* hidden on desktop */
+}
+
+.hamburgerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.hamburgerBtn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Dropdown panel */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 180px;
+  background: rgba(14, 14, 28, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: var(--space-2) 0;
+  z-index: 100;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.dropItem {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.dropItem:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dropItemActive {
+  color: var(--accent-light) !important;
+}
+
+.dropUser {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: var(--space-1);
+  padding-top: var(--space-2);
+}
+
+.dropLogout { margin: 0; padding: 0; border: none; background: none; }
+.dropLogout button { color: rgba(239, 68, 68, 0.8); }
+.dropLogout button:hover { color: #ef4444; background: rgba(239, 68, 68, 0.08); }
+
+/* ── Responsive breakpoint ── */
+@media (max-width: 640px) {
+  .desktopLinks { display: none; }
+  .hamburgerWrapper { display: block; }
+}

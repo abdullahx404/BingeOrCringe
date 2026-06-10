@@ -81,6 +81,8 @@
   .mobileSearch {
     display: block;
   }
+  /* Logout is in hamburger on mobile */
+  .headerLinks form { display: none; }
 }
 
 /* ── Main content ─────────────────────────────────────────────── */

@@ -49,7 +49,14 @@
   flex-shrink: 0;
 }
 
-.logoutForm { flex-shrink: 0; }
+.logoutForm {
+  flex-shrink: 0;
+}
+
+/* Hide external logout on mobile — hamburger menu handles it */
+@media (max-width: 640px) {
+  .logoutForm { display: none; }
+}
 
 /* ── Mobile: search moves below the nav bar ── */
 .mobileSearch {
