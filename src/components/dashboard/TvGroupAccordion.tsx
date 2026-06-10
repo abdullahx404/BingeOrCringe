@@ -107,22 +107,21 @@ export default function TvGroupAccordion({
         <div className={styles.tvActions}>
           {group.showRanking && (
             <>
-              <Link href={showHref} className={`btn btn-ghost btn-sm ${styles.editBtn}`} title="Edit ranking">
-                <Edit2 size={13} />
+              <Link href={showHref} className={styles.editBtn} title="Edit ranking">
+                <Edit2 size={17} />
               </Link>
               <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} />
             </>
           )}
-          {/* Expand chevron — only if there are inner rankings */}
+          {/* Expand chevron */}
           {innerCount > 0 && (
             <button
               type="button"
-              className="btn btn-ghost btn-sm"
+              className={styles.expandBtn}
               onClick={() => setExpanded((v) => !v)}
               aria-label={expanded ? 'Collapse' : `Show ${innerCount} ranked item${innerCount !== 1 ? 's' : ''}`}
-              title={expanded ? 'Collapse' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked`}
             >
-              {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              {expanded ? <ChevronUp size={17} /> : <ChevronDown size={17} />}
             </button>
           )}
         </div>
@@ -151,9 +150,9 @@ export default function TvGroupAccordion({
               <div className={styles.tvSubActions}>
                 <Link
                   href={`/title/tv/${group.tmdbId}/season/${s.season_number}`}
-                  className={`btn btn-ghost btn-sm ${styles.editBtn}`}
+                  className={styles.editBtn}
                 >
-                  <Edit2 size={12} />
+                  <Edit2 size={16} />
                 </Link>
                 <DeleteRankingButton id={s.id} title={`Season ${s.season_number}`} />
               </div>

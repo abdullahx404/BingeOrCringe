@@ -1,22 +1,23 @@
-/* Delete icon button in cards — red glass, feels clickable */
+/* Delete icon button in cards — bare red icon, no border/bg */
 .btn {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
   width: 32px !important;
   height: 32px !important;
-  border-radius: 8px !important;
-  background: rgba(239, 68, 68, 0.08) !important;
-  border: 1px solid rgba(239, 68, 68, 0.2) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
   color: rgba(239, 68, 68, 0.7) !important;
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast) !important;
+  transition: color var(--transition-fast) !important;
   padding: 0 !important;
 }
 
 .btn:hover {
-  background: rgba(239, 68, 68, 0.16) !important;
-  border-color: rgba(239, 68, 68, 0.4) !important;
   color: #ef4444 !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 /* ── Full-screen overlay ─────────────────────────────── */

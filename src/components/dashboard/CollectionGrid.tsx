@@ -15,6 +15,8 @@ import styles from '../../app/dashboard/page.module.css';
 
 const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 
+const ICON_SIZE = 17; // all action icons same size
+
 interface Props {
   movies: Ranking[];
   tvGroups: TvGroupData[];
@@ -31,9 +33,9 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
       <Link href={href} className={styles.posterLink}>
         <div className={styles.poster}>
           {poster ? (
-            <Image src={poster} alt={ranking.title} fill sizes="180px" className={styles.posterImg} />
+            <Image src={poster} alt={ranking.title} fill sizes="220px" className={styles.posterImg} />
           ) : (
-            <div className={styles.posterPlaceholder}><Film size={28} strokeWidth={1} /></div>
+            <div className={styles.posterPlaceholder}><Film size={32} strokeWidth={1} /></div>
           )}
           {cfg && (
             <div
@@ -64,8 +66,9 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
           )}
         </div>
         <div className={styles.cardActions}>
-          <Link href={href} className={`btn btn-ghost btn-sm ${styles.editBtn}`} title="Edit">
-            <Edit2 size={13} />
+          {/* Edit — plain link with editBtn class only, no btn-ghost overrides */}
+          <Link href={href} className={styles.editBtn} title="Edit ranking">
+            <Edit2 size={ICON_SIZE} />
           </Link>
           <DeleteRankingButton id={ranking.id} title={ranking.title} />
         </div>
@@ -93,13 +96,12 @@ function TvPosterCard({
 
   return (
     <div className={`${styles.rankCard} ${isExpanded ? styles.rankCardExpanded : ''}`}>
-      {/* Poster — click navigates to show page; Chevron toggles tree */}
       <Link href={showHref} className={styles.posterLink}>
         <div className={styles.poster}>
           {poster ? (
-            <Image src={poster} alt={group.showTitle} fill sizes="180px" className={styles.posterImg} />
+            <Image src={poster} alt={group.showTitle} fill sizes="220px" className={styles.posterImg} />
           ) : (
-            <div className={styles.posterPlaceholder}><Tv size={28} strokeWidth={1} /></div>
+            <div className={styles.posterPlaceholder}><Tv size={32} strokeWidth={1} /></div>
           )}
           {cfg && (
             <div
@@ -132,21 +134,21 @@ function TvPosterCard({
         <div className={styles.cardActions}>
           {group.showRanking && (
             <>
-              <Link href={showHref} className={`btn btn-ghost btn-sm ${styles.editBtn}`} title="Edit">
-                <Edit2 size={13} />
+              <Link href={showHref} className={styles.editBtn} title="Edit ranking">
+                <Edit2 size={ICON_SIZE} />
               </Link>
               <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} />
             </>
           )}
-          {/* Toggle tree — only if there are seasons/episodes ranked */}
+          {/* Expand chevron — only if seasons/episodes are ranked */}
           {innerCount > 0 && (
             <button
               type="button"
-              className={`btn btn-ghost btn-sm ${styles.expandBtn} ${isExpanded ? styles.expandBtnActive : ''}`}
+              className={`${styles.expandBtn} ${isExpanded ? styles.expandBtnActive : ''}`}
               onClick={(e) => { e.preventDefault(); onToggle(); }}
-              title={isExpanded ? 'Collapse seasons/episodes' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked — click to expand`}
+              title={isExpanded ? 'Collapse' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked — expand`}
             >
-              {isExpanded ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+              {isExpanded ? <ChevronUp size={ICON_SIZE} /> : <ChevronDown size={ICON_SIZE} />}
             </button>
           )}
         </div>

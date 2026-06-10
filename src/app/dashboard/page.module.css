@@ -85,16 +85,16 @@
 
 /* (Visibility toggle is its own component) */
 
-/* Collection grid */
+/* Collection grid — wider cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: var(--space-5);
 }
 
 @media (max-width: 480px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: var(--space-3);
   }
 }
@@ -267,34 +267,49 @@
   margin-top: var(--space-1);
 }
 
-/* Edit button — highlighted to feel clickable */
+/* Edit button — bare icon, no border/bg */
 .editBtn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--text-secondary) !important;
+  transition: color var(--transition-fast) !important;
+  text-decoration: none !important;
+  padding: 0 !important;
+}
+
+.editBtn:hover {
+  color: var(--text-primary) !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Expand/dropdown chevron — accent purple, pushed to right */
+.expandBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-secondary);
-  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-  text-decoration: none;
-}
-
-.editBtn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.2);
-  color: var(--text-primary);
-}
-
-.expandBtn {
-  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  color: var(--accent-light);
   margin-left: auto;
+  padding: 0;
+  transition: color var(--transition-fast), transform var(--transition-fast);
 }
 
-.expandBtn:hover { color: var(--text-primary); }
-.expandBtnActive { color: var(--accent-light) !important; }
+.expandBtn:hover { color: var(--accent); }
+.expandBtnActive {
+  color: var(--accent) !important;
+  transform: rotate(0deg);
+}
 
 /* Tree panel — full-width section below the grid for expanded TV show */
 .treePanel {
