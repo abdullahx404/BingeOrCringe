@@ -1,26 +1,23 @@
 import { redirect } from 'next/navigation';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Film, Clapperboard, Edit2 } from 'lucide-react';
+import { Film, Clapperboard } from 'lucide-react';
 import { Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { logOut } from '@/lib/auth/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
-import { tmdbImage, getTvShow } from '@/lib/tmdb/client';
+import { getTvShow } from '@/lib/tmdb/client';
 import type { TierType } from '@/lib/utils/tiers';
 import type { Ranking } from '@/types';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
-import DeleteRankingButton from '@/components/dashboard/DeleteRankingButton';
 import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
 import SearchInput from '@/components/search/SearchInput';
-import TvGroupAccordion, { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
+import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
+import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import NavLinks from '@/components/nav/NavLinks';
 import styles from './page.module.css';
 
 export const metadata = { title: 'My Collection' };
-
-const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 
 interface Props {
   searchParams: { tier?: string };
@@ -80,25 +77,22 @@ export default async function DashboardPage({ searchParams }: Props) {
   }
 
   const movieRankings = allRankings.filter((r) => r.media_type === 'movie');
-  const tvRelated = allRankings.filter((r) =>
-    ['tv', 'season', 'episode'].includes(r.media_type)
-  );
+  const tvRelated    = allRankings.filter((r) => ['tv', 'season', 'episode'].includes(r.media_type));
 
   const tvGroupMap = buildTvGroups(tvRelated);
 
-  // Fetch show info from TMDB for groups without a show-level ranking
   await Promise.all(
     Array.from(tvGroupMap.values())
       .filter((g) => !g.showRanking)
       .map(async (group) => {
         try {
           const show = await getTvShow(group.tmdbId);
-          group.showTitle = show.name;
+          group.showTitle  = show.name;
           group.showPoster = show.poster_path ?? null;
-          group.showYear = show.first_air_date ? show.first_air_date.slice(0, 4) : null;
+          group.showYear   = show.first_air_date ? show.first_air_date.slice(0, 4) : null;
         } catch {
           const first = group.seasons[0] ?? group.episodes[0];
-          group.showTitle = first?.title ?? `Show #${group.tmdbId}`;
+          group.showTitle  = first?.title ?? `Show #${group.tmdbId}`;
           group.showPoster = first?.poster_path ?? null;
         }
       })
@@ -106,7 +100,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   const tvGroups = Array.from(tvGroupMap.values());
 
-  const validTier = searchParams.tier as TierType | undefined;
+  const validTier   = searchParams.tier as TierType | undefined;
   const isTierValid = validTier && TIERS.includes(validTier);
 
   const filteredMovies = isTierValid
@@ -122,9 +116,7 @@ export default async function DashboardPage({ searchParams }: Props) {
       )
     : tvGroups;
 
-  const hasMovies = filteredMovies.length > 0;
-  const hasTv     = filteredTvGroups.length > 0;
-  const hasContent = hasMovies || hasTv;
+  const hasContent  = filteredMovies.length > 0 || filteredTvGroups.length > 0;
   const totalRanked = allRankings.length;
   const displayName = profile?.display_name ?? user.email ?? '';
 
@@ -133,23 +125,19 @@ export default async function DashboardPage({ searchParams }: Props) {
       {/* ── Sticky header ────────────────────────────── */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
-          {/* Logo → /search */}
           <Link href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </Link>
 
-          {/* Search bar */}
           <div className={styles.headerSearch}>
             <Suspense>
               <SearchInput />
             </Suspense>
           </div>
 
-          {/* Browse + List (active underline) + username */}
           <NavLinks isLoggedIn displayName={displayName} />
 
-          {/* Logout (server form) */}
           <form action={logOut}>
             <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
           </form>
@@ -158,7 +146,6 @@ export default async function DashboardPage({ searchParams }: Props) {
 
       <main className={styles.main}>
         <div className="container">
-          {/* Welcome strip */}
           <div className={styles.welcome}>
             <div>
               <h1 className={styles.welcomeTitle}>
@@ -173,7 +160,6 @@ export default async function DashboardPage({ searchParams }: Props) {
             <VisibilityToggle isPublic={profile?.is_public ?? false} />
           </div>
 
-          {/* Tier filter tabs */}
           <TierFilterTabs
             activeTier={isTierValid ? validTier : undefined}
             countByTier={countByTier}
@@ -184,9 +170,7 @@ export default async function DashboardPage({ searchParams }: Props) {
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}><Film size={48} strokeWidth={1.2} /></div>
               <h2 className={styles.emptyTitle}>
-                {isTierValid
-                  ? `No ${TIER_CONFIG[validTier!].label} titles yet`
-                  : 'Nothing ranked yet'}
+                {isTierValid ? `No ${TIER_CONFIG[validTier!].label} titles yet` : 'Nothing ranked yet'}
               </h2>
               <p className={styles.emptyDesc}>
                 {isTierValid
@@ -196,96 +180,10 @@ export default async function DashboardPage({ searchParams }: Props) {
               <Link href="/search" className="btn btn-primary">Search Titles</Link>
             </div>
           ) : (
-            <div className={styles.collectionWrap}>
-              {/* ── Movies — poster grid ────────────────── */}
-              {hasMovies && (
-                <div className={styles.grid}>
-                  {filteredMovies.map((ranking) => (
-                    <MovieCard key={ranking.id} ranking={ranking} />
-                  ))}
-                </div>
-              )}
-
-              {/* ── TV Shows — horizontal accordion cards ── */}
-              {hasTv && (
-                <div className={styles.tvSection}>
-                  {filteredTvGroups.map((group) => (
-                    <TvGroupAccordion key={group.tmdbId} group={group} />
-                  ))}
-                </div>
-              )}
-            </div>
+            <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} />
           )}
         </div>
       </main>
-    </div>
-  );
-}
-
-/* ── Movie Card component ───────────────────────────────── */
-function MovieCard({ ranking }: { ranking: Ranking }) {
-  const cfg = TIER_CONFIG[ranking.tier as TierType];
-  const Icon = cfg ? TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS] : null;
-  const poster = tmdbImage(ranking.poster_path, 'w342');
-  const href = `/title/movie/${ranking.tmdb_id}`;
-
-  return (
-    <div className={styles.rankCard}>
-      {/* Poster */}
-      <Link href={href} className={styles.posterLink}>
-        <div className={styles.poster}>
-          {poster ? (
-            <Image
-              src={poster}
-              alt={ranking.title}
-              fill
-              sizes="180px"
-              className={styles.posterImg}
-            />
-          ) : (
-            <div className={styles.posterPlaceholder}>
-              <Film size={28} strokeWidth={1} />
-            </div>
-          )}
-          {/* Tier badge overlay */}
-          {cfg && (
-            <div
-              className={styles.tierBadge}
-              style={{ color: cfg.color, borderColor: `${cfg.color}40`, background: cfg.bgColor }}
-            >
-              {Icon && <Icon size={11} />}
-              <span>{cfg.label}</span>
-            </div>
-          )}
-        </div>
-      </Link>
-
-      {/* Info + actions in ONE contained block */}
-      <div className={styles.cardBody}>
-        <div className={styles.cardInfo}>
-          <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
-          <div className={styles.cardMeta}>
-            {ranking.year && <span>{ranking.year}</span>}
-            <span className={styles.mediaTypePill}>Movie</span>
-          </div>
-          {ranking.tags && (ranking.tags as string[]).length > 0 ? (
-            <div className={styles.tags}>
-              {(ranking.tags as string[]).slice(0, 3).map((tag) => (
-                <span key={tag} className={styles.tag}>{tag}</span>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.tagsPlaceholder} />
-          )}
-        </div>
-
-        <div className={styles.cardActions}>
-          <Link href={href} className={`btn btn-ghost btn-sm ${styles.editBtn}`} title="Edit ranking">
-            <Edit2 size={13} />
-          </Link>
-          <DeleteRankingButton id={ranking.id} title={ranking.title} />
-        </div>
-      </div>
     </div>
   );
 }

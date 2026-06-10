@@ -39,8 +39,14 @@ function InlineTierPill({ tier }: { tier: string }) {
   );
 }
 
-export default function TvGroupAccordion({ group }: { group: TvGroupData }) {
-  const [expanded, setExpanded] = useState(false);
+export default function TvGroupAccordion({
+  group,
+  defaultExpanded = false,
+}: {
+  group: TvGroupData;
+  defaultExpanded?: boolean;
+}) {
+  const [expanded, setExpanded] = useState(defaultExpanded);
 
   const posterUrl = tmdbImage(group.showPoster, 'w342');
   const showHref = `/title/tv/${group.tmdbId}`;

@@ -94,6 +94,12 @@
   flex: 1;
 }
 
+/* "No, Keep It" ghost button gets a visible border */
+.modalActions > button:first-child {
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--radius-full) !important;
+}
+
 .removeBtn {
   background: rgba(239, 68, 68, 0.12) !important;
   color: #ef4444 !important;

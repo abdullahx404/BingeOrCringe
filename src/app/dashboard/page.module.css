@@ -115,19 +115,25 @@
   }
 }
 
-/* Rank card */
+/* Rank card — full card with border wrapping poster + info + actions */
 .rankCard {
   display: flex;
   flex-direction: column;
   gap: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* cardBody: wraps info + actions so they feel attached to the card */
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-1) var(--space-1);
+.rankCard:hover {
+  border-color: var(--border-default);
+}
+
+.rankCardExpanded {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px rgba(108, 99, 255, 0.25);
 }
 
 .posterLink {
@@ -135,17 +141,24 @@
   text-decoration: none;
 }
 
+/* cardBody: wraps title + meta + tags + actions inside the bordered card */
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
 .poster {
   position: relative;
   aspect-ratio: 2 / 3;
-  border-radius: var(--radius-md);
+  border-radius: 0;
   overflow: hidden;
   background: var(--bg-elevated);
-  transition: transform var(--transition-base);
 }
 
 .posterLink:hover .poster {
-  transform: translateY(-3px);
+  /* no translate — card has overflow:hidden so poster clips cleanly */
 }
 
 .posterImg {
@@ -267,6 +280,25 @@
 
 .editBtn:hover {
   color: var(--text-primary);
+}
+
+.expandBtn {
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.expandBtn:hover { color: var(--text-primary); }
+.expandBtnActive { color: var(--accent-light) !important; }
+
+/* Tree panel — full-width section below the grid for expanded TV show */
+.treePanel {
+  margin-top: var(--space-4);
+  animation: slidePanelIn 0.2s ease;
+}
+
+@keyframes slidePanelIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* Empty state */
