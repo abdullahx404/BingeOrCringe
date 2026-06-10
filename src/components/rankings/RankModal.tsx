@@ -7,6 +7,7 @@ import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
 import type { TierType } from '@/lib/utils/tiers';
 import type { Ranking } from '@/types';
+import Portal from './Portal';
 import styles from './RankModal.module.css';
 
 const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
@@ -28,10 +29,7 @@ interface Props {
 }
 
 export default function RankModal({ media, existing, onClose, onSuccess }: Props) {
-  const [selectedTier, setSelectedTier] = useState<TierType | null>(
-    existing?.tier ?? null
-  );
-  // Enforce max 3 on load — in case DB has stale extra tags
+  const [selectedTier, setSelectedTier] = useState<TierType | null>(existing?.tier ?? null);
   const [selectedTags, setSelectedTags] = useState<string[]>(
     (existing?.tags ?? []).slice(0, MAX_TAGS) as string[]
   );
@@ -39,7 +37,6 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
   const [error, setError] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  // Close on Escape key
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
@@ -48,7 +45,6 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
     return () => document.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  // Prevent body scroll while open
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
@@ -57,7 +53,7 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
   function toggleTag(tag: string) {
     setSelectedTags((prev) => {
       if (prev.includes(tag)) return prev.filter((t) => t !== tag);
-      if (prev.length >= MAX_TAGS) return prev; // hard limit
+      if (prev.length >= MAX_TAGS) return prev;
       return [...prev, tag];
     });
   }
@@ -83,9 +79,7 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
       if (media.episode_number != null)
         formData.append('episode_number', String(media.episode_number));
 
-      const action = existing
-        ? updateRanking.bind(null, existing.id)
-        : createRanking;
+      const action = existing ? updateRanking.bind(null, existing.id) : createRanking;
       const result = await action(formData);
 
       if (result.error) {
@@ -98,135 +92,125 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
   }
 
   const mediaTypeLabel =
-    media.media_type === 'movie'
-      ? 'Movie'
-      : media.media_type === 'tv'
-      ? 'TV Show'
-      : media.media_type === 'season'
-      ? 'Season'
-      : 'Episode';
+    media.media_type === 'movie' ? 'Movie'
+    : media.media_type === 'tv' ? 'TV Show'
+    : media.media_type === 'season' ? 'Season'
+    : 'Episode';
 
   return (
-    <div
-      className={styles.overlay}
-      ref={overlayRef}
-      onClick={(e) => {
-        if (e.target === overlayRef.current) onClose();
-      }}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Rank ${media.title}`}
-    >
-      <div className={styles.modal}>
-        {/* ── Sticky Header ───────────────────────── */}
-        <div className={styles.header}>
-          <div className={styles.headerTitle}>
-            <Crown size={16} className={styles.headerIcon} />
-            <span>{existing ? 'Edit Ranking' : 'Rank This'}</span>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className={styles.closeBtn}
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
-        </div>
+    <Portal>
+      <div
+        className={styles.overlay}
+        ref={overlayRef}
+        onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Rank ${media.title}`}
+      >
+        <div className={styles.modal}>
 
-        {/* ── Scrollable Body ─────────────────────── */}
-        <div className={styles.body}>
-          {/* Media info */}
-          <div className={styles.mediaInfo}>
-            <p className={styles.mediaTitle}>{media.title}</p>
-            <div className={styles.mediaMeta}>
-              {media.year && <span className={styles.mediaYear}>{media.year}</span>}
-              <span className={styles.mediaType}>{mediaTypeLabel}</span>
+          {/* Sticky Header */}
+          <div className={styles.header}>
+            <div className={styles.headerTitle}>
+              <Crown size={16} className={styles.headerIcon} />
+              <span>{existing ? 'Edit Ranking' : 'Rank This'}</span>
             </div>
+            <button type="button" onClick={onClose} className={styles.closeBtn} aria-label="Close">
+              <X size={20} />
+            </button>
           </div>
 
-          {/* Tier selector */}
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>Tier</p>
-            <div className={styles.tierGrid}>
-              {TIERS.map((tier) => {
-                const cfg = TIER_CONFIG[tier];
-                const Icon = TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS];
-                const isSelected = selectedTier === tier;
-                return (
-                  <button
-                    key={tier}
-                    type="button"
-                    onClick={() => setSelectedTier(tier)}
-                    className={styles.tierBtn}
-                    style={{
-                      color: isSelected ? cfg.color : undefined,
-                      borderColor: isSelected ? cfg.color : undefined,
-                      background: isSelected ? cfg.bgColor : undefined,
-                    }}
-                    aria-pressed={isSelected}
-                  >
-                    {Icon && <Icon size={16} />}
-                    <span>{cfg.label}</span>
-                  </button>
-                );
-              })}
+          {/* Scrollable Body */}
+          <div className={styles.body}>
+            <div className={styles.mediaInfo}>
+              <p className={styles.mediaTitle}>{media.title}</p>
+              <div className={styles.mediaMeta}>
+                {media.year && <span className={styles.mediaYear}>{media.year}</span>}
+                <span className={styles.mediaType}>{mediaTypeLabel}</span>
+              </div>
             </div>
-            {selectedTier && (
-              <p className={styles.tierDesc}>{TIER_CONFIG[selectedTier].description}</p>
+
+            {/* Tier selector */}
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Tier</p>
+              <div className={styles.tierGrid}>
+                {TIERS.map((tier) => {
+                  const cfg = TIER_CONFIG[tier];
+                  const Icon = TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS];
+                  const isSelected = selectedTier === tier;
+                  return (
+                    <button
+                      key={tier}
+                      type="button"
+                      onClick={() => setSelectedTier(tier)}
+                      className={styles.tierBtn}
+                      style={{
+                        color: isSelected ? cfg.color : undefined,
+                        borderColor: isSelected ? cfg.color : undefined,
+                        background: isSelected ? cfg.bgColor : undefined,
+                      }}
+                      aria-pressed={isSelected}
+                    >
+                      {Icon && <Icon size={16} />}
+                      <span>{cfg.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedTier && (
+                <p className={styles.tierDesc}>{TIER_CONFIG[selectedTier].description}</p>
+              )}
+            </div>
+
+            {/* Tags */}
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>
+                Tags{' '}
+                <span className={styles.optional}>
+                  (optional · {selectedTags.length}/{MAX_TAGS} max)
+                </span>
+              </p>
+              <div className={styles.tagsGrid}>
+                {TAGS.map((tag) => {
+                  const isSelected = selectedTags.includes(tag);
+                  const isDisabled = !isSelected && selectedTags.length >= MAX_TAGS;
+                  return (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => toggleTag(tag)}
+                      disabled={isDisabled}
+                      className={`${styles.tagBtn} ${isSelected ? styles.tagBtnSelected : ''} ${isDisabled ? styles.tagBtnDisabled : ''}`}
+                    >
+                      {tag}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {error && (
+              <p className={styles.error} role="alert">{error}</p>
             )}
           </div>
 
-          {/* Tags */}
-          <div className={styles.section}>
-            <p className={styles.sectionLabel}>
-              Tags{' '}
-              <span className={styles.optional}>
-                (optional · {selectedTags.length}/{MAX_TAGS} max)
-              </span>
-            </p>
-            <div className={styles.tagsGrid}>
-              {TAGS.map((tag) => {
-                const isSelected = selectedTags.includes(tag);
-                const isDisabled = !isSelected && selectedTags.length >= MAX_TAGS;
-                return (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => toggleTag(tag)}
-                    disabled={isDisabled}
-                    className={`${styles.tagBtn} ${isSelected ? styles.tagBtnSelected : ''} ${isDisabled ? styles.tagBtnDisabled : ''}`}
-                  >
-                    {tag}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Sticky Footer */}
+          <div className={styles.actions}>
+            <button type="button" onClick={onClose} className="btn btn-ghost">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isPending || !selectedTier}
+              className="btn btn-primary"
+            >
+              {isPending ? 'Saving…' : existing ? 'Update Ranking' : 'Save Ranking'}
+            </button>
           </div>
 
-          {/* Error */}
-          {error && (
-            <p className={styles.error} role="alert">
-              {error}
-            </p>
-          )}
-        </div>
-
-        {/* ── Sticky Footer Actions ────────────────── */}
-        <div className={styles.actions}>
-          <button type="button" onClick={onClose} className="btn btn-ghost">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={isPending || !selectedTier}
-            className="btn btn-primary"
-          >
-            {isPending ? 'Saving…' : existing ? 'Update Ranking' : 'Save Ranking'}
-          </button>
         </div>
       </div>
-    </div>
+    </Portal>
   );
 }

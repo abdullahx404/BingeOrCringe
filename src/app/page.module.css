@@ -1,11 +1,62 @@
-/* ─── Hero ───────────────────────────────────────────── */
-.main {
+.page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ── Sticky Nav ───────────────────────────────────────── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(8, 8, 16, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navLogoIcon {
+  color: var(--accent-light);
+}
+
+.navLogoText {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ── Main ────────────────────────────────────────────── */
+.main {
+  flex: 1;
+}
+
+/* ── Hero ─────────────────────────────────────────────── */
 .hero {
   position: relative;
-  min-height: 92vh;
+  min-height: calc(100vh - 60px); /* full screen minus nav */
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -18,10 +69,11 @@
   align-items: center;
   text-align: center;
   gap: var(--space-6);
-  padding-top: var(--space-24);
-  padding-bottom: var(--space-24);
+  padding-top: var(--space-20);
+  padding-bottom: var(--space-20);
   position: relative;
   z-index: 2;
+  width: 100%;
 }
 
 .heroBadge {
@@ -40,7 +92,7 @@
 }
 
 .heroTitle {
-  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-size: clamp(2.4rem, 8vw, 5.5rem);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.03em;
@@ -49,11 +101,12 @@
 }
 
 .heroSub {
-  font-size: var(--text-lg);
+  font-size: clamp(var(--text-base), 2.5vw, var(--text-lg));
   color: var(--text-secondary);
   max-width: 540px;
   line-height: 1.7;
   animation: fadeInUp 0.8s ease;
+  padding: 0 var(--space-4);
 }
 
 .heroSub strong {
@@ -72,10 +125,10 @@
 /* Tier strip */
 .tierStrip {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--space-2);
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: var(--space-4);
+  margin-top: var(--space-2);
   animation: fadeInUp 1s ease;
 }
 
@@ -83,10 +136,10 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-full);
   border: 1px solid;
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: 0.04em;
   transition: transform var(--transition-fast);
@@ -96,7 +149,6 @@
   transform: translateY(-2px);
 }
 
-.tierEmoji { font-size: 1rem; }
 .tierLabel { text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--text-xs); }
 
 /* Background glow */
@@ -111,11 +163,7 @@
   pointer-events: none;
 }
 
-/* ─── Shared Section Styles ──────────────────────────── */
-.section {
-  padding: var(--space-24) 0;
-}
-
+/* ── Shared Section Styles ──────────────────────────── */
 .sectionEyebrow {
   font-size: var(--text-sm);
   font-weight: 600;
@@ -127,7 +175,7 @@
 }
 
 .sectionTitle {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
   font-weight: 800;
   text-align: center;
   margin-bottom: var(--space-4);
@@ -142,7 +190,7 @@
   font-size: var(--text-lg);
 }
 
-/* ─── How It Works ───────────────────────────────────── */
+/* ── How It Works ─────────────────────────────────── */
 .howSection {
   background: var(--bg-primary);
   padding: var(--space-24) 0;
@@ -150,7 +198,7 @@
 
 .stepsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--space-6);
   margin-top: var(--space-12);
 }
@@ -194,7 +242,7 @@
   line-height: 1.6;
 }
 
-/* ─── Tags ───────────────────────────────────────────── */
+/* ── Tags ─────────────────────────────────────────── */
 .tagsSection {
   border-top: 1px solid var(--border-subtle);
   border-bottom: 1px solid var(--border-subtle);
@@ -227,7 +275,7 @@
   transform: translateY(-1px);
 }
 
-/* ─── Tiers Grid ─────────────────────────────────────── */
+/* ── Tiers Grid ───────────────────────────────────── */
 .tiersSection {
   background: var(--bg-primary);
   padding: var(--space-24) 0;
@@ -241,15 +289,11 @@
 }
 
 @media (max-width: 900px) {
-  .tiersGrid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  .tiersGrid { grid-template-columns: repeat(3, 1fr); }
 }
 
-@media (max-width: 600px) {
-  .tiersGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+@media (max-width: 560px) {
+  .tiersGrid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
 }
 
 .tierCard {
@@ -258,7 +302,7 @@
   align-items: center;
   text-align: center;
   gap: var(--space-3);
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-6) var(--space-4);
   background: var(--bg-card);
   border: 1px solid;
   border-radius: var(--radius-lg);
@@ -288,7 +332,7 @@
   line-height: 1.5;
 }
 
-/* ─── CTA Banner ─────────────────────────────────────── */
+/* ── CTA Banner ────────────────────────────────────── */
 .ctaSection {
   border-top: 1px solid var(--border-subtle);
   padding: var(--space-24) 0;
@@ -307,7 +351,7 @@
 }
 
 .ctaTitle {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
   font-weight: 800;
   letter-spacing: -0.03em;
 }
@@ -318,7 +362,7 @@
   max-width: 480px;
 }
 
-/* ─── Footer ─────────────────────────────────────────── */
+/* ── Footer ─────────────────────────────────────────── */
 .footer {
   padding: var(--space-12) 0;
   border-top: 1px solid var(--border-subtle);
@@ -338,9 +382,7 @@
   gap: var(--space-2);
 }
 
-.logoMark {
-  color: var(--accent-light);
-}
+.logoMark { color: var(--accent-light); }
 
 .logoText {
   font-family: var(--font-display);
@@ -354,14 +396,54 @@
   color: var(--text-muted);
 }
 
-/* ─── Responsive ─────────────────────────────────────── */
+/* ── Mobile ──────────────────────────────────────────── */
 @media (max-width: 640px) {
   .heroCta {
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    padding: 0 var(--space-4);
+  }
+
+  .heroCta .btn {
+    width: 100%;
+    max-width: 320px;
   }
 
   .stepsGrid {
     grid-template-columns: 1fr;
+  }
+
+  .howSection,
+  .tagsSection,
+  .tiersSection,
+  .ctaSection {
+    padding: var(--space-16) 0;
+  }
+
+  .ctaBanner {
+    padding: var(--space-10) var(--space-4);
+  }
+
+  .tierStrip {
+    gap: var(--space-2);
+  }
+
+  .tierChip {
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .navLogoText {
+    font-size: var(--text-base);
+  }
+}
+
+@media (max-width: 380px) {
+  .navLogoText {
+    display: none; /* Very small screens: icon only */
+  }
+
+  .tierStrip {
+    display: none; /* Hide on very small screens to keep hero clean */
   }
 }
