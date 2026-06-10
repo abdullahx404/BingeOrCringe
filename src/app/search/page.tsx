@@ -8,6 +8,7 @@ import {
   normalizeTv,
 } from '@/lib/tmdb/client';
 import type { TmdbSearchMovie, TmdbSearchTv } from '@/lib/tmdb/types';
+import { createClient } from '@/lib/supabase/server';
 import SearchResultCard from '@/components/search/SearchResultCard';
 import SearchInput from '@/components/search/SearchInput';
 import styles from './page.module.css';
@@ -114,12 +115,16 @@ function GridSkeleton() {
   );
 }
 
-export default function SearchPage({ searchParams }: Props) {
+export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
+
+  // Auth check — show My List if logged in
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   return (
     <div className={styles.page}>
-      {/* ── Header with integrated search ──────────── */}
+      {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
           {/* Logo */}
@@ -135,10 +140,16 @@ export default function SearchPage({ searchParams }: Props) {
             </Suspense>
           </div>
 
-          {/* Nav links */}
+          {/* Nav links — auth-aware */}
           <div className={styles.headerLinks}>
-            <a href="/dashboard" className="btn btn-ghost btn-sm">My List</a>
-            <a href="/login" className="btn btn-primary btn-sm">Log In</a>
+            {user ? (
+              <a href="/dashboard" className="btn btn-primary btn-sm">My List</a>
+            ) : (
+              <>
+                <a href="/login" className="btn btn-ghost btn-sm">Log In</a>
+                <a href="/signup" className="btn btn-primary btn-sm">Sign Up</a>
+              </>
+            )}
           </div>
         </div>
       </header>

@@ -48,6 +48,13 @@
   gap: var(--space-2);
 }
 
+/* Search bar occupies the center space */
+.headerSearch {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 var(--space-4);
+}
+
 .headerRight {
   display: flex;
   align-items: center;
@@ -294,4 +301,183 @@
   gap: var(--space-2);
   color: var(--text-muted);
   font-size: var(--text-sm);
+}
+
+/* ── Collection layout ───────────────────────────────── */
+.collectionWrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+/* ── TV Show Groups ──────────────────────────────────── */
+.tvSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.tvGroup {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Show header row */
+.tvShowRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.tvPosterLink {
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.tvPoster {
+  position: relative;
+  width: 60px;
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  transition: transform var(--transition-fast);
+}
+
+.tvPosterLink:hover .tvPoster {
+  transform: translateY(-2px);
+}
+
+.tvPosterImg { object-fit: cover; }
+
+.tvPosterPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.tvShowInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.tvShowTitle {
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tvShowTitle:hover { color: var(--accent-light); }
+
+.tvShowMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.tvTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: var(--space-1);
+}
+
+.tvActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* Inline tier pill — used inside TV group rows */
+.inlineTierPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+/* Sub-list (seasons / episodes) */
+.tvSubList {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.tvSeasonLabel {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+}
+
+.tvSubRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.tvSubRow:last-child { border-bottom: none; }
+
+.tvSubIndent {
+  width: 1px;
+  height: 20px;
+  background: var(--border-default);
+  flex-shrink: 0;
+  margin-left: var(--space-2);
+}
+
+.tvSubLink {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color var(--transition-fast);
+}
+
+.tvSubLink:hover { color: var(--text-primary); }
+
+.tvSubTags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+
+.tvSubActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-shrink: 0;
 }

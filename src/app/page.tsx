@@ -1,9 +1,12 @@
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { Crown, Play, Minus, ThumbsDown, Trash2, Search, Tag, Globe, Clapperboard } from 'lucide-react';
+import { Suspense } from 'react';
+import { Crown, Play, Minus, ThumbsDown, Trash2, Search, Tag, Globe, Clapperboard, ExternalLink } from 'lucide-react';
 import styles from './page.module.css';
 import { TIER_CONFIG, TIERS } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
 import { createClient } from '@/lib/supabase/server';
+import SearchInput from '@/components/search/SearchInput';
 
 const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 
@@ -38,6 +41,9 @@ export default async function HomePage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Logged-in users go straight to dashboard
+  if (user) redirect('/dashboard');
+
   return (
     <div className={styles.page}>
       {/* ── Sticky Nav ────────────────────────────────────── */}
@@ -50,14 +56,8 @@ export default async function HomePage() {
 
           <div className={styles.navLinks}>
             <Link href="/search" className="btn btn-ghost btn-sm">Browse</Link>
-            {user ? (
-              <Link href="/dashboard" className="btn btn-primary btn-sm">My List</Link>
-            ) : (
-              <>
-                <Link href="/login" className="btn btn-ghost btn-sm">Log In</Link>
-                <Link href="/signup" className="btn btn-primary btn-sm">Sign Up</Link>
-              </>
-            )}
+            <Link href="/login" className="btn btn-ghost btn-sm">Log In</Link>
+            <Link href="/signup" className="btn btn-primary btn-sm">Sign Up</Link>
           </div>
         </div>
       </nav>
@@ -83,12 +83,12 @@ export default async function HomePage() {
             </p>
 
             <div className={styles.heroCta}>
-              <a href="/signup" className="btn btn-primary btn-lg">
+              <Link href="/signup" className="btn btn-primary btn-lg">
                 Start Ranking Free
-              </a>
-              <a href="/search" className="btn btn-secondary btn-lg">
+              </Link>
+              <Link href="/search" className="btn btn-secondary btn-lg">
                 Browse Titles
-              </a>
+              </Link>
             </div>
 
             {/* Tier preview strip */}
@@ -195,9 +195,9 @@ export default async function HomePage() {
               <p className={styles.ctaDesc}>
                 Make a free account. Start ranking. Your list, your rules.
               </p>
-              <a href="/signup" className="btn btn-primary btn-lg">
+              <Link href="/signup" className="btn btn-primary btn-lg">
                 Get Started — Free
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -205,11 +205,51 @@ export default async function HomePage() {
         {/* ── Footer ──────────────────────────────────────── */}
         <footer className={styles.footer}>
           <div className={`container ${styles.footerInner}`}>
-            <div className={styles.footerLogo}>
-              <Clapperboard size={20} className={styles.logoMark} />
-              <span className={styles.logoText}>BingeOrCringe</span>
+            <div className={styles.footerTop}>
+              {/* Brand */}
+              <div className={styles.footerBrand}>
+                <div className={styles.footerLogo}>
+                  <Clapperboard size={20} className={styles.logoMark} />
+                  <span className={styles.logoText}>BingeOrCringe</span>
+                </div>
+                <p className={styles.footerTagline}>
+                  Rank what you watch. Share what slaps.
+                </p>
+              </div>
+
+              {/* Links */}
+              <div className={styles.footerLinks}>
+                <div className={styles.footerCol}>
+                  <p className={styles.footerColTitle}>Product</p>
+                  <Link href="/search" className={styles.footerLink}>Browse Titles</Link>
+                  <Link href="/signup" className={styles.footerLink}>Sign Up Free</Link>
+                  <Link href="/login" className={styles.footerLink}>Log In</Link>
+                </div>
+                <div className={styles.footerCol}>
+                  <p className={styles.footerColTitle}>About</p>
+                  <a href="#" className={styles.footerLink}>About Us</a>
+                  <a href="#" className={styles.footerLink}>Contact</a>
+                </div>
+              </div>
             </div>
-            <p className={styles.footerCopy}>&copy; {new Date().getFullYear()} BingeOrCringe</p>
+
+            <div className={styles.footerBottom}>
+              <p className={styles.footerCopy}>&copy; {new Date().getFullYear()} BingeOrCringe. All rights reserved.</p>
+              <div className={styles.footerSocials}>
+                <a href="#" className={styles.socialLink} aria-label="GitHub" title="GitHub">
+                  <ExternalLink size={14} />
+                  <span>GitHub</span>
+                </a>
+                <a href="#" className={styles.socialLink} aria-label="LinkedIn" title="LinkedIn">
+                  <ExternalLink size={14} />
+                  <span>LinkedIn</span>
+                </a>
+                <a href="#" className={styles.socialLink} aria-label="Instagram" title="Instagram">
+                  <ExternalLink size={14} />
+                  <span>Instagram</span>
+                </a>
+              </div>
+            </div>
           </div>
         </footer>
       </main>

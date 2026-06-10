@@ -2,12 +2,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { User, Star, Crown } from 'lucide-react';
+import { User, Star, Crown, ArrowLeft } from 'lucide-react';
 import { getEpisode, tmdbImage } from '@/lib/tmdb/client';
+import { createClient } from '@/lib/supabase/server';
+import RankButton from '@/components/rankings/RankButton';
 import styles from './page.module.css';
 
 interface Props {
-  params: { id: string; seasonNum: string; epNum: string };
+  params: { type: string; id: string; seasonNum: string; epNum: string };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -28,6 +30,25 @@ export default async function EpisodePage({ params }: Props) {
   const epNum = parseInt(params.epNum);
   if (isNaN(tvId) || isNaN(seasonNum) || isNaN(epNum)) notFound();
 
+  // Auth check
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Existing episode ranking (if logged in)
+  let existingRanking = null;
+  if (user) {
+    const { data } = await supabase
+      .from('rankings')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('tmdb_id', tvId)
+      .eq('media_type', 'episode')
+      .eq('season_number', seasonNum)
+      .eq('episode_number', epNum)
+      .single();
+    existingRanking = data;
+  }
+
   try {
     const ep = await getEpisode(tvId, seasonNum, epNum);
     const still = tmdbImage(ep.still_path, 'w780');
@@ -40,7 +61,8 @@ export default async function EpisodePage({ params }: Props) {
               href={`/title/tv/${tvId}/season/${seasonNum}`}
               className={styles.backLink}
             >
-              ← Back to Season {seasonNum}
+              <ArrowLeft size={16} />
+              Back to Season {seasonNum}
             </Link>
           </div>
         </div>
@@ -92,13 +114,27 @@ export default async function EpisodePage({ params }: Props) {
 
               {ep.overview && <p className={styles.overview}>{ep.overview}</p>}
 
-              {/* Rank CTA */}
+              {/* Rank CTA — auth-aware */}
               <div className={styles.rankCta}>
-                <Link href="/login" className="btn btn-primary">
-                  <Crown size={16} />
-                  Rank This Episode
-                </Link>
-                <p className={styles.rankHint}>Log in to add to your collection</p>
+                {user ? (
+                  <RankButton
+                    media={{
+                      tmdb_id: tvId,
+                      media_type: 'episode',
+                      season_number: seasonNum,
+                      episode_number: epNum,
+                      title: ep.name,
+                      poster_path: ep.still_path,
+                      year: ep.air_date ? ep.air_date.slice(0, 4) : null,
+                    }}
+                    existing={existingRanking}
+                  />
+                ) : (
+                  <Link href="/login" className="btn btn-primary">
+                    <Crown size={16} />
+                    Rank This Episode
+                  </Link>
+                )}
               </div>
             </div>
 
