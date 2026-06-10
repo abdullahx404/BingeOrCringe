@@ -119,12 +119,23 @@ export default function SearchPage({ searchParams }: Props) {
 
   return (
     <div className={styles.page}>
+      {/* ── Header with integrated search ──────────── */}
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
+          {/* Logo */}
           <a href="/" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </a>
+
+          {/* Search bar — inline in header */}
+          <div className={styles.headerSearch}>
+            <Suspense>
+              <SearchInput />
+            </Suspense>
+          </div>
+
+          {/* Nav links */}
           <div className={styles.headerLinks}>
             <a href="/dashboard" className="btn btn-ghost btn-sm">My List</a>
             <a href="/login" className="btn btn-primary btn-sm">Log In</a>
@@ -132,14 +143,7 @@ export default function SearchPage({ searchParams }: Props) {
         </div>
       </header>
 
-      <div className={styles.searchBar}>
-        <div className="container">
-          <Suspense>
-            <SearchInput />
-          </Suspense>
-        </div>
-      </div>
-
+      {/* ── Main content ────────────────────────────── */}
       <main className={styles.main}>
         <div className="container">
           <Suspense fallback={<GridSkeleton />}>

@@ -7,20 +7,24 @@ export interface ValidationResult {
   error?: string;
 }
 
-/** Username: 3–20 chars, alphanumeric + underscores, no spaces */
+/** Username: 3–20 chars, lowercase letters/numbers/dots/underscores only */
 export function validateUsername(value: string): ValidationResult {
   if (!value || value.trim().length === 0) {
     return { valid: false, error: 'Username is required.' };
   }
-  const trimmed = value.trim();
+  // Auto-lowercased before validation — so check on lowercase form
+  const trimmed = value.trim().toLowerCase();
   if (trimmed.length < 3) {
     return { valid: false, error: 'Username must be at least 3 characters.' };
   }
   if (trimmed.length > 20) {
     return { valid: false, error: 'Username must be 20 characters or less.' };
   }
-  if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
-    return { valid: false, error: 'Username can only contain letters, numbers, and underscores.' };
+  if (!/^[a-z0-9._]+$/.test(trimmed)) {
+    return {
+      valid: false,
+      error: 'Only lowercase letters, numbers, dots ( . ) and underscores ( _ ) are allowed.',
+    };
   }
   return { valid: true };
 }

@@ -9,11 +9,13 @@ import {
 } from '@/lib/utils/validators';
 
 describe('validateUsername', () => {
-  it('accepts valid usernames', () => {
-    expect(validateUsername('john_doe').valid).toBe(true);
+  it('accepts valid lowercase usernames', () => {
+    expect(validateUsername('moviebuff').valid).toBe(true);
+    expect(validateUsername('movie.buff').valid).toBe(true);
+    expect(validateUsername('movie_buff').valid).toBe(true);
     expect(validateUsername('abc').valid).toBe(true);
-    expect(validateUsername('User123').valid).toBe(true);
-    expect(validateUsername('a'.repeat(20)).valid).toBe(true);
+    expect(validateUsername('user123').valid).toBe(true);
+    expect(validateUsername('a.b_c').valid).toBe(true);
   });
 
   it('rejects empty or blank', () => {
@@ -29,11 +31,16 @@ describe('validateUsername', () => {
     expect(validateUsername('a'.repeat(21)).valid).toBe(false);
   });
 
-  it('rejects special characters and spaces', () => {
-    expect(validateUsername('john doe').valid).toBe(false);
-    expect(validateUsername('john-doe').valid).toBe(false);
-    expect(validateUsername('john@doe').valid).toBe(false);
-    expect(validateUsername('john.doe').valid).toBe(false);
+  it('rejects special characters, spaces, and dashes', () => {
+    expect(validateUsername('user name').valid).toBe(false);
+    expect(validateUsername('user-name').valid).toBe(false); // dashes NOT allowed
+    expect(validateUsername('user@name').valid).toBe(false);
+    expect(validateUsername('user!name').valid).toBe(false);
+  });
+
+  it('auto-lowercases uppercase input (trimmed.toLowerCase is called)', () => {
+    // The validator lowercases internally, so UPPER input should pass if otherwise valid
+    expect(validateUsername('MovieBuff').valid).toBe(true);
   });
 });
 

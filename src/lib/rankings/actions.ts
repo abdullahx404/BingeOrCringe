@@ -29,7 +29,7 @@ export async function createRanking(formData: FormData): Promise<ApiResponse<nul
   let tags: string[] = [];
   try {
     const raw = formData.get('tags') as string;
-    tags = sanitizeTags(JSON.parse(raw));
+    tags = sanitizeTags(JSON.parse(raw)).slice(0, 3); // hard cap: max 3 tags
   } catch { /* empty tags */ }
 
   if (!isValidTier(tier)) return { data: null, error: 'Invalid tier.' };
@@ -74,7 +74,7 @@ export async function updateRanking(
 
   let tags: string[] = [];
   try {
-    tags = sanitizeTags(JSON.parse(formData.get('tags') as string));
+    tags = sanitizeTags(JSON.parse(formData.get('tags') as string)).slice(0, 3);
   } catch { /* empty */ }
 
   const { error } = await supabase

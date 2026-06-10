@@ -92,20 +92,7 @@
   margin-top: var(--space-1);
 }
 
-.visibilityBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-full);
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-subtle);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
+/* (Visibility toggle is its own component) */
 
 /* Collection grid */
 .grid {
@@ -226,6 +213,15 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+  /* Reserve exactly 2 lines for up to 3 tags — ensures uniform card height */
+  min-height: 42px;
+  align-content: flex-start;
+  overflow: hidden;
+}
+
+/* Invisible placeholder for cards with no tags — same height as tags row */
+.tagsPlaceholder {
+  min-height: 42px;
 }
 
 .tag {

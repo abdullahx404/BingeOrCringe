@@ -30,9 +30,9 @@ export default function SignupPage() {
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
-    setFields((prev) => ({ ...prev, [name]: value }));
-
-    // Live validation — clear error when user starts typing
+    // Auto-lowercase username as the user types
+    const processed = name === 'username' ? value.toLowerCase() : value;
+    setFields((prev) => ({ ...prev, [name]: processed }));
     setErrors((prev) => ({ ...prev, [name]: undefined }));
   }
 
@@ -85,7 +85,7 @@ export default function SignupPage() {
 
     startTransition(async () => {
       const formData = new FormData();
-      formData.append('username', fields.username.trim());
+      formData.append('username', fields.username.trim().toLowerCase());
       formData.append('displayName', fields.displayName.trim());
       formData.append('email', fields.email.trim());
       formData.append('password', fields.password);
@@ -181,7 +181,7 @@ export default function SignupPage() {
             name="username"
             type="text"
             autoComplete="username"
-            placeholder="e.g. moviebuff404"
+            placeholder="e.g. movie.buff_404"
             value={fields.username}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -270,7 +270,7 @@ export default function SignupPage() {
           )}
           {/* Password strength hint */}
           {fields.password && !errors.password && (
-            <p className={styles.hint}>Looking good! Strong password. ✓</p>
+            <p className={styles.hint}>Strong password — good to go.</p>
           )}
         </div>
 

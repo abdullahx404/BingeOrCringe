@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Film, Globe, Lock, Info, Clapperboard, Trash2, Edit2 } from 'lucide-react';
+import { Film, Info, Clapperboard, Trash2, Edit2 } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { logOut } from '@/lib/auth/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
@@ -11,6 +11,7 @@ import type { TierType } from '@/lib/utils/tiers';
 import type { Ranking } from '@/types';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
 import DeleteRankingButton from '@/components/dashboard/DeleteRankingButton';
+import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
 import styles from './page.module.css';
 
 export const metadata = { title: 'My Collection' };
@@ -97,11 +98,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                   : `${tierCounts?.length ?? 0} titles ranked total`}
               </p>
             </div>
-            <div className={styles.visibilityBadge}>
-              {profile?.is_public
-                ? <><Globe size={14} /> Public</>
-                : <><Lock size={14} /> Private</>}
-            </div>
+            <VisibilityToggle isPublic={profile?.is_public ?? false} />
           </div>
 
           {/* Tier filter tabs */}
@@ -179,16 +176,17 @@ export default async function DashboardPage({ searchParams }: Props) {
                         </span>
                       </div>
 
-                      {/* Tags */}
-                      {ranking.tags && ranking.tags.length > 0 && (
+                      {/* Tags — cap at 3, reserve space for up to 3 */}
+                      {ranking.tags && (ranking.tags as string[]).length > 0 && (
                         <div className={styles.tags}>
-                          {(ranking.tags as string[]).slice(0, 2).map((tag: string) => (
+                          {(ranking.tags as string[]).slice(0, 3).map((tag: string) => (
                             <span key={tag} className={styles.tag}>{tag}</span>
                           ))}
-                          {(ranking.tags as string[]).length > 2 && (
-                            <span className={styles.tagMore}>+{(ranking.tags as string[]).length - 2}</span>
-                          )}
                         </div>
+                      )}
+                      {/* Always reserve tag row space for grid alignment */}
+                      {(!ranking.tags || (ranking.tags as string[]).length === 0) && (
+                        <div className={styles.tagsPlaceholder} />
                       )}
                     </div>
 

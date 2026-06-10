@@ -8,7 +8,8 @@ import type { ApiResponse } from '@/types';
 
 /* ─── Sign Up ──────────────────────────────────────────────── */
 export async function signUp(formData: FormData): Promise<ApiResponse<null> & { errors?: SignupFormErrors }> {
-  const username = (formData.get('username') as string ?? '').trim();
+  // Lowercase enforce — username must be all lowercase
+  const username = (formData.get('username') as string ?? '').trim().toLowerCase();
   const displayName = (formData.get('displayName') as string ?? '').trim();
   const email = (formData.get('email') as string ?? '').trim();
   const password = (formData.get('password') as string ?? '');
@@ -30,9 +31,11 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
   });
 
   if (error) {
-    // Map Supabase errors to user-friendly messages
     if (error.message.includes('already registered') || error.message.includes('already exists')) {
       return { data: null, error: 'An account with this email already exists.' };
+    }
+    if (error.message.includes('username') && error.message.includes('duplicate')) {
+      return { data: null, error: 'That username is already taken. Try another.' };
     }
     return { data: null, error: 'Something went wrong. Please try again.' };
   }
