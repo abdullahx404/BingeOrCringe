@@ -138,7 +138,6 @@ export default async function SearchPage({ searchParams }: Props) {
     <div className={styles.page}>
       {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
-        {/* No .container — full width with equal padding from CSS */}
         <div className={styles.headerInner}>
           <a href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
@@ -151,7 +150,6 @@ export default async function SearchPage({ searchParams }: Props) {
             </Suspense>
           </div>
 
-          {/* Browse + List nav + logout */}
           <div className={styles.headerLinks}>
             <NavLinks isLoggedIn={!!user} displayName={displayName} />
             {user && (
@@ -160,6 +158,12 @@ export default async function SearchPage({ searchParams }: Props) {
               </form>
             )}
           </div>
+        </div>
+        {/* Mobile: search below nav row */}
+        <div className={styles.mobileSearch}>
+          <Suspense>
+            <SearchInput />
+          </Suspense>
         </div>
       </header>
 

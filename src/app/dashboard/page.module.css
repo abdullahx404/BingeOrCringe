@@ -55,6 +55,19 @@
   flex-shrink: 0;
 }
 
+/* Mobile search row */
+.mobileSearch {
+  display: none;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+@media (max-width: 640px) {
+  .headerInner { gap: var(--space-2); padding: 0 var(--space-3); }
+  .headerSearch { display: none; }
+  .mobileSearch { display: block; }
+}
+
 /* Main */
 .main {
   flex: 1;
@@ -88,7 +101,7 @@
 /* Collection grid — wider cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: var(--space-5);
 }
 
@@ -176,14 +189,14 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 2px var(--space-2);
+  padding: 3px var(--space-2);
   border-radius: var(--radius-sm);
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   border: 1px solid;
-  backdrop-filter: blur(4px);
+  /* No backdrop-filter — solid bg keeps badge readable */
 }
 
 /* Card info */

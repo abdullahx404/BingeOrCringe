@@ -23,14 +23,14 @@ export default async function GlobalNav() {
 
   return (
     <nav className={styles.nav}>
-      {/* No .container — full width with equal padding from CSS */}
+      {/* ── Main row ── */}
       <div className={styles.navInner}>
         <Link href="/search" className={styles.logo}>
           <Clapperboard size={20} className={styles.logoIcon} />
           <span className={styles.logoText}>BingeOrCringe</span>
         </Link>
 
-        {/* Search grows to fill all available middle space */}
+        {/* Desktop search — hidden on mobile via CSS, shown below */}
         <div className={styles.search}>
           <Suspense fallback={null}>
             <SearchInput />
@@ -46,6 +46,13 @@ export default async function GlobalNav() {
             </form>
           )}
         </div>
+      </div>
+
+      {/* ── Mobile search row — only visible on small screens ── */}
+      <div className={styles.mobileSearch}>
+        <Suspense fallback={null}>
+          <SearchInput />
+        </Suspense>
       </div>
     </nav>
   );

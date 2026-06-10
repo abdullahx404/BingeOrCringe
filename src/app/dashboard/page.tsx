@@ -143,6 +143,12 @@ export default async function DashboardPage({ searchParams }: Props) {
             </form>
           </div>
         </div>
+        {/* Mobile: search appears below nav row */}
+        <div className={styles.mobileSearch}>
+          <Suspense>
+            <SearchInput />
+          </Suspense>
+        </div>
       </header>
 
       <main className={styles.main}>

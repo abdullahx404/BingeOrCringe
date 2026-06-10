@@ -15,7 +15,7 @@ import styles from '../../app/dashboard/page.module.css';
 
 const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 
-const ICON_SIZE = 17; // all action icons same size
+const ICON_SIZE = 17;
 
 interface Props {
   movies: Ranking[];
@@ -33,14 +33,14 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
       <Link href={href} className={styles.posterLink}>
         <div className={styles.poster}>
           {poster ? (
-            <Image src={poster} alt={ranking.title} fill sizes="220px" className={styles.posterImg} />
+            <Image src={poster} alt={ranking.title} fill sizes="260px" className={styles.posterImg} />
           ) : (
             <div className={styles.posterPlaceholder}><Film size={32} strokeWidth={1} /></div>
           )}
           {cfg && (
             <div
               className={styles.tierBadge}
-              style={{ color: cfg.color, borderColor: `${cfg.color}40`, background: cfg.bgColor }}
+              style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
             >
               {Icon && <Icon size={11} />}
               <span>{cfg.label}</span>
@@ -48,30 +48,35 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
           )}
         </div>
       </Link>
+
       <div className={styles.cardBody}>
-        <div className={styles.cardInfo}>
-          <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
-          <div className={styles.cardMeta}>
-            {ranking.year && <span>{ranking.year}</span>}
-            <span className={styles.mediaTypePill}>Movie</span>
-          </div>
-          {ranking.tags && (ranking.tags as string[]).length > 0 ? (
-            <div className={styles.tags}>
-              {(ranking.tags as string[]).slice(0, 3).map((tag) => (
-                <span key={tag} className={styles.tag}>{tag}</span>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.tagsPlaceholder} />
-          )}
+        {/* Title */}
+        <Link href={href} className={styles.cardTitle}>{ranking.title}</Link>
+
+        {/* Year + type */}
+        <div className={styles.cardMeta}>
+          {ranking.year && <span>{ranking.year}</span>}
+          <span className={styles.mediaTypePill}>Movie</span>
         </div>
+
+        {/* ── Actions row (above tags) ── */}
         <div className={styles.cardActions}>
-          {/* Edit — plain link with editBtn class only, no btn-ghost overrides */}
           <Link href={href} className={styles.editBtn} title="Edit ranking">
             <Edit2 size={ICON_SIZE} />
           </Link>
           <DeleteRankingButton id={ranking.id} title={ranking.title} />
         </div>
+
+        {/* Tags */}
+        {ranking.tags && (ranking.tags as string[]).length > 0 ? (
+          <div className={styles.tags}>
+            {(ranking.tags as string[]).slice(0, 3).map((tag) => (
+              <span key={tag} className={styles.tag}>{tag}</span>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.tagsPlaceholder} />
+        )}
       </div>
     </div>
   );
@@ -99,14 +104,14 @@ function TvPosterCard({
       <Link href={showHref} className={styles.posterLink}>
         <div className={styles.poster}>
           {poster ? (
-            <Image src={poster} alt={group.showTitle} fill sizes="220px" className={styles.posterImg} />
+            <Image src={poster} alt={group.showTitle} fill sizes="260px" className={styles.posterImg} />
           ) : (
             <div className={styles.posterPlaceholder}><Tv size={32} strokeWidth={1} /></div>
           )}
           {cfg && (
             <div
               className={styles.tierBadge}
-              style={{ color: cfg.color, borderColor: `${cfg.color}40`, background: cfg.bgColor }}
+              style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
             >
               {Icon && <Icon size={11} />}
               <span>{cfg.label}</span>
@@ -114,23 +119,18 @@ function TvPosterCard({
           )}
         </div>
       </Link>
+
       <div className={styles.cardBody}>
-        <div className={styles.cardInfo}>
-          <Link href={showHref} className={styles.cardTitle}>{group.showTitle}</Link>
-          <div className={styles.cardMeta}>
-            {group.showYear && <span>{group.showYear}</span>}
-            <span className={styles.mediaTypePill}>TV</span>
-          </div>
-          {group.showRanking?.tags && (group.showRanking.tags as string[]).length > 0 ? (
-            <div className={styles.tags}>
-              {(group.showRanking.tags as string[]).slice(0, 3).map((t) => (
-                <span key={t} className={styles.tag}>{t}</span>
-              ))}
-            </div>
-          ) : (
-            <div className={styles.tagsPlaceholder} />
-          )}
+        {/* Title */}
+        <Link href={showHref} className={styles.cardTitle}>{group.showTitle}</Link>
+
+        {/* Year + type */}
+        <div className={styles.cardMeta}>
+          {group.showYear && <span>{group.showYear}</span>}
+          <span className={styles.mediaTypePill}>TV</span>
         </div>
+
+        {/* ── Actions row (above tags, below date) ── */}
         <div className={styles.cardActions}>
           {group.showRanking && (
             <>
@@ -140,18 +140,29 @@ function TvPosterCard({
               <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} />
             </>
           )}
-          {/* Expand chevron — only if seasons/episodes are ranked */}
+          {/* Expand chevron */}
           {innerCount > 0 && (
             <button
               type="button"
               className={`${styles.expandBtn} ${isExpanded ? styles.expandBtnActive : ''}`}
               onClick={(e) => { e.preventDefault(); onToggle(); }}
-              title={isExpanded ? 'Collapse' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked — expand`}
+              title={isExpanded ? 'Collapse' : `${innerCount} item${innerCount !== 1 ? 's' : ''} ranked`}
             >
               {isExpanded ? <ChevronUp size={ICON_SIZE} /> : <ChevronDown size={ICON_SIZE} />}
             </button>
           )}
         </div>
+
+        {/* Tags */}
+        {group.showRanking?.tags && (group.showRanking.tags as string[]).length > 0 ? (
+          <div className={styles.tags}>
+            {(group.showRanking.tags as string[]).slice(0, 3).map((t) => (
+              <span key={t} className={styles.tag}>{t}</span>
+            ))}
+          </div>
+        ) : (
+          <div className={styles.tagsPlaceholder} />
+        )}
       </div>
     </div>
   );
@@ -168,7 +179,6 @@ export default function CollectionGrid({ movies, tvGroups }: Props) {
 
   return (
     <>
-      {/* ── Unified grid: movies + TV poster cards ──── */}
       <div className={styles.grid}>
         {movies.map((r) => (
           <MovieCard key={r.id} ranking={r} />
@@ -183,7 +193,6 @@ export default function CollectionGrid({ movies, tvGroups }: Props) {
         ))}
       </div>
 
-      {/* ── Expanded tree panel (full-width, below grid) ─ */}
       {expandedGroup && (
         <div className={styles.treePanel}>
           <TvGroupAccordion group={expandedGroup} defaultExpanded />

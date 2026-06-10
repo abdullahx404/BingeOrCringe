@@ -26,11 +26,11 @@ export default function DeleteRankingButton({ id, title }: Props) {
       <button
         type="button"
         onClick={() => setShowModal(true)}
-        className={`btn btn-ghost btn-sm ${styles.btn}`}
+        className={styles.btn}
         aria-label={`Remove ${title} from collection`}
         title="Remove from collection"
       >
-        <Trash2 size={13} />
+        <Trash2 size={17} />
       </button>
 
       {showModal && (
