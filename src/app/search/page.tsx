@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 interface Props {
-  searchParams: { q?: string };
+  searchParams: { q?: string; type?: string };
 }
 
 async function SearchResults({ query }: { query: string }) {
@@ -118,21 +118,68 @@ function GridSkeleton() {
   );
 }
 
+// ── User Search ──────────────────────────────────────────
+
+async function UserSearchResults({ query }: { query: string }) {
+  const supabase = await createClient();
+
+  const { data: profiles, error } = await supabase
+    .from('profiles')
+    .select('id, username, display_name, avatar_url')
+    .or(`username.ilike.%${query}%,display_name.ilike.%${query}%`)
+    .limit(20);
+
+  if (error || !profiles || profiles.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <SearchX size={40} className={styles.emptyIcon} strokeWidth={1.5} />
+        <h2 className={styles.emptyTitle}>No users found for &ldquo;{query}&rdquo;</h2>
+      </div>
+    );
+  }
+
+  return (
+    <section className={styles.section}>
+      <p className={styles.resultCount}>
+        {profiles.length} results for &ldquo;{query}&rdquo;
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {profiles.map((p) => (
+          <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)' }}>
+            <Link href={`/u/${p.username}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                {p.avatar_url ? <img src={p.avatar_url} alt={p.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <SearchX size={20} />}
+              </div>
+              <div>
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.display_name}</div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>@{p.username}</div>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
+  const type = searchParams.type === 'users' ? 'users' : 'titles';
 
   // Auth check
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   let displayName: string | null = null;
+  let username: string | null = null;
   if (user) {
     const { data: prof } = await supabase
       .from('profiles')
-      .select('display_name')
+      .select('display_name, username')
       .eq('id', user.id)
       .single();
     displayName = prof?.display_name ?? null;
+    username = prof?.username ?? null;
   }
 
   return (
@@ -152,7 +199,7 @@ export default async function SearchPage({ searchParams }: Props) {
           </div>
 
           <div className={styles.headerLinks}>
-            <NavLinks isLoggedIn={!!user} displayName={displayName} />
+            <NavLinks isLoggedIn={!!user} displayName={displayName} username={username} />
             {user && (
               <form action={logOut}>
                 <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
@@ -171,8 +218,33 @@ export default async function SearchPage({ searchParams }: Props) {
       {/* ── Main content ────────────────────────────── */}
       <main className={styles.main}>
         <div className="container">
+          <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)' }}>
+            <Link 
+              href={`/search?q=${encodeURIComponent(query)}&type=titles`} 
+              style={{ padding: '8px 16px', color: type === 'titles' ? 'var(--accent-light)' : 'var(--text-muted)', borderBottom: type === 'titles' ? '2px solid var(--accent-light)' : '2px solid transparent', textDecoration: 'none', fontWeight: 600 }}
+            >
+              Titles
+            </Link>
+            <Link 
+              href={`/search?q=${encodeURIComponent(query)}&type=users`} 
+              style={{ padding: '8px 16px', color: type === 'users' ? 'var(--accent-light)' : 'var(--text-muted)', borderBottom: type === 'users' ? '2px solid var(--accent-light)' : '2px solid transparent', textDecoration: 'none', fontWeight: 600 }}
+            >
+              Users
+            </Link>
+          </div>
+
           <Suspense fallback={<GridSkeleton />}>
-            {query ? <SearchResults query={query} /> : <TrendingSection />}
+            {type === 'users' ? (
+              query ? <UserSearchResults query={query} /> : (
+                <div className={styles.emptyState}>
+                  <SearchX size={40} className={styles.emptyIcon} strokeWidth={1.5} />
+                  <h2 className={styles.emptyTitle}>Search for users</h2>
+                  <p className={styles.emptyDesc}>Type a username or display name to find friends.</p>
+                </div>
+              )
+            ) : (
+              query ? <SearchResults query={query} /> : <TrendingSection />
+            )}
           </Suspense>
         </div>
       </main>

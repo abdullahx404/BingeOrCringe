@@ -5,14 +5,16 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { logOut } from '@/lib/auth/actions';
+import NotificationsBell from './NotificationsBell';
 import styles from './NavLinks.module.css';
 
 interface Props {
   displayName?: string | null;
+  username?: string | null;
   isLoggedIn?: boolean;
 }
 
-export default function NavLinks({ displayName, isLoggedIn }: Props) {
+export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -36,9 +38,9 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
     <div className={styles.desktopLinks}>
       <Link href="/search"    className={`${styles.navLink} ${onBrowse ? styles.active : ''}`}>Browse</Link>
       <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>List</Link>
-      <Link href="/settings"  className={`${styles.navLink} ${pathname === '/settings' ? styles.active : ''}`}>Settings</Link>
-      {displayName && (
-        <Link href="/dashboard" className={styles.username}>{displayName}</Link>
+      <NotificationsBell />
+      {username && (
+        <Link href={`/u/${username}`} className={styles.username}>{displayName || username}</Link>
       )}
     </div>
   ) : (
@@ -81,17 +83,19 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
               >
                 List
               </Link>
-              <Link
-                href="/settings"
-                className={`${styles.dropItem} ${pathname === '/settings' ? styles.active : ''}`}
-                onClick={() => setMenuOpen(false)}
-              >
-                Settings
-              </Link>
+              <div style={{ padding: '0 var(--space-4)', margin: 'var(--space-2) 0' }}>
+                <NotificationsBell />
+              </div>
             </>
           )}
-          {isLoggedIn && displayName && (
-            <span className={styles.dropUser}>{displayName}</span>
+          {isLoggedIn && username && (
+            <Link 
+              href={`/u/${username}`} 
+              className={styles.dropUser}
+              onClick={() => setMenuOpen(false)}
+            >
+              {displayName || username}
+            </Link>
           )}
           {isLoggedIn ? (
             <form action={logOut} className={styles.dropLogout}>

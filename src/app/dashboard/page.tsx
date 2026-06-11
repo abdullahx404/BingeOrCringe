@@ -148,7 +148,7 @@ export default async function DashboardPage({ searchParams }: Props) {
           </div>
 
           <div className={styles.headerRight}>
-            <NavLinks isLoggedIn displayName={displayName} />
+            <NavLinks isLoggedIn displayName={displayName} username={profile?.username} />
             <form action={logOut}>
               <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
             </form>

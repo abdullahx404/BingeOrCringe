@@ -10,6 +10,9 @@ import { TIERS } from '@/lib/utils/tiers';
 import type { TierType } from '@/lib/utils/tiers';
 import { getTvShow } from '@/lib/tmdb/client';
 import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
+import FollowButton from '@/components/profile/FollowButton';
+import ProfileSettingsForm from '@/components/profile/ProfileSettingsForm';
+import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
 import styles from './page.module.css';
 
 interface Props {
@@ -64,8 +67,32 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
     notFound();
   }
 
+  // Follower/Following counts
+  const { count: followersCount } = await supabase
+    .from('follows')
+    .select('id', { count: 'exact', head: true })
+    .eq('following_id', profile.id);
+
+  const { count: followingCount } = await supabase
+    .from('follows')
+    .select('id', { count: 'exact', head: true })
+    .eq('follower_id', profile.id);
+
   // 1.5. Auth check
   const { data: { user } } = await supabase.auth.getUser();
+
+  const isOwnProfile = user?.id === profile.id;
+
+  let isFollowing = false;
+  if (user && !isOwnProfile) {
+    const { data: followRecord } = await supabase
+      .from('follows')
+      .select('id')
+      .eq('follower_id', user.id)
+      .eq('following_id', profile.id)
+      .single();
+    if (followRecord) isFollowing = true;
+  }
   if (!user) {
     return (
       <div className={styles.page}>
@@ -188,7 +215,21 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
                 <span className={styles.statNum}>{totalRanked}</span>
                 <span className={styles.statLabel}>Total Ranked</span>
               </div>
+              <div className={styles.statBox}>
+                <span className={styles.statNum}>{followersCount || 0}</span>
+                <span className={styles.statLabel}>Followers</span>
+              </div>
+              <div className={styles.statBox}>
+                <span className={styles.statNum}>{followingCount || 0}</span>
+                <span className={styles.statLabel}>Following</span>
+              </div>
             </div>
+            
+            {user && !isOwnProfile && (
+              <div style={{ marginTop: 'var(--space-4)' }}>
+                <FollowButton followingId={profile.id} initialIsFollowing={isFollowing} />
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -211,6 +252,24 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
             // Right now CollectionGrid assumes it's the current user. We should update CollectionGrid 
             // to accept `readonly={true}` to hide actions!
             <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} isPublicView />
+          )}
+
+          {isOwnProfile && (
+            <div style={{ marginTop: 'var(--space-16)', paddingTop: 'var(--space-8)', borderTop: '1px solid var(--border-subtle)' }}>
+              <h2 className={styles.emptyTitle} style={{ marginBottom: 'var(--space-6)', textAlign: 'left' }}>Settings</h2>
+              
+              <ProfileSettingsForm initialData={{
+                display_name: profile.display_name,
+                username: profile.username,
+                is_public: profile.is_public
+              }} />
+
+              <div style={{ marginTop: 'var(--space-10)' }}>
+                <h3 className={styles.emptyTitle} style={{ fontSize: 'var(--text-lg)', marginBottom: 'var(--space-2)', textAlign: 'left' }}>Password & Security</h3>
+                <p className={styles.emptyDesc} style={{ marginBottom: 'var(--space-6)', textAlign: 'left' }}>Update your password.</p>
+                <ChangePasswordForm />
+              </div>
+            </div>
           )}
         </div>
       </main>

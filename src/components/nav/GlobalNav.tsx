@@ -12,13 +12,15 @@ export default async function GlobalNav() {
   const { data: { user } } = await supabase.auth.getUser();
 
   let displayName: string | null = null;
+  let username: string | null = null;
   if (user) {
     const { data: profile } = await supabase
       .from('profiles')
-      .select('display_name')
+      .select('display_name, username')
       .eq('id', user.id)
       .single();
     displayName = profile?.display_name ?? null;
+    username = profile?.username ?? null;
   }
 
   return (
@@ -39,7 +41,7 @@ export default async function GlobalNav() {
 
         {/* Right group: Browse + List + username + Logout */}
         <div className={styles.rightGroup}>
-          <NavLinks isLoggedIn={!!user} displayName={displayName} />
+          <NavLinks isLoggedIn={!!user} displayName={displayName} username={username} />
           {user && (
             <form action={logOut} className={styles.logoutForm}>
               <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
