@@ -16,13 +16,19 @@ export default async function FollowersPage({ params }: { params: { username: st
 
   if (!profile) notFound();
 
+  // Ensure only the owner can view their followers
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || user.id !== profile.id) {
+    notFound(); // or redirect to their profile
+  }
+
   // Get followers (people following this profile)
   const { data: follows } = await supabase
     .from('follows')
     .select('follower:profiles!follower_id(id, display_name, username, avatar_url)')
     .eq('following_id', profile.id);
 
-  const followers = follows?.map(f => f.follower) || [];
+  const followers = follows?.map(f => f.follower).filter(Boolean) || [];
 
   return (
     <div className={styles.page}>
