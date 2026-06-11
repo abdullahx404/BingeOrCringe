@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { TAGS, isValidTag, isValidTagArray, sanitizeTags } from '@/lib/utils/tags';
 
 describe('Tags Constants', () => {
-  it('should export exactly 14 tags', () => {
-    expect(TAGS).toHaveLength(14);
+  it('should export exactly 53 tags', () => {
+    expect(TAGS).toHaveLength(53);
   });
 
   it('should contain all expected tags', () => {
@@ -22,6 +22,45 @@ describe('Tags Constants', () => {
       'Low IQ',
       'Dramatic',
       'Dead-End',
+      'Space Brainrot',
+      'Time Travel Slop',
+      'Alien Aura',
+      'Dystopian Cooked',
+      'Plot Holes in Orbit',
+      'Multiverse Mid',
+      'Jumpscare Only',
+      'Trauma Fuel',
+      'Nightmare Bait',
+      'Demonic Rizz',
+      'Cozy Horror',
+      'Mid But Funny',
+      'Cringe Comedy King',
+      'Laugh or Cry',
+      'Gen Z Humor Only',
+      'Dad Joke Cinema',
+      'Unhinged Comedy',
+      'Oscar Bait',
+      'Crying at 3AM',
+      'Trauma Bond Movie',
+      'Slow Burn Tears',
+      'Family Trauma Core',
+      'Based-Drama',
+      'Character Development',
+      'Tommy Shelby Aura',
+      'Depressing',
+      'Sci-Fi Horror Rizz',
+      'Horror Comedy Gold',
+      'Psychological Mindfuck',
+      'Gore Maxxing',
+      'Cannibal Core',
+      'Wrong Turn Energy',
+      'Anti-Hero',
+      'Brutal AF',
+      'Ultra Violence',
+      'Bloodbath Cinema',
+      'Violent AF',
+      'Guts & Gore Only',
+      'Brutality Peak',
     ];
     for (const tag of expectedTags) {
       expect(TAGS).toContain(tag);
