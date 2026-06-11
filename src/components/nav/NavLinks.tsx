@@ -36,6 +36,7 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
     <div className={styles.desktopLinks}>
       <Link href="/search"    className={`${styles.navLink} ${onBrowse ? styles.active : ''}`}>Browse</Link>
       <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>List</Link>
+      <Link href="/settings"  className={`${styles.navLink} ${pathname === '/settings' ? styles.active : ''}`}>Settings</Link>
       {displayName && (
         <Link href="/dashboard" className={styles.username}>{displayName}</Link>
       )}
@@ -72,13 +73,22 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
             Browse
           </Link>
           {isLoggedIn && (
-            <Link
-              href="/dashboard"
-              className={`${styles.dropItem} ${onList ? styles.active : ''}`}
-              onClick={() => setMenuOpen(false)}
-            >
-              List
-            </Link>
+            <>
+              <Link
+                href="/dashboard"
+                className={`${styles.dropItem} ${onList ? styles.active : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                List
+              </Link>
+              <Link
+                href="/settings"
+                className={`${styles.dropItem} ${pathname === '/settings' ? styles.active : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Settings
+              </Link>
+            </>
           )}
           {isLoggedIn && displayName && (
             <span className={styles.dropUser}>{displayName}</span>

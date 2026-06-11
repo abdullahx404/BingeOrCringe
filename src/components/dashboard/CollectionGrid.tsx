@@ -18,9 +18,10 @@ const TIER_ICONS = { Crown, Play, Minus, ThumbsDown, Trash2 } as const;
 interface Props {
   movies: Ranking[];
   tvGroups: TvGroupData[];
+  isPublicView?: boolean;
 }
 
-function MovieCard({ ranking }: { ranking: Ranking }) {
+function MovieCard({ ranking, isPublicView }: { ranking: Ranking; isPublicView?: boolean }) {
   const cfg = TIER_CONFIG[ranking.tier as TierType];
   const Icon = cfg ? TIER_ICONS[cfg.icon as keyof typeof TIER_ICONS] : null;
   const poster = tmdbImage(ranking.poster_path, 'w342');
@@ -51,16 +52,18 @@ function MovieCard({ ranking }: { ranking: Ranking }) {
         </Link>
 
         {/* Edit / Delete — top-right glass overlay, revealed on hover */}
-        <div className={styles.overlayActions}>
-          <Link href={href} className={styles.overlayBtn} title="Edit ranking">
-            <Edit2 size={14} />
-          </Link>
-          <DeleteRankingButton
-            id={ranking.id}
-            title={ranking.title}
-            btnClassName={styles.overlayDeleteBtn}
-          />
-        </div>
+        {!isPublicView && (
+          <div className={styles.overlayActions}>
+            <Link href={href} className={styles.overlayBtn} title="Edit ranking">
+              <Edit2 size={14} />
+            </Link>
+            <DeleteRankingButton
+              id={ranking.id}
+              title={ranking.title}
+              btnClassName={styles.overlayDeleteBtn}
+            />
+          </div>
+        )}
       </div>
 
       {/* ── Card body ── */}
@@ -92,10 +95,12 @@ function TvPosterCard({
   group,
   isExpanded,
   onToggle,
+  isPublicView,
 }: {
   group: TvGroupData;
   isExpanded: boolean;
   onToggle: () => void;
+  isPublicView?: boolean;
 }) {
   const cfg = group.showRanking
     ? TIER_CONFIG[group.showRanking.tier as TierType]
@@ -129,7 +134,7 @@ function TvPosterCard({
         </Link>
 
         {/* Edit / Delete overlay (only if show itself is ranked) */}
-        {group.showRanking && (
+        {!isPublicView && group.showRanking && (
           <div className={styles.overlayActions}>
             <Link href={showHref} className={styles.overlayBtn} title="Edit ranking">
               <Edit2 size={14} />
@@ -180,7 +185,7 @@ function TvPosterCard({
   );
 }
 
-export default function CollectionGrid({ movies, tvGroups }: Props) {
+export default function CollectionGrid({ movies, tvGroups, isPublicView }: Props) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const expandedGroup = tvGroups.find((g) => g.tmdbId === expandedId) ?? null;
@@ -193,7 +198,7 @@ export default function CollectionGrid({ movies, tvGroups }: Props) {
     <>
       <div className={styles.grid}>
         {movies.map((r) => (
-          <MovieCard key={r.id} ranking={r} />
+          <MovieCard key={r.id} ranking={r} isPublicView={isPublicView} />
         ))}
         {tvGroups.map((g) => (
           <TvPosterCard
@@ -201,13 +206,14 @@ export default function CollectionGrid({ movies, tvGroups }: Props) {
             group={g}
             isExpanded={expandedId === g.tmdbId}
             onToggle={() => toggle(g.tmdbId)}
+            isPublicView={isPublicView}
           />
         ))}
       </div>
 
       {expandedGroup && (
         <div className={styles.treePanel}>
-          <TvGroupAccordion group={expandedGroup} defaultExpanded />
+          <TvGroupAccordion group={expandedGroup} defaultExpanded isPublicView={isPublicView} />
         </div>
       )}
     </>

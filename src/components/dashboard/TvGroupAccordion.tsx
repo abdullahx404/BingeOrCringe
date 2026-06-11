@@ -42,9 +42,11 @@ function InlineTierPill({ tier }: { tier: string }) {
 export default function TvGroupAccordion({
   group,
   defaultExpanded = false,
+  isPublicView,
 }: {
   group: TvGroupData;
   defaultExpanded?: boolean;
+  isPublicView?: boolean;
 }) {
   const [expanded, setExpanded] = useState(defaultExpanded);
 
@@ -105,7 +107,7 @@ export default function TvGroupAccordion({
 
         {/* Actions */}
         <div className={styles.tvActions}>
-          {group.showRanking && (
+          {!isPublicView && group.showRanking && (
             <>
               <Link href={showHref} className={styles.editBtn} title="Edit ranking">
                 <Edit2 size={17} />
@@ -147,15 +149,17 @@ export default function TvGroupAccordion({
                   ))}
                 </div>
               )}
-              <div className={styles.tvSubActions}>
-                <Link
-                  href={`/title/tv/${group.tmdbId}/season/${s.season_number}`}
-                  className={styles.editBtn}
-                >
-                  <Edit2 size={16} />
-                </Link>
-                <DeleteRankingButton id={s.id} title={`Season ${s.season_number}`} />
-              </div>
+              {!isPublicView && (
+                <div className={styles.tvSubActions}>
+                  <Link
+                    href={`/title/tv/${group.tmdbId}/season/${s.season_number}`}
+                    className={styles.editBtn}
+                  >
+                    <Edit2 size={16} />
+                  </Link>
+                  <DeleteRankingButton id={s.id} title={`Season ${s.season_number}`} />
+                </div>
+              )}
             </div>
           ))}
 
@@ -172,9 +176,11 @@ export default function TvGroupAccordion({
                     E{ep.episode_number} &middot; {ep.title}
                   </Link>
                   <InlineTierPill tier={ep.tier} />
-                  <div className={styles.tvSubActions}>
-                    <DeleteRankingButton id={ep.id} title={ep.title} />
-                  </div>
+                  {!isPublicView && (
+                    <div className={styles.tvSubActions}>
+                      <DeleteRankingButton id={ep.id} title={ep.title} />
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
