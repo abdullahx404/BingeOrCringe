@@ -30,6 +30,8 @@ export const viewport: Viewport = {
   themeColor: '#080810',
 };
 
+import Footer from '@/components/nav/Footer';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -38,7 +40,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        {children}
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   );
