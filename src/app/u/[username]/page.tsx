@@ -113,23 +113,7 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
     );
   }
 
-  // 2. Privacy check
-  if (!profile.is_public) {
-    return (
-      <div className={styles.page}>
-        <GlobalNav />
-        <main className={styles.main}>
-          <div className="container">
-            <div className={styles.privateState}>
-              <Lock size={48} className={styles.privateIcon} />
-              <h1 className={styles.privateTitle}>@{profile.username}&apos;s Collection is Private</h1>
-              <p className={styles.privateDesc}>This user has chosen not to share their rankings publicly.</p>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  const canViewCollection = profile.is_public || isOwnProfile;
 
   // 3. Fetch their rankings
   const { data: allRaw } = await supabase
@@ -236,22 +220,29 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
 
       <main className={styles.main}>
         <div className="container">
-          <TierFilterTabs
-            activeTier={isTierValid ? validTier : undefined}
-            countByTier={countByTier}
-            total={totalRanked}
-          />
-
-          {!hasContent ? (
-            <div className={styles.emptyState}>
-              <h2 className={styles.emptyTitle}>Nothing here yet</h2>
-              <p className={styles.emptyDesc}>This user hasn&apos;t ranked anything in this category.</p>
+          {!canViewCollection ? (
+            <div className={styles.privateState} style={{ padding: 'var(--space-12) 0', textAlign: 'center' }}>
+              <Lock size={48} className={styles.privateIcon} style={{ margin: '0 auto var(--space-4)' }} />
+              <h2 className={styles.privateTitle}>@{profile.username}&apos;s Collection is Private</h2>
+              <p className={styles.privateDesc}>This user has chosen not to share their rankings publicly.</p>
             </div>
           ) : (
-            // readonly=true implies we should hide edit/delete buttons, let's pass a prop if needed
-            // Right now CollectionGrid assumes it's the current user. We should update CollectionGrid 
-            // to accept `readonly={true}` to hide actions!
-            <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} isPublicView />
+            <>
+              <TierFilterTabs
+                activeTier={isTierValid ? validTier : undefined}
+                countByTier={countByTier}
+                total={totalRanked}
+              />
+
+              {!hasContent ? (
+                <div className={styles.emptyState}>
+                  <h2 className={styles.emptyTitle}>Nothing here yet</h2>
+                  <p className={styles.emptyDesc}>This user hasn&apos;t ranked anything in this category.</p>
+                </div>
+              ) : (
+                <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} isPublicView />
+              )}
+            </>
           )}
 
           {isOwnProfile && (
