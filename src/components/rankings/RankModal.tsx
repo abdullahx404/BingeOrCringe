@@ -4,10 +4,11 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { X, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { createRanking, updateRanking } from '@/lib/rankings/actions';
+import { getLists, addToList, removeFromList } from '@/lib/lists/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
 import type { TierType } from '@/lib/utils/tiers';
-import type { Ranking } from '@/types';
+import type { Ranking, CustomList } from '@/types';
 import Portal from './Portal';
 import styles from './RankModal.module.css';
 
@@ -37,6 +38,17 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  const [userLists, setUserLists] = useState<CustomList[]>([]);
+  const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    async function loadLists() {
+      const res = await getLists();
+      if (res.data) setUserLists(res.data);
+    }
+    loadLists();
+  }, []);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -87,8 +99,15 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
         setError(result.error);
         toast.error(result.error);
       } else {
+        const ranking = result.data;
+        if (ranking) {
+          // Add to selected lists
+          for (const listId of Array.from(selectedListIds)) {
+            await addToList(listId, ranking.id);
+          }
+        }
         toast.success(`Saved "${media.title}" as ${TIER_CONFIG[selectedTier].label}`);
-        onSuccess?.(result.data);
+        onSuccess?.(ranking);
         onClose();
       }
     });
@@ -192,6 +211,33 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
               </div>
             </div>
 
+            {/* Custom Lists */}
+            {userLists.length > 0 && (
+              <div className={styles.section}>
+                <p className={styles.sectionLabel}>Add to Custom Lists <span className={styles.optional}>(optional)</span></p>
+                <div className={styles.tagsGrid}>
+                  {userLists.map((list) => {
+                    const isSelected = selectedListIds.has(list.id);
+                    return (
+                      <button
+                        key={list.id}
+                        type="button"
+                        onClick={() => setSelectedListIds(prev => {
+                          const next = new Set(prev);
+                          if (next.has(list.id)) next.delete(list.id);
+                          else next.add(list.id);
+                          return next;
+                        })}
+                        className={`${styles.tagBtn} ${isSelected ? styles.tagBtnSelected : ''}`}
+                      >
+                        {list.name}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+            
             {error && (
               <p className={styles.error} role="alert">{error}</p>
             )}

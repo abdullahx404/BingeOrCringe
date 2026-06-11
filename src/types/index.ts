@@ -38,3 +38,18 @@ export interface ApiResponse<T> {
   data: T | null;
   error: string | null;
 }
+
+export interface CustomList {
+  id: string;
+  user_id: string;
+  name: string;
+  is_public: boolean;
+  created_at: string;
+}
+
+export interface CustomListItem {
+  list_id: string;
+  ranking_id: string;
+  created_at: string;
+  ranking?: Ranking; // Joined relation
+}

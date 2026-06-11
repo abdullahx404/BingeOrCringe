@@ -16,6 +16,8 @@ import SearchInput from '@/components/search/SearchInput';
 import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import NavLinks from '@/components/nav/NavLinks';
+import CustomListsRow from '@/components/lists/CustomListsRow';
+import type { CustomList } from '@/types';
 import styles from './page.module.css';
 
 export const metadata = { title: 'My Collection' };
@@ -71,6 +73,14 @@ export default async function DashboardPage({ searchParams }: Props) {
     .order('created_at', { ascending: false });
 
   const allRankings: Ranking[] = allRaw ?? [];
+
+  const { data: rawLists } = await supabase
+    .from('lists')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false });
+
+  const userLists: CustomList[] = rawLists ?? [];
 
   const countByTier: Record<string, number> = {};
   for (const r of allRankings) {
@@ -172,6 +182,8 @@ export default async function DashboardPage({ searchParams }: Props) {
               <VisibilityToggle isPublic={profile?.is_public ?? false} />
             </div>
           </div>
+
+          <CustomListsRow lists={userLists} />
 
           <TierFilterTabs
             activeTier={isTierValid ? validTier : undefined}
