@@ -83,9 +83,13 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
               >
                 List
               </Link>
-              <div style={{ padding: '0 var(--space-4)', margin: 'var(--space-2) 0' }}>
-                <NotificationsBell />
-              </div>
+              <Link
+                href="/notifications"
+                className={`${styles.dropItem} ${pathname === '/notifications' ? styles.active : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Notifications
+              </Link>
             </>
           )}
           {isLoggedIn && username && (

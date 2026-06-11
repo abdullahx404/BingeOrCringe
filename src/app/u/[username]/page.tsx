@@ -215,14 +215,14 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
                 <span className={styles.statNum}>{totalRanked}</span>
                 <span className={styles.statLabel}>Total Ranked</span>
               </div>
-              <div className={styles.statBox}>
+              <Link href={`/u/${profile.username}/followers`} className={styles.statBox} style={{ textDecoration: 'none' }}>
                 <span className={styles.statNum}>{followersCount || 0}</span>
                 <span className={styles.statLabel}>Followers</span>
-              </div>
-              <div className={styles.statBox}>
+              </Link>
+              <Link href={`/u/${profile.username}/following`} className={styles.statBox} style={{ textDecoration: 'none' }}>
                 <span className={styles.statNum}>{followingCount || 0}</span>
                 <span className={styles.statLabel}>Following</span>
-              </div>
+              </Link>
             </div>
             
             {user && !isOwnProfile && (
