@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { X, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { createRanking, updateRanking } from '@/lib/rankings/actions';
-import { getLists, addToList, removeFromList } from '@/lib/lists/actions';
+import { getLists, addToList, createList } from '@/lib/lists/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
 import type { TierType } from '@/lib/utils/tiers';
@@ -41,6 +41,8 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
 
   const [userLists, setUserLists] = useState<CustomList[]>([]);
   const [selectedListIds, setSelectedListIds] = useState<Set<string>>(new Set());
+  const [isCreatingList, setIsCreatingList] = useState(false);
+  const [newListName, setNewListName] = useState('');
 
   useEffect(() => {
     async function loadLists() {
@@ -69,6 +71,23 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
       if (prev.length >= MAX_TAGS) return prev;
       return [...prev, tag];
     });
+  }
+
+  async function handleCreateList() {
+    if (!newListName.trim()) return;
+    const formData = new FormData();
+    formData.append('name', newListName);
+    formData.append('is_public', 'true');
+    const res = await createList(formData);
+    if (res.data) {
+      setUserLists(prev => [res.data!, ...prev]);
+      setSelectedListIds(prev => new Set(prev).add(res.data!.id));
+      setIsCreatingList(false);
+      setNewListName('');
+      toast.success('List created!');
+    } else {
+      toast.error(res.error || 'Failed to create list');
+    }
   }
 
   function handleSubmit() {
@@ -212,9 +231,10 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
             </div>
 
             {/* Custom Lists */}
-            {userLists.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionLabel}>Add to Custom Lists <span className={styles.optional}>(optional)</span></p>
+            <div className={styles.section}>
+              <p className={styles.sectionLabel}>Add to Custom Lists <span className={styles.optional}>(optional)</span></p>
+              
+              {userLists.length > 0 ? (
                 <div className={styles.tagsGrid}>
                   {userLists.map((list) => {
                     const isSelected = selectedListIds.has(list.id);
@@ -234,9 +254,43 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
                       </button>
                     );
                   })}
+                  <button 
+                    type="button" 
+                    className={styles.tagBtn} 
+                    onClick={() => setIsCreatingList(true)}
+                  >
+                    + Create List
+                  </button>
                 </div>
-              </div>
-            )}
+              ) : (
+                <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                  <p className={styles.tierDesc}>No custom lists yet.</p>
+                  <button 
+                    type="button" 
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => setIsCreatingList(true)}
+                    style={{ padding: '0 8px' }}
+                  >
+                    Create List
+                  </button>
+                </div>
+              )}
+
+              {isCreatingList && (
+                <div style={{ display: 'flex', gap: 'var(--space-2)', marginTop: 'var(--space-2)' }}>
+                  <input 
+                    type="text" 
+                    value={newListName} 
+                    onChange={e => setNewListName(e.target.value)} 
+                    placeholder="List Name" 
+                    className="form-input"
+                    autoFocus
+                  />
+                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => setIsCreatingList(false)}>Cancel</button>
+                  <button type="button" className="btn btn-primary btn-sm" onClick={handleCreateList}>Save</button>
+                </div>
+              )}
+            </div>
             
             {error && (
               <p className={styles.error} role="alert">{error}</p>

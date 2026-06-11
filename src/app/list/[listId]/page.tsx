@@ -3,7 +3,9 @@ import { createClient } from '@/lib/supabase/server';
 import type { Ranking, CustomList } from '@/types';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import GlobalNav from '@/components/nav/GlobalNav';
-import ShareProfileButton from '@/components/profile/ShareProfileButton';
+import ListSettingsMenu from '@/components/lists/ListSettingsMenu';
+import ShareListButton from '@/components/lists/ShareListButton';
+import { getTvShow } from '@/lib/tmdb/client';
 import { Film, Lock } from 'lucide-react';
 import styles from './page.module.css';
 
@@ -81,8 +83,26 @@ export default async function ListPage({ params }: Props) {
     else g.episodes.push(r);
   }
 
+  await Promise.all(
+    Array.from(tvGroupMap.values())
+      .filter((g) => !g.showRanking)
+      .map(async (group) => {
+        try {
+          const show = await getTvShow(group.tmdbId);
+          group.showTitle  = show.name;
+          group.showPoster = show.poster_path ?? null;
+          group.showYear   = show.first_air_date ? show.first_air_date.slice(0, 4) : null;
+        } catch {
+          const first = group.seasons[0] ?? group.episodes[0];
+          group.showTitle  = first?.title ?? `Show #${group.tmdbId}`;
+          group.showPoster = first?.poster_path ?? null;
+        }
+      })
+  );
+
   const tvGroups = Array.from(tvGroupMap.values());
   const hasContent = movies.length > 0 || tvGroups.length > 0;
+  const isOwner = user?.id === list.user_id;
 
   return (
     <div className={styles.page}>
@@ -96,9 +116,12 @@ export default async function ListPage({ params }: Props) {
                 Created by {list.profiles.display_name} (@{list.profiles.username})
               </p>
             </div>
-            {list.is_public && (
-              <ShareProfileButton username={`list/${list.id}`} />
-            )}
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+              {list.is_public && <ShareListButton listId={list.id} />}
+              {isOwner && (
+                <ListSettingsMenu listId={list.id} listName={list.name} isPublic={list.is_public} />
+              )}
+            </div>
           </div>
 
           {!hasContent ? (

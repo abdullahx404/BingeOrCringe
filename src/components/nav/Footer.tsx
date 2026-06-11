@@ -31,6 +31,8 @@ export default function Footer() {
             <h4 className={styles.linksTitle}>Navigation</h4>
             <ul className={styles.linksList}>
               <li><Link href="/">Home</Link></li>
+              <li><Link href="/about">About</Link></li>
+              <li><Link href="/how-to-use">How To Use</Link></li>
               <li><Link href="/search">Search</Link></li>
               <li><Link href="/terms">Terms & Conditions</Link></li>
             </ul>
@@ -50,9 +52,14 @@ export default function Footer() {
           <p className={styles.copyright}>
             &copy; {new Date().getFullYear()} BingeOrCringe. All rights reserved.
           </p>
-          <p className={styles.tmdbAttr}>
-            This product uses the TMDB API but is not endorsed or certified by TMDB.
-          </p>
+          <div className={styles.tmdbAttr}>
+            <img 
+              src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
+              alt="TMDB Logo" 
+              style={{ width: '120px', marginBottom: '8px' }} 
+            />
+            <p>This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
+          </div>
         </div>
       </div>
     </footer>
