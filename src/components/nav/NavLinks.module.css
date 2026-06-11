@@ -54,86 +54,177 @@
 
 /* ── Mobile hamburger ── */
 .hamburgerWrapper {
-  position: relative;
   display: none; /* hidden on desktop */
 }
 
-.hamburgerBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: color var(--transition-fast), background var(--transition-fast);
-}
-
-.hamburgerBtn:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-/* Dropdown panel */
-.dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  min-width: 180px;
-  background: rgba(14, 14, 28, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: var(--space-2) 0;
-  z-index: 100;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-}
-
-.dropItem {
-  display: block;
-  width: 100%;
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--text-secondary);
-  text-decoration: none;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  transition: color var(--transition-fast), background var(--transition-fast);
-}
-
-.dropItem:hover {
-  color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.dropItemActive {
-  color: var(--accent-light) !important;
-}
-
-.dropUser {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-xs);
-  color: var(--text-muted);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  margin-top: var(--space-1);
-  padding-top: var(--space-2);
-}
-
-.dropLogout { margin: 0; padding: 0; border: none; background: none; }
-.dropLogout button { color: rgba(239, 68, 68, 0.8); }
-.dropLogout button:hover { color: #ef4444; background: rgba(239, 68, 68, 0.08); }
-
 /* ── Responsive breakpoint ── */
-@media (max-width: 640px) {
+@media (max-width: 736px) {
   .desktopLinks { display: none; }
   .hamburgerWrapper { display: block; }
+
+  /* Hamburger Button */
+  .hamburgerBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 28px;
+    height: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 101;
+    -webkit-tap-highlight-color: transparent;
+    padding: 0;
+    margin-left: var(--space-3);
+  }
+
+  /* Hamburger Lines */
+  .hamburgerBar {
+    width: 100%;
+    height: 2.5px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+                opacity 0.3s ease, 
+                background-color 0.4s ease;
+  }
+
+  /* Hamburger Morphing Animations */
+  .hamburgerBtn.open .hamburgerBar:nth-child(1) {
+    transform: translateY(8.5px) rotate(45deg);
+  }
+
+  .hamburgerBtn.open .hamburgerBar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburgerBtn.open .hamburgerBar:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  /* iOS Glassmorphism Overlay */
+  .menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 99;
+  }
+
+  /* Active Open State for Overlay */
+  .menuOverlay.open {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  /* Layout Structure Inside Menu */
+  .menuNav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    width: 100%;
+  }
+
+  /* Menu Links Navigation */
+  .dropItem {
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+    position: relative;
+    padding-bottom: 6px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  /* Slide Up Entry Animation for Links */
+  .menuOverlay.open .dropItem {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered Entry Delays */
+  .menuOverlay.open .dropItem:nth-child(1) { transition-delay: 0.10s; }
+  .menuOverlay.open .dropItem:nth-child(2) { transition-delay: 0.15s; }
+  .menuOverlay.open .dropItem:nth-child(3) { transition-delay: 0.20s; }
+  .menuOverlay.open .dropItem:nth-child(4) { transition-delay: 0.25s; }
+
+  /* Browser Underline Indicating Active Page */
+  .dropItem.active {
+    color: #ffffff;
+  }
+
+  .dropItem.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 1px;
+  }
+
+  .dropUser {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+    padding-bottom: 6px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .menuOverlay.open .dropUser {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.20s;
+  }
+
+  .dropLogout { margin: 0; padding: 0; border: none; background: none; display: block; }
+  
+  /* iOS System Red Logout Button */
+  .logoutBtn {
+    color: #ff453a;
+    text-decoration: none;
+    font-size: 1.6rem;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+    position: relative;
+    padding-bottom: 6px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+
+  .menuOverlay.open .logoutBtn {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.25s;
+  }
 }

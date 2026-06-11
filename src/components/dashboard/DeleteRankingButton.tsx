@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Trash2, X } from 'lucide-react';
 import { deleteRanking } from '@/lib/rankings/actions';
 import styles from './DeleteRankingButton.module.css';
@@ -14,6 +15,11 @@ interface Props {
 export default function DeleteRankingButton({ id, title, btnClassName }: Props) {
   const [showModal, setShowModal] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   function handleConfirm() {
     startTransition(async () => {
@@ -22,27 +28,15 @@ export default function DeleteRankingButton({ id, title, btnClassName }: Props) 
     });
   }
 
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setShowModal(true)}
-        className={btnClassName ?? styles.btn}
-        aria-label={`Remove ${title} from collection`}
-        title="Remove from collection"
-      >
-        <Trash2 size={14} />
-      </button>
-
-      {showModal && (
-        /* Click outside overlay to dismiss */
-        <div
-          className={styles.overlay}
-          onClick={() => !isPending && setShowModal(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Confirm removal"
-        >
+  const modalContent = showModal ? (
+    /* Click outside overlay to dismiss */
+    <div
+      className={styles.overlay}
+      onClick={() => !isPending && setShowModal(false)}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Confirm removal"
+    >
           <div
             className={styles.modal}
             onClick={(e) => e.stopPropagation()}
@@ -92,7 +86,21 @@ export default function DeleteRankingButton({ id, title, btnClassName }: Props) 
             </button>
           </div>
         </div>
-      )}
+  ) : null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setShowModal(true)}
+        className={btnClassName ?? styles.btn}
+        aria-label={`Remove ${title} from collection`}
+        title="Remove from collection"
+      >
+        <Trash2 size={14} />
+      </button>
+
+      {mounted && createPortal(modalContent, document.body)}
     </>
   );
 }

@@ -166,6 +166,12 @@
   opacity: 1;
 }
 
+@media (max-width: 736px) {
+  .overlayActions {
+    opacity: 1;
+  }
+}
+
 /* Glass edit button */
 .overlayBtn {
   display: inline-flex;
@@ -253,9 +259,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 3px var(--space-2);
+  padding: 4px 10px;
   border-radius: var(--radius-sm);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -301,18 +307,24 @@
   justify-content: center;
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  border: none;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   background: transparent;
   color: var(--accent-light);
   margin-left: auto;
   padding: 0;
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.expandBtnInline:hover { color: var(--accent); }
-.expandBtnInlineActive { color: var(--accent) !important; }
+.expandBtnInline:hover { 
+  color: var(--accent); 
+  border-color: var(--accent);
+}
+.expandBtnInlineActive { 
+  color: var(--accent) !important; 
+  border-color: var(--accent) !important;
+}
 
 .mediaTypePill {
   font-size: 10px;

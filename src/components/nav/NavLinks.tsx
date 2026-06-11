@@ -50,19 +50,23 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
   // ── Mobile hamburger ─────────────────────────────────────
   const mobileNav = (
     <div className={styles.hamburgerWrapper} ref={menuRef}>
+      {/* Animated Hamburger Button */}
       <button
-        className={styles.hamburgerBtn}
+        className={`${styles.hamburgerBtn} ${menuOpen ? styles.open : ''}`}
         onClick={() => setMenuOpen((v) => !v)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       >
-        {menuOpen ? <X size={22} /> : <Menu size={22} />}
+        <div className={styles.hamburgerBar} />
+        <div className={styles.hamburgerBar} />
+        <div className={styles.hamburgerBar} />
       </button>
 
-      {menuOpen && (
-        <div className={styles.dropdown}>
+      {/* Full Screen Glass Overlay */}
+      <div className={`${styles.menuOverlay} ${menuOpen ? styles.open : ''}`}>
+        <div className={styles.menuNav}>
           <Link
             href="/search"
-            className={`${styles.dropItem} ${onBrowse ? styles.dropItemActive : ''}`}
+            className={`${styles.dropItem} ${onBrowse ? styles.active : ''}`}
             onClick={() => setMenuOpen(false)}
           >
             Browse
@@ -70,7 +74,7 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
           {isLoggedIn && (
             <Link
               href="/dashboard"
-              className={`${styles.dropItem} ${onList ? styles.dropItemActive : ''}`}
+              className={`${styles.dropItem} ${onList ? styles.active : ''}`}
               onClick={() => setMenuOpen(false)}
             >
               List
@@ -81,7 +85,9 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
           )}
           {isLoggedIn ? (
             <form action={logOut} className={styles.dropLogout}>
-              <button type="submit" className={styles.dropItem}>Log out</button>
+              <button type="submit" className={styles.logoutBtn} onClick={() => setMenuOpen(false)}>
+                Log out
+              </button>
             </form>
           ) : (
             <>
@@ -90,7 +96,7 @@ export default function NavLinks({ displayName, isLoggedIn }: Props) {
             </>
           )}
         </div>
-      )}
+      </div>
     </div>
   );
 

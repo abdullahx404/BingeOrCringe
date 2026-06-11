@@ -35,9 +35,13 @@ export default function TierFilterTabs({ activeTier, countByTier, total }: Props
             key={tier}
             href={`/dashboard?tier=${tier}`}
             className={`${styles.tab} ${isActive ? styles.tabActive : ''}`}
-            style={isActive ? { color: cfg.color, borderColor: cfg.color } : {}}
+            style={{
+              borderColor: cfg.color,
+              color: isActive ? cfg.color : undefined,
+              backgroundColor: isActive ? `${cfg.color}15` : undefined
+            }}
           >
-            {Icon && <Icon size={13} />}
+            {Icon && <Icon size={14} style={{ color: isActive ? cfg.color : cfg.color }} />}
             <span>{cfg.label}</span>
             {countByTier[tier] > 0 && (
               <span className={styles.count}>{countByTier[tier]}</span>
