@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Bell } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 interface Notification {
   id: string;
@@ -30,6 +31,36 @@ export default function NotificationsBell() {
         }
       })
       .catch(() => {});
+
+    // Supabase Realtime Subscription for Notifications
+    const supabase = createClient();
+    let channel: any = null;
+    
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      channel = supabase
+        .channel('public:notifications')
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` },
+          async (payload) => {
+            const newNotif = payload.new;
+            // Fetch actor profile since it's just an ID
+            const { data: actor } = await supabase.from('profiles').select('id, display_name, username, avatar_url').eq('id', newNotif.actor_id).single();
+            if (actor) {
+              setNotifications(prev => [{
+                ...newNotif,
+                actor
+              } as Notification, ...prev]);
+            }
+          }
+        )
+        .subscribe();
+    });
+
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
   }, []);
 
   const unreadCount = notifications.filter((n) => !n.is_read).length;

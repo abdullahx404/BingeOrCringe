@@ -14,6 +14,7 @@ import { logOut } from '@/lib/auth/actions';
 import SearchResultCard from '@/components/search/SearchResultCard';
 import SearchInput from '@/components/search/SearchInput';
 import NavLinks from '@/components/nav/NavLinks';
+import TopRankers from '@/components/search/TopRankers';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -218,6 +219,8 @@ export default async function SearchPage({ searchParams }: Props) {
       {/* ── Main content ────────────────────────────── */}
       <main className={styles.main}>
         <div className="container">
+          {type === 'users' && !query ? <TopRankers /> : null}
+
           <div style={{ display: 'flex', gap: '16px', marginBottom: '24px', borderBottom: '1px solid var(--border-subtle)' }}>
             <Link 
               href={`/search?q=${encodeURIComponent(query)}&type=titles`} 

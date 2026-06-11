@@ -2,8 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Search, ListChecks, Share2, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import GlobalNav from '@/components/nav/GlobalNav';
-import { getTrending } from '@/lib/tmdb/client';
-import { tmdbImage } from '@/lib/tmdb/client';
+import { getTrending, tmdbImage } from '@/lib/tmdb/client';
+import { createClient } from '@/lib/supabase/server';
+import ActivityFeed from '@/components/feed/ActivityFeed';
 import styles from './page.module.css';
 
 export const metadata = {
@@ -11,6 +12,22 @@ export const metadata = {
 };
 
 export default async function LandingPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (user) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.navWrapper}>
+          <GlobalNav />
+        </div>
+        <main className={styles.main} style={{ paddingTop: '100px' }}>
+          <ActivityFeed userId={user.id} />
+        </main>
+      </div>
+    );
+  }
+
   let trendingItems: any[] = [];
   try {
     const res = await getTrending();
