@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { User, Image as ImageIcon } from 'lucide-react';
 import { updateProfile, type ProfileUpdateData } from '@/lib/profile/actions';
 import styles from './ProfileSettingsForm.module.css';
 
@@ -33,38 +32,6 @@ export default function ProfileSettingsForm({ initialData }: Props) {
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      
-      {/* Aesthetic Profile Photo Section */}
-      <div className={styles.photoSection}>
-        <div className={styles.avatarPreview}>
-          {formData.avatar_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={formData.avatar_url} alt="Avatar" className={styles.avatarImg} />
-          ) : (
-            <div className={styles.avatarFallback}>
-              <User size={40} />
-            </div>
-          )}
-        </div>
-        <div className={styles.photoInputContainer}>
-          <label htmlFor="avatar_url" className={styles.label}>Profile Photo URL</label>
-          <div className={styles.inputWithIcon}>
-            <ImageIcon size={18} className={styles.inputIcon} />
-            <input
-              id="avatar_url"
-              type="url"
-              placeholder="https://example.com/avatar.png"
-              className={`input ${styles.iconInput}`}
-              value={formData.avatar_url || ''}
-              onChange={(e) => setFormData({ ...formData, avatar_url: e.target.value })}
-            />
-          </div>
-          <p className={styles.hint}>Paste a link to an image to use as your avatar.</p>
-        </div>
-      </div>
-
-      <hr className={styles.divider} />
-
       <div className={styles.fieldGrid}>
         <div className={styles.field}>
           <label htmlFor="display_name" className={styles.label}>Display Name</label>
@@ -93,8 +60,6 @@ export default function ProfileSettingsForm({ initialData }: Props) {
           <p className={styles.hint}>3-20 characters. Letters, numbers, and underscores.</p>
         </div>
       </div>
-
-      <hr className={styles.divider} />
 
       <div className={styles.fieldRow}>
         <div className={styles.toggleText}>

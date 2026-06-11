@@ -31,6 +31,7 @@ export const viewport: Viewport = {
 };
 
 import Footer from '@/components/nav/Footer';
+import { Toaster } from 'sonner';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Footer />
         </div>
+        <Toaster position="bottom-center" theme="dark" />
       </body>
     </html>
   );

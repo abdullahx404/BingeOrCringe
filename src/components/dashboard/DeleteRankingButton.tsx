@@ -3,6 +3,7 @@
 import { useState, useTransition, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Trash2, X } from 'lucide-react';
+import { toast } from 'sonner';
 import { deleteRanking } from '@/lib/rankings/actions';
 import styles from './DeleteRankingButton.module.css';
 
@@ -23,8 +24,13 @@ export default function DeleteRankingButton({ id, title, btnClassName }: Props) 
 
   function handleConfirm() {
     startTransition(async () => {
-      await deleteRanking(id);
-      setShowModal(false);
+      const res = await deleteRanking(id);
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success(`Removed "${title}" from your collection`);
+        setShowModal(false);
+      }
     });
   }
 

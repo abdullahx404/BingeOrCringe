@@ -22,6 +22,17 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
 
   const supabase = await createClient();
 
+  // Check if username is taken
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .single();
+
+  if (existingProfile) {
+    return { data: null, error: 'That username is already taken. Try another.' };
+  }
+
   const { error } = await supabase.auth.signUp({
     email,
     password,

@@ -24,7 +24,6 @@ export async function toggleVisibility(isPublic: boolean): Promise<ApiResponse<n
 export interface ProfileUpdateData {
   display_name: string;
   username: string;
-  avatar_url: string | null;
   is_public: boolean;
 }
 
@@ -59,7 +58,6 @@ export async function updateProfile(data: ProfileUpdateData): Promise<ApiRespons
     .update({
       display_name: data.display_name,
       username: data.username,
-      avatar_url: data.avatar_url || null,
       is_public: data.is_public,
       updated_at: new Date().toISOString(),
     })

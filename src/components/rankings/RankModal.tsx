@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { X, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import { createRanking, updateRanking } from '@/lib/rankings/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
@@ -25,7 +26,7 @@ interface Props {
   };
   existing?: Ranking | null;
   onClose: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (savedRank: Ranking | null) => void;
 }
 
 export default function RankModal({ media, existing, onClose, onSuccess }: Props) {
@@ -84,8 +85,10 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
 
       if (result.error) {
         setError(result.error);
+        toast.error(result.error);
       } else {
-        onSuccess?.();
+        toast.success(`Saved "${media.title}" as ${TIER_CONFIG[selectedTier].label}`);
+        onSuccess?.(result.data);
         onClose();
       }
     });

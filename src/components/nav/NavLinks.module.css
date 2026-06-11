@@ -58,7 +58,7 @@
 }
 
 /* ── Responsive breakpoint ── */
-@media (max-width: 736px) {
+@media (max-width: 640px) {
   .desktopLinks { display: none; }
   .hamburgerWrapper { display: block; }
 
@@ -109,10 +109,8 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--bg-default);
+    border-left: 1px solid var(--border-subtle);
     display: flex;
     flex-direction: column;
     align-items: center;

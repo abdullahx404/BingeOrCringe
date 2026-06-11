@@ -16,7 +16,7 @@ export default async function SettingsPage() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('display_name, username, avatar_url, is_public')
+    .select('display_name, username, is_public')
     .eq('id', user.id)
     .single();
 
@@ -28,7 +28,6 @@ export default async function SettingsPage() {
   const initialData = {
     display_name: profile.display_name,
     username: profile.username,
-    avatar_url: profile.avatar_url,
     is_public: profile.is_public,
   };
 

@@ -140,7 +140,7 @@ export default async function SearchPage({ searchParams }: Props) {
       {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link href="/" className={styles.logo}>
+          <Link href={user ? '/search' : '/'} className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </Link>

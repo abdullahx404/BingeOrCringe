@@ -7,7 +7,7 @@ import { sanitizeTags } from '@/lib/utils/tags';
 import type { ApiResponse } from '@/types';
 
 /* ─── Create Ranking ─────────────────────────────────── */
-export async function createRanking(formData: FormData): Promise<ApiResponse<null>> {
+export async function createRanking(formData: FormData): Promise<ApiResponse<any>> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -37,7 +37,7 @@ export async function createRanking(formData: FormData): Promise<ApiResponse<nul
   if (isNaN(tmdb_id)) return { data: null, error: 'Invalid TMDB ID.' };
 
   // Upsert — if they rank again, update instead of error
-  const { error } = await supabase
+  const { data: insertedData, error } = await supabase
     .from('rankings')
     .upsert({
       user_id: user.id,
@@ -52,19 +52,21 @@ export async function createRanking(formData: FormData): Promise<ApiResponse<nul
       episode_number,
     }, {
       onConflict: 'user_id,tmdb_id,media_type,season_number,episode_number',
-    });
+    })
+    .select()
+    .single();
 
   if (error) return { data: null, error: error.message };
 
   revalidatePath('/dashboard');
-  return { data: null, error: null };
+  return { data: insertedData, error: null };
 }
 
 /* ─── Update Ranking ────────────────────────────────── */
 export async function updateRanking(
   id: string,
   formData: FormData
-): Promise<ApiResponse<null>> {
+): Promise<ApiResponse<any>> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { data: null, error: 'Not signed in.' };
@@ -77,16 +79,18 @@ export async function updateRanking(
     tags = sanitizeTags(JSON.parse(formData.get('tags') as string)).slice(0, 3);
   } catch { /* empty */ }
 
-  const { error } = await supabase
+  const { data: updatedData, error } = await supabase
     .from('rankings')
     .update({ tier, tags })
     .eq('id', id)
-    .eq('user_id', user.id); // RLS + safety check
+    .eq('user_id', user.id) // RLS + safety check
+    .select()
+    .single();
 
   if (error) return { data: null, error: error.message };
 
   revalidatePath('/dashboard');
-  return { data: null, error: null };
+  return { data: updatedData, error: null };
 }
 
 /* ─── Delete Ranking ────────────────────────────────── */

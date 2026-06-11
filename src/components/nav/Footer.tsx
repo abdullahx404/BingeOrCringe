@@ -8,7 +8,7 @@ import styles from './Footer.module.css';
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname === '/login' || pathname === '/signup') {
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/settings') {
     return null;
   }
   return (

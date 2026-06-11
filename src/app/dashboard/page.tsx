@@ -126,7 +126,7 @@ export default async function DashboardPage({ searchParams }: Props) {
       {/* ── Sticky header ────────────────────────────── */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <Link href="/" className={styles.logo}>
+          <Link href="/search" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
           </Link>
