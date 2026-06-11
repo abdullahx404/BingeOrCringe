@@ -116,12 +116,12 @@ export default async function ListPage({ params }: Props) {
                 Created by {list.profiles.display_name} (@{list.profiles.username})
               </p>
             </div>
-            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-              {list.is_public && <ShareListButton listId={list.id} />}
-              {isOwner && (
+            {isOwner && (
+              <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                {list.is_public && <ShareListButton listId={list.id} />}
                 <ListSettingsMenu listId={list.id} listName={list.name} isPublic={list.is_public} />
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {!hasContent ? (

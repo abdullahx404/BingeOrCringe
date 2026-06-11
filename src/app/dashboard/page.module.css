@@ -120,25 +120,17 @@
   flex-direction: column;
   gap: 0;
   position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  transition: transform var(--transition-fast);
 }
 
 .rankCard:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
   transform: translateY(-2px);
 }
 
 .rankCardExpanded {
-  border-color: rgba(108, 99, 255, 0.5) !important;
-  box-shadow: 0 0 0 1px rgba(108, 99, 255, 0.25), 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+  /* No special expanded styles needed if there's no border */
 }
 
 .posterWrapper {
@@ -219,13 +211,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-2) var(--space-3) var(--space-3);
+  padding: var(--space-2) 0 0 0;
 }
 
 .poster {
   position: relative;
   aspect-ratio: 2 / 3;
-  border-radius: 0;
+  border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--bg-elevated);
 }
