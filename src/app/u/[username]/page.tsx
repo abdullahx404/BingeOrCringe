@@ -13,6 +13,8 @@ import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
 import FollowButton from '@/components/profile/FollowButton';
 import ProfileSettingsForm from '@/components/profile/ProfileSettingsForm';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
+import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
+import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import styles from './page.module.css';
 
 interface Props {
@@ -227,6 +229,15 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
             {user && !isOwnProfile && (
               <div style={{ marginTop: 'var(--space-4)' }}>
                 <FollowButton followingId={profile.id} initialIsFollowing={isFollowing} />
+              </div>
+            )}
+
+            {isOwnProfile && (
+              <div style={{ marginTop: 'var(--space-4)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                {profile?.is_public && profile?.username && (
+                  <ShareProfileButton username={profile.username} />
+                )}
+                <VisibilityToggle isPublic={profile?.is_public ?? false} />
               </div>
             )}
           </div>
