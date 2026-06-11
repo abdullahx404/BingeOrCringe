@@ -43,8 +43,8 @@ export default function FollowButton({ followingId, initialIsFollowing }: Props)
     <button
       onClick={handleFollowToggle}
       disabled={isPending}
-      className={`btn btn-sm ${isFollowing ? 'btn-ghost' : 'btn-primary'}`}
-      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+      className={`btn btn-sm ${isFollowing ? 'btn-secondary' : 'btn-primary'}`}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: 'var(--radius-full)' }}
     >
       {isFollowing ? (
         <>

@@ -72,10 +72,6 @@ export async function logIn(formData: FormData): Promise<ApiResponse<null>> {
   if (!emailValidation.valid) {
     return { data: null, error: emailValidation.error! };
   }
-  const passwordValidation = validatePassword(password);
-  if (!passwordValidation.valid) {
-    return { data: null, error: passwordValidation.error! };
-  }
 
   const supabase = await createClient();
 

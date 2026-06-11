@@ -227,9 +227,9 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
             </div>
             
             {user && !isOwnProfile && (
-              <div style={{ marginTop: 'var(--space-4)', display: 'flex', gap: 'var(--space-2)' }}>
+              <div style={{ marginTop: 'var(--space-4)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', width: '100%', maxWidth: '200px' }}>
                 <FollowButton followingId={profile.id} initialIsFollowing={isFollowing} />
-                <Link href={`/messages?user=${profile.username}`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                <Link href={`/messages?user=${profile.username}`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)', borderRadius: 'var(--radius-full)' }}>
                   <MessageSquare size={16} />
                   Message
                 </Link>

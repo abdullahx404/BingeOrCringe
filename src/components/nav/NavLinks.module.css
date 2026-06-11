@@ -107,8 +107,15 @@
   margin: 6px 0;
 }
 
+.logoutForm {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .dropdownLogout {
   color: var(--color-error);
+  width: 100%;
 }
 
 .dropdownLogout:hover {

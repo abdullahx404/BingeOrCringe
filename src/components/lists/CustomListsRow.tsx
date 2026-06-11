@@ -18,7 +18,7 @@ export default function CustomListsRow({ lists }: Props) {
     <div className={styles.container}>
       <div className={styles.header}>
         <h2 className={styles.title}>Your Custom Lists</h2>
-        <button className="btn btn-secondary btn-sm" onClick={() => setIsModalOpen(true)}>
+        <button className="btn btn-secondary btn-sm" onClick={() => setIsModalOpen(true)} style={{ borderRadius: 'var(--radius-full)' }}>
           <Plus size={16} /> Create List
         </button>
       </div>

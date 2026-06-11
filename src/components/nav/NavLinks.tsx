@@ -41,7 +41,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
   const desktopNav = isLoggedIn ? (
     <div className={styles.desktopLinks}>
       <Link href="/search"    className={`${styles.navLink} ${onBrowse ? styles.active : ''}`}>Browse</Link>
-      <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>List</Link>
+      <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>My Lists</Link>
       
       {username && (
         <div className={styles.dropdownContainer} ref={dropdownRef}>
@@ -65,7 +65,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
                 Notifications
               </Link>
               <div className={styles.dropdownDivider} />
-              <form action={logOut}>
+              <form action={logOut} className={styles.logoutForm}>
                 <button type="submit" className={`${styles.dropdownItem} ${styles.dropdownLogout}`}>
                   Log out
                 </button>
@@ -111,7 +111,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
                 className={`${styles.dropItem} ${onList ? styles.active : ''}`}
                 onClick={() => setMenuOpen(false)}
               >
-                List
+                My Lists
               </Link>
               <Link
                 href="/messages"
@@ -132,7 +132,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
           {isLoggedIn && username && (
             <Link 
               href={`/u/${username}`} 
-              className={styles.dropUser}
+              className={`${styles.dropItem} ${pathname === `/u/${username}` ? styles.active : ''}`}
               onClick={() => setMenuOpen(false)}
             >
               Profile

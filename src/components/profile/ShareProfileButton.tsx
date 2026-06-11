@@ -25,7 +25,7 @@ export default function ShareProfileButton({ username }: Props) {
     <button
       onClick={handleCopy}
       className="btn btn-secondary btn-sm"
-      style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+      style={{ display: 'flex', alignItems: 'center', gap: '6px', borderRadius: 'var(--radius-full)' }}
       title="Copy Profile Link"
     >
       {copied ? <Check size={14} /> : <Share2 size={14} />}
