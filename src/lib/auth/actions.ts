@@ -97,7 +97,7 @@ export async function signInWithGoogle(): Promise<ApiResponse<{ url: string }>> 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/callback`,
     },
   });
 
@@ -126,7 +126,7 @@ export async function resetPassword(formData: FormData): Promise<ApiResponse<nul
 
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/settings`,
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/callback?next=/update-password`,
   });
 
   if (error) {

@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
       if (result?.error) {
         setServerError(result.error);
       } else {
-        setServerSuccess('If an account exists, a password reset link has been sent to that email.');
+        setServerSuccess('If an account exists, a password reset link has been sent to that email. This can take up to 2 minutes.');
       }
     });
   }
@@ -46,7 +46,7 @@ export default function ForgotPasswordPage() {
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <h1 className={styles.title}>Reset Password</h1>
-        <p className={styles.subtitle}>Enter your email to receive a password reset link.</p>
+        <p className={styles.subtitle}>Enter your email to receive a password reset link. It may take up to 2 minutes to arrive.</p>
       </div>
 
       {serverError && (
