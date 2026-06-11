@@ -67,7 +67,7 @@
   .headerSearch { display: none; }
   .mobileSearch { display: block; }
   /* Logout is in hamburger on mobile */
-  .headerRight form { display: none; }
+  .headerRight > form { display: none; }
 }
 
 /* Main */
