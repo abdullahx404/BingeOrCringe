@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, MessageSquare } from 'lucide-react';
 import { logOut } from '@/lib/auth/actions';
 import NotificationsBell from './NotificationsBell';
 import styles from './NavLinks.module.css';
@@ -38,6 +38,9 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
     <div className={styles.desktopLinks}>
       <Link href="/search"    className={`${styles.navLink} ${onBrowse ? styles.active : ''}`}>Browse</Link>
       <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>List</Link>
+      <Link href="/messages" className={`${styles.navLink} ${pathname.startsWith('/messages') ? styles.active : ''}`} title="Messages">
+        <MessageSquare size={20} />
+      </Link>
       <NotificationsBell />
       {username && (
         <Link href={`/u/${username}`} className={styles.username}>{displayName || username}</Link>
@@ -82,6 +85,13 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
                 onClick={() => setMenuOpen(false)}
               >
                 List
+              </Link>
+              <Link
+                href="/messages"
+                className={`${styles.dropItem} ${pathname.startsWith('/messages') ? styles.active : ''}`}
+                onClick={() => setMenuOpen(false)}
+              >
+                Messages
               </Link>
               <Link
                 href="/notifications"

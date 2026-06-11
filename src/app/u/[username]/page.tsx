@@ -4,7 +4,7 @@ import GlobalNav from '@/components/nav/GlobalNav';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
 import Link from 'next/link';
-import { Lock, User } from 'lucide-react';
+import { Lock, User, MessageSquare } from 'lucide-react';
 import type { Ranking } from '@/types';
 import { TIERS } from '@/lib/utils/tiers';
 import type { TierType } from '@/lib/utils/tiers';
@@ -227,8 +227,12 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
             </div>
             
             {user && !isOwnProfile && (
-              <div style={{ marginTop: 'var(--space-4)' }}>
+              <div style={{ marginTop: 'var(--space-4)', display: 'flex', gap: 'var(--space-2)' }}>
                 <FollowButton followingId={profile.id} initialIsFollowing={isFollowing} />
+                <Link href={`/messages?user=${profile.username}`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+                  <MessageSquare size={16} />
+                  Message
+                </Link>
               </div>
             )}
 
