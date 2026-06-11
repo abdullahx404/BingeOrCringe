@@ -63,7 +63,7 @@
 }
 
 @media (max-width: 640px) {
-  .headerInner { gap: var(--space-2); padding: 0 var(--space-3); }
+  .headerInner { gap: var(--space-2); padding: 0 var(--space-3); justify-content: space-between; }
   .headerSearch { display: none; }
   .mobileSearch { display: block; }
   /* Logout is in hamburger on mobile */
