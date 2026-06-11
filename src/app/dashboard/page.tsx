@@ -11,6 +11,7 @@ import type { TierType } from '@/lib/utils/tiers';
 import type { Ranking } from '@/types';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
 import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
+import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import SearchInput from '@/components/search/SearchInput';
 import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
@@ -164,7 +165,12 @@ export default async function DashboardPage({ searchParams }: Props) {
                   : `${totalRanked} ranking${totalRanked !== 1 ? 's' : ''} total`}
               </p>
             </div>
-            <VisibilityToggle isPublic={profile?.is_public ?? false} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              {profile?.is_public && profile?.username && (
+                <ShareProfileButton username={profile.username} />
+              )}
+              <VisibilityToggle isPublic={profile?.is_public ?? false} />
+            </div>
           </div>
 
           <TierFilterTabs
