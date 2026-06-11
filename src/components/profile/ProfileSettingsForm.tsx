@@ -39,7 +39,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
             id="display_name"
             type="text"
             required
-            className="input"
+            className={styles.input}
             value={formData.display_name}
             onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
           />
@@ -53,7 +53,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
             required
             pattern="^[a-zA-Z0-9_]{3,20}$"
             title="3-20 characters, letters, numbers, and underscores only"
-            className="input"
+            className={styles.input}
             value={formData.username}
             onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           />

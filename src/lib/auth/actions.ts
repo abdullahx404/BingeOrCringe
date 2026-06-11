@@ -33,13 +33,17 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
     return { data: null, error: 'That username is already taken. Try another.' };
   }
 
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { username, display_name: displayName },
     },
   });
+
+  if (data?.user?.identities && data.user.identities.length === 0) {
+    return { data: null, error: 'An account with this email already exists.' };
+  }
 
   if (error) {
     if (error.message.includes('already registered') || error.message.includes('already exists')) {

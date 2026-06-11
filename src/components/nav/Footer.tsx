@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Clapperboard } from 'lucide-react';
+import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -31,9 +32,17 @@ export default function Footer() {
             <ul className={styles.linksList}>
               <li><Link href="/">Home</Link></li>
               <li><Link href="/search">Search</Link></li>
-              <li><Link href="/login">Log In</Link></li>
-              <li><Link href="/signup">Sign Up</Link></li>
+              <li><Link href="/terms">Terms & Conditions</Link></li>
             </ul>
+          </div>
+
+          <div className={styles.linksCol}>
+            <h4 className={styles.linksTitle}>Social</h4>
+            <div className={styles.socialLinks}>
+              <Link href="#" aria-label="Github"><FaGithub size={20} /></Link>
+              <Link href="#" aria-label="LinkedIn"><FaLinkedin size={20} /></Link>
+              <Link href="#" aria-label="Instagram"><FaInstagram size={20} /></Link>
+            </div>
           </div>
         </div>
 

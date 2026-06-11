@@ -73,7 +73,21 @@
 }
 
 .linksList a:hover {
-  color: var(--accent-light);
+  color: var(--text-primary);
+}
+
+.socialLinks {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.socialLinks a {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.socialLinks a:hover {
+  color: var(--text-primary);
 }
 
 .bottomBar {
