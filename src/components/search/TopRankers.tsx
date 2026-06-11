@@ -28,13 +28,7 @@ export default async function TopRankers() {
         {rankers.map((ranker, idx) => (
           <Link key={ranker.id} href={`/u/${ranker.username}`} className={styles.rankerCard}>
             <div className={styles.rank}>{idx + 1}</div>
-            <div className={styles.avatarWrap}>
-              {ranker.avatar_url ? (
-                <img src={ranker.avatar_url} alt={ranker.username} className={styles.avatar} />
-              ) : (
-                ranker.username[0].toUpperCase()
-              )}
-            </div>
+
             <div className={styles.info}>
               <div className={styles.name}>@{ranker.username}</div>
               <div className={styles.stats}>{ranker.total_rankings} rankings</div>

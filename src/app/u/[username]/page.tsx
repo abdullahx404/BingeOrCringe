@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+
+export const dynamic = 'force-dynamic';
 import GlobalNav from '@/components/nav/GlobalNav';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
@@ -229,7 +231,7 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
             {user && !isOwnProfile && (
               <div className={styles.profileActions}>
                 <FollowButton followingId={profile.id} initialIsFollowing={isFollowing} />
-                <Link href={`/messages?user=${profile.username}`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)', borderRadius: 'var(--radius-full)', width: '100%' }}>
+                <Link href={`/messages?user=${profile.username}`} className="btn btn-secondary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)', borderRadius: 'var(--radius-full)', width: '100%', height: '44px' }}>
                   <MessageSquare size={16} />
                   Message
                 </Link>
