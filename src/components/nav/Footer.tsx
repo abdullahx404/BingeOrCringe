@@ -1,8 +1,16 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Clapperboard } from 'lucide-react';
 import styles from './Footer.module.css';
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
   return (
     <footer className={styles.footer}>
       <div className="container">
@@ -33,17 +41,6 @@ export default function Footer() {
           <p className={styles.copyright}>
             &copy; {new Date().getFullYear()} BingeOrCringe. All rights reserved.
           </p>
-          <div className={styles.tmdbAttr}>
-            {/* TMDB attribution requires logo or specific text */}
-            <img 
-              src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_short-8e7b30f73a4020692ccca9c88bafe5dcb6f8a62a4c6bc55cd9ba82bb2cd95f6c.svg" 
-              alt="TMDB Logo" 
-              className={styles.tmdbLogo}
-            />
-            <p>
-              This product uses the TMDB API but is not endorsed or certified by TMDB.
-            </p>
-          </div>
         </div>
       </div>
     </footer>

@@ -25,7 +25,7 @@ export default async function GlobalNav() {
     <nav className={styles.nav}>
       {/* ── Main row ── */}
       <div className={styles.navInner}>
-        <Link href="/search" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <Clapperboard size={20} className={styles.logoIcon} />
           <span className={styles.logoText}>BingeOrCringe</span>
         </Link>

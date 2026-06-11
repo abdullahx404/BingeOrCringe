@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import { SearchX, TrendingUp, AlertCircle, Clapperboard } from 'lucide-react';
 import {
@@ -139,10 +140,10 @@ export default async function SearchPage({ searchParams }: Props) {
       {/* ── Header with integrated search ─────────── */}
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <a href="/search" className={styles.logo}>
+          <Link href="/" className={styles.logo}>
             <Clapperboard size={20} className={styles.logoIcon} />
             <span className={styles.logoText}>BingeOrCringe</span>
-          </a>
+          </Link>
 
           <div className={styles.headerSearch}>
             <Suspense>

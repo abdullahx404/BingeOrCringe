@@ -109,10 +109,10 @@ export default function TvGroupAccordion({
         <div className={styles.tvActions}>
           {!isPublicView && group.showRanking && (
             <>
-              <Link href={showHref} className={styles.editBtn} title="Edit ranking">
-                <Edit2 size={17} />
+              <Link href={showHref} className={styles.overlayBtn} title="Edit ranking">
+                <Edit2 size={14} />
               </Link>
-              <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} />
+              <DeleteRankingButton id={group.showRanking.id} title={group.showTitle} btnClassName={styles.overlayDeleteBtn} />
             </>
           )}
           {/* Expand chevron */}
@@ -153,11 +153,11 @@ export default function TvGroupAccordion({
                 <div className={styles.tvSubActions}>
                   <Link
                     href={`/title/tv/${group.tmdbId}/season/${s.season_number}`}
-                    className={styles.editBtn}
+                    className={styles.overlayBtn}
                   >
-                    <Edit2 size={16} />
+                    <Edit2 size={14} />
                   </Link>
-                  <DeleteRankingButton id={s.id} title={`Season ${s.season_number}`} />
+                  <DeleteRankingButton id={s.id} title={`Season ${s.season_number}`} btnClassName={styles.overlayDeleteBtn} />
                 </div>
               )}
             </div>
@@ -178,7 +178,7 @@ export default function TvGroupAccordion({
                   <InlineTierPill tier={ep.tier} />
                   {!isPublicView && (
                     <div className={styles.tvSubActions}>
-                      <DeleteRankingButton id={ep.id} title={ep.title} />
+                      <DeleteRankingButton id={ep.id} title={ep.title} btnClassName={styles.overlayDeleteBtn} />
                     </div>
                   )}
                 </div>

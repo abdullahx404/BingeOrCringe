@@ -16,9 +16,6 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       <main className={styles.main}>{children}</main>
 
-      <footer className={styles.footer}>
-        <p>&copy; {new Date().getFullYear()} BingeOrCringe</p>
-      </footer>
     </div>
   );
 }

@@ -19,7 +19,8 @@ export default function SignupPage() {
   const [isPending, startTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-  const [errors, setErrors] = useState<SignupFormErrors>({});
+  const [errors, setErrors] = useState<SignupFormErrors & { terms?: string }>({});
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [fields, setFields] = useState({
     username: '',
@@ -77,6 +78,8 @@ export default function SignupPage() {
     if (displayNameErr) newErrors.displayName = displayNameErr;
     if (emailErr) newErrors.email = emailErr;
     if (passwordErr) newErrors.password = passwordErr;
+
+    if (!agreedToTerms) newErrors.terms = 'You must agree to the Terms and Conditions to sign up.';
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -272,6 +275,24 @@ export default function SignupPage() {
           {fields.password && !errors.password && (
             <p className={styles.hint}>Strong password — good to go.</p>
           )}
+        </div>
+
+        <div className={`form-group ${styles.termsGroup}`}>
+          <label className={styles.termsLabel}>
+            <input
+              type="checkbox"
+              checked={agreedToTerms}
+              onChange={(e) => {
+                setAgreedToTerms(e.target.checked);
+                if (e.target.checked) setErrors((prev) => ({ ...prev, terms: undefined }));
+              }}
+              className={styles.termsCheckbox}
+            />
+            <span>
+              I agree to the <Link href="/terms" className={styles.switchLink} target="_blank">Terms and Conditions</Link>
+            </span>
+          </label>
+          {errors.terms && <p className="form-error">{errors.terms}</p>}
         </div>
 
         <button

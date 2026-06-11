@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import GlobalNav from '@/components/nav/GlobalNav';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
 import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
+import Link from 'next/link';
 import { Lock, User } from 'lucide-react';
 import type { Ranking } from '@/types';
 import { TIERS } from '@/lib/utils/tiers';
@@ -61,6 +62,28 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
 
   if (!profile) {
     notFound();
+  }
+
+  // 1.5. Auth check
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return (
+      <div className={styles.page}>
+        <GlobalNav />
+        <main className={styles.main}>
+          <div className="container">
+            <div className={styles.privateState}>
+              <Lock size={48} className={styles.privateIcon} />
+              <h1 className={styles.privateTitle}>Log in to view</h1>
+              <p className={styles.privateDesc}>Log in to see @{params.username}&apos;s list.</p>
+              <div style={{ marginTop: '16px' }}>
+                <Link href="/login" className="btn btn-primary">Log In</Link>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   // 2. Privacy check
