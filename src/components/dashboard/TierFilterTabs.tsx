@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
@@ -15,11 +16,13 @@ interface Props {
 }
 
 export default function TierFilterTabs({ activeTier, countByTier, total }: Props) {
+  const pathname = usePathname();
+  
   return (
     <div className={styles.tabs}>
       {/* All */}
       <Link
-        href="/dashboard"
+        href={pathname}
         className={`${styles.tab} ${!activeTier ? styles.tabActive : ''}`}
       >
         <span>All</span>
@@ -33,7 +36,7 @@ export default function TierFilterTabs({ activeTier, countByTier, total }: Props
         return (
           <Link
             key={tier}
-            href={`/dashboard?tier=${tier}`}
+            href={`${pathname}?tier=${tier}`}
             className={`${styles.tab} ${isActive ? styles.tabActive : ''}`}
             style={{
               borderColor: cfg.color,

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Settings, Trash2, Globe, Lock } from 'lucide-react';
 import { updateList, deleteList } from '@/lib/lists/actions';
 import { toast } from 'sonner';
+import modalStyles from '../dashboard/DeleteRankingButton.module.css';
 
 interface Props {
   listId: string;
@@ -122,32 +123,45 @@ export default function ListSettingsMenu({ listId, listName, isPublic }: Props) 
       )}
 
       {showDeleteModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 9999, 
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)',
-          padding: 'var(--space-4)'
-        }}>
-          <div style={{
-            background: 'var(--bg-surface)', padding: 'var(--space-6)',
-            borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)',
-            maxWidth: '400px', width: '100%', textAlign: 'center',
-            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
-          }}>
-            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-2)' }}>Delete List</h3>
-            <p style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-6)' }}>
-              Are you sure you want to delete &quot;{listName}&quot;? This action cannot be undone.
+        <div 
+          className={modalStyles.overlay}
+          onClick={() => !isPending && setShowDeleteModal(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div 
+            className={modalStyles.modal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={modalStyles.modalIconWrap}>
+              <Trash2 size={28} className={modalStyles.modalIcon} />
+            </div>
+
+            <h2 className={modalStyles.modalTitle}>Delete List</h2>
+            <p className={modalStyles.modalDesc}>
+              Are you sure you want to delete <strong>&ldquo;{listName}&rdquo;</strong>? This action cannot be undone.
             </p>
-            <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center' }}>
-              <button className="btn btn-secondary" onClick={() => setShowDeleteModal(false)} disabled={isPending}>
+
+            <div className={modalStyles.modalActions}>
+              <button 
+                type="button"
+                className="btn btn-ghost" 
+                onClick={() => setShowDeleteModal(false)} 
+                disabled={isPending}
+              >
                 Cancel
               </button>
               <button 
-                className="btn btn-primary" 
-                style={{ background: 'var(--color-trash)', borderColor: 'var(--color-trash)', color: '#fff' }} 
+                type="button"
+                className={`btn ${modalStyles.removeBtn}`} 
                 onClick={confirmDelete} 
                 disabled={isPending}
               >
+                {isPending ? (
+                  <span className={modalStyles.spinner} />
+                ) : (
+                  <Trash2 size={15} />
+                )}
                 {isPending ? 'Deleting...' : 'Delete'}
               </button>
             </div>
