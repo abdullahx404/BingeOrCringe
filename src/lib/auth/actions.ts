@@ -115,3 +115,73 @@ export async function logOut(): Promise<void> {
   revalidatePath('/', 'layout');
   redirect('/');
 }
+
+/* ─── Password Management ──────────────────────────────────── */
+export async function resetPassword(formData: FormData): Promise<ApiResponse<null>> {
+  const email = (formData.get('email') as string ?? '').trim();
+  const emailValidation = validateEmail(email);
+  if (!emailValidation.valid) {
+    return { data: null, error: emailValidation.error! };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/settings`,
+  });
+
+  if (error) {
+    return { data: null, error: 'Could not send reset email. Please try again.' };
+  }
+
+  return { data: null, error: null };
+}
+
+export async function updatePassword(password: string): Promise<ApiResponse<null>> {
+  const passwordValidation = validatePassword(password);
+  if (!passwordValidation.valid) {
+    return { data: null, error: passwordValidation.error! };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { data: null, error: 'Failed to update password.' };
+  }
+
+  return { data: null, error: null };
+}
+
+export async function changePasswordWithVerification(formData: FormData): Promise<ApiResponse<null>> {
+  const oldPassword = (formData.get('oldPassword') as string ?? '');
+  const newPassword = (formData.get('newPassword') as string ?? '');
+
+  const passwordValidation = validatePassword(newPassword);
+  if (!passwordValidation.valid) {
+    return { data: null, error: passwordValidation.error! };
+  }
+
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) {
+    return { data: null, error: 'Not authenticated.' };
+  }
+
+  // Verify old password
+  const { error: verifyError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: oldPassword
+  });
+
+  if (verifyError) {
+    return { data: null, error: 'Incorrect old password.' };
+  }
+
+  // Update password
+  const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+  if (updateError) {
+    return { data: null, error: 'Failed to update password. Try again.' };
+  }
+
+  return { data: null, error: null };
+}

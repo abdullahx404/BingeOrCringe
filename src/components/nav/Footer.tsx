@@ -39,9 +39,9 @@ export default function Footer() {
           <div className={styles.linksCol}>
             <h4 className={styles.linksTitle}>Social</h4>
             <div className={styles.socialLinks}>
-              <Link href="#" aria-label="Github"><FaGithub size={20} /></Link>
-              <Link href="#" aria-label="LinkedIn"><FaLinkedin size={20} /></Link>
-              <Link href="#" aria-label="Instagram"><FaInstagram size={20} /></Link>
+              <Link href="https://github.com/abdullahx404/BingeOrCringe" target="_blank" rel="noopener noreferrer" aria-label="Github"><FaGithub size={20} /></Link>
+              <Link href="https://www.linkedin.com/in/abdullahzia-linked/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={20} /></Link>
+              <Link href="https://www.instagram.com/abdullah.wtf/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={20} /></Link>
             </div>
           </div>
         </div>
@@ -49,6 +49,9 @@ export default function Footer() {
         <div className={styles.bottomBar}>
           <p className={styles.copyright}>
             &copy; {new Date().getFullYear()} BingeOrCringe. All rights reserved.
+          </p>
+          <p className={styles.tmdbAttr}>
+            This product uses the TMDB API but is not endorsed or certified by TMDB.
           </p>
         </div>
       </div>

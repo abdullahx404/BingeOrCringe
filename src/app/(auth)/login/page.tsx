@@ -126,9 +126,12 @@ function LoginForm() {
             aria-describedby={fieldErrors.password ? 'login-password-error' : undefined}
             aria-invalid={!!fieldErrors.password}
           />
-          {fieldErrors.password && (
-            <p id="login-password-error" className="form-error">{fieldErrors.password}</p>
-          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'var(--space-1)' }}>
+            {fieldErrors.password ? (
+              <p id="login-password-error" className="form-error">{fieldErrors.password}</p>
+            ) : <span />}
+            <Link href="/forgot-password" style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>Forgot password?</Link>
+          </div>
         </div>
 
         <button

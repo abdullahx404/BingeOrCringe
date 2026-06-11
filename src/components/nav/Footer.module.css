@@ -118,3 +118,9 @@
   height: 12px;
   width: auto;
 }
+
+.tmdbAttr {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  opacity: 0.8;
+}

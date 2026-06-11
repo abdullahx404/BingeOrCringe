@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import ProfileSettingsForm from '@/components/profile/ProfileSettingsForm';
+import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
 import GlobalNav from '@/components/nav/GlobalNav';
 import styles from './page.module.css';
 
@@ -40,6 +41,12 @@ export default async function SettingsPage() {
           <p className={styles.subtitle}>Manage your profile and privacy.</p>
 
           <ProfileSettingsForm initialData={initialData} />
+
+          <div style={{ marginTop: 'var(--space-10)' }}>
+            <h2 className={styles.title} style={{ fontSize: 'var(--text-xl)', marginBottom: 'var(--space-2)' }}>Password & Security</h2>
+            <p className={styles.subtitle} style={{ marginBottom: 'var(--space-6)' }}>Update your password.</p>
+            <ChangePasswordForm />
+          </div>
         </div>
       </main>
     </div>

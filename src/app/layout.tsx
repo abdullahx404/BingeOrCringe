@@ -33,6 +33,7 @@ export const viewport: Viewport = {
 
 import Footer from '@/components/nav/Footer';
 import { Toaster } from 'sonner';
+import NextTopLoader from 'nextjs-toploader';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -42,6 +43,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
+        <NextTopLoader
+          color="var(--accent)"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px var(--accent),0 0 5px var(--accent)"
+        />
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           {children}
           <Footer />
