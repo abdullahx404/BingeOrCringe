@@ -14,6 +14,7 @@ interface Props {
 
 export default function ListSettingsMenu({ listId, listName, isPublic }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -33,13 +34,17 @@ export default function ListSettingsMenu({ listId, listName, isPublic }: Props) 
     });
   }
 
-  function handleDelete() {
-    if (!confirm('Are you sure you want to delete this list? This cannot be undone.')) return;
-    
+  function handleDeleteClick() {
+    setIsOpen(false);
+    setShowDeleteModal(true);
+  }
+
+  function confirmDelete() {
     startTransition(async () => {
       const res = await deleteList(listId);
       if (res.error) {
         toast.error(res.error);
+        setShowDeleteModal(false);
       } else {
         toast.success('List deleted.');
         router.push('/dashboard');
@@ -98,7 +103,7 @@ export default function ListSettingsMenu({ listId, listName, isPublic }: Props) 
               Make {isPublic ? 'Private' : 'Public'}
             </button>
             <button 
-              onClick={handleDelete}
+              onClick={handleDeleteClick}
               disabled={isPending}
               style={{
                 display: 'flex', alignItems: 'center', gap: '8px', width: '100%',
@@ -114,6 +119,40 @@ export default function ListSettingsMenu({ listId, listName, isPublic }: Props) 
             </button>
           </div>
         </>
+      )}
+
+      {showDeleteModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999, 
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(8px)',
+          padding: 'var(--space-4)'
+        }}>
+          <div style={{
+            background: 'var(--bg-surface)', padding: 'var(--space-6)',
+            borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)',
+            maxWidth: '400px', width: '100%', textAlign: 'center',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
+          }}>
+            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 700, marginBottom: 'var(--space-2)' }}>Delete List</h3>
+            <p style={{ color: 'var(--text-muted)', marginBottom: 'var(--space-6)' }}>
+              Are you sure you want to delete &quot;{listName}&quot;? This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center' }}>
+              <button className="btn btn-secondary" onClick={() => setShowDeleteModal(false)} disabled={isPending}>
+                Cancel
+              </button>
+              <button 
+                className="btn btn-primary" 
+                style={{ background: 'var(--color-trash)', borderColor: 'var(--color-trash)', color: '#fff' }} 
+                onClick={confirmDelete} 
+                disabled={isPending}
+              >
+                {isPending ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

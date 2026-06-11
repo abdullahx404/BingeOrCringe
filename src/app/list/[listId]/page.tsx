@@ -6,14 +6,18 @@ import GlobalNav from '@/components/nav/GlobalNav';
 import ListSettingsMenu from '@/components/lists/ListSettingsMenu';
 import ShareListButton from '@/components/lists/ShareListButton';
 import { getTvShow } from '@/lib/tmdb/client';
+import TierFilterTabs from '@/components/dashboard/TierFilterTabs';
+import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
+import type { TierType } from '@/lib/utils/tiers';
 import { Film, Lock } from 'lucide-react';
 import styles from './page.module.css';
 
 interface Props {
   params: { listId: string };
+  searchParams: { tier?: string };
 }
 
-export default async function ListPage({ params }: Props) {
+export default async function ListPage({ params, searchParams }: Props) {
   const supabase = await createClient();
 
   const { data: listRaw, error: listErr } = await supabase
@@ -60,6 +64,11 @@ export default async function ListPage({ params }: Props) {
     rankings = rankingData || [];
   }
 
+  const countByTier: Record<string, number> = {};
+  for (const r of rankings) {
+    countByTier[r.tier] = (countByTier[r.tier] ?? 0) + 1;
+  }
+
   const movies = rankings.filter(r => r.media_type === 'movie');
   const tvRelated = rankings.filter(r => ['tv', 'season', 'episode'].includes(r.media_type));
 
@@ -101,8 +110,25 @@ export default async function ListPage({ params }: Props) {
   );
 
   const tvGroups = Array.from(tvGroupMap.values());
-  const hasContent = movies.length > 0 || tvGroups.length > 0;
   const isOwner = user?.id === list.user_id;
+
+  const validTier = searchParams.tier as TierType | undefined;
+  const isTierValid = validTier && TIERS.includes(validTier);
+
+  const filteredMovies = isTierValid
+    ? movies.filter(r => r.tier === validTier)
+    : movies;
+
+  const filteredTvGroups = isTierValid
+    ? tvGroups.filter(g =>
+        g.showRanking?.tier === validTier ||
+        g.seasons.some((s: Ranking) => s.tier === validTier) ||
+        g.episodes.some((e: Ranking) => e.tier === validTier)
+      )
+    : tvGroups;
+
+  const hasContent = filteredMovies.length > 0 || filteredTvGroups.length > 0;
+  const totalRanked = rankings.length;
 
   return (
     <div className={styles.page}>
@@ -124,14 +150,26 @@ export default async function ListPage({ params }: Props) {
             )}
           </div>
 
+          <TierFilterTabs
+            activeTier={isTierValid ? validTier : undefined}
+            countByTier={countByTier}
+            total={totalRanked}
+          />
+
           {!hasContent ? (
             <div className={styles.emptyState}>
               <Film size={48} className={styles.emptyIcon} />
-              <h2 className={styles.emptyTitle}>Empty List</h2>
-              <p className={styles.subtitle}>There are no titles in this list yet.</p>
+              <h2 className={styles.emptyTitle}>
+                {isTierValid ? `No ${TIER_CONFIG[validTier!].label} titles in this list` : 'Empty List'}
+              </h2>
+              <p className={styles.subtitle}>
+                {isTierValid
+                  ? `There are no titles ranked as ${TIER_CONFIG[validTier!].label} in this list.`
+                  : 'There are no titles in this list yet.'}
+              </p>
             </div>
           ) : (
-            <CollectionGrid movies={movies} tvGroups={tvGroups} />
+            <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} />
           )}
         </div>
       </main>
