@@ -3,9 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, MessageSquare } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { logOut } from '@/lib/auth/actions';
-import NotificationsBell from './NotificationsBell';
 import styles from './NavLinks.module.css';
 
 interface Props {
@@ -17,33 +16,63 @@ interface Props {
 export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const onBrowse = pathname === '/search' || pathname.startsWith('/search?');
   const onList   = pathname === '/dashboard' || pathname.startsWith('/dashboard');
 
-  // Close menu when clicking outside
+  // Close menus when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
     }
-    if (menuOpen) document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [menuOpen]);
+  }, []);
 
   // ── Desktop nav ──────────────────────────────────────────
   const desktopNav = isLoggedIn ? (
     <div className={styles.desktopLinks}>
       <Link href="/search"    className={`${styles.navLink} ${onBrowse ? styles.active : ''}`}>Browse</Link>
       <Link href="/dashboard" className={`${styles.navLink} ${onList   ? styles.active : ''}`}>List</Link>
-      <Link href="/messages" className={`${styles.navLink} ${pathname.startsWith('/messages') ? styles.active : ''}`} title="Messages">
-        <MessageSquare size={20} />
-      </Link>
-      <NotificationsBell />
+      
       {username && (
-        <Link href={`/u/${username}`} className={styles.username}>{displayName || username}</Link>
+        <div className={styles.dropdownContainer} ref={dropdownRef}>
+          <button 
+            className={styles.dropdownToggle} 
+            onClick={() => setDropdownOpen((v) => !v)}
+          >
+            {displayName || username}
+            <ChevronDown size={16} />
+          </button>
+          
+          {dropdownOpen && (
+            <div className={styles.dropdownMenu}>
+              <Link href={`/u/${username}`} className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
+                Profile
+              </Link>
+              <Link href="/messages" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
+                Messages
+              </Link>
+              <Link href="/notifications" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
+                Notifications
+              </Link>
+              <div className={styles.dropdownDivider} />
+              <form action={logOut}>
+                <button type="submit" className={`${styles.dropdownItem} ${styles.dropdownLogout}`}>
+                  Log out
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
       )}
     </div>
   ) : (
@@ -56,7 +85,6 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
   // ── Mobile hamburger ─────────────────────────────────────
   const mobileNav = (
     <div className={styles.hamburgerWrapper} ref={menuRef}>
-      {/* Animated Hamburger Button */}
       <button
         className={`${styles.hamburgerBtn} ${menuOpen ? styles.open : ''}`}
         onClick={() => setMenuOpen((v) => !v)}
@@ -67,7 +95,6 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
         <div className={styles.hamburgerBar} />
       </button>
 
-      {/* Full Screen Glass Overlay */}
       <div className={`${styles.menuOverlay} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.menuNav}>
           <Link
@@ -108,7 +135,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
               className={styles.dropUser}
               onClick={() => setMenuOpen(false)}
             >
-              {displayName || username}
+              Profile
             </Link>
           )}
           {isLoggedIn ? (

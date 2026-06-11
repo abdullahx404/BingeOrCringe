@@ -42,11 +42,6 @@ export default async function GlobalNav() {
         {/* Right group: Browse + List + username + Logout */}
         <div className={styles.rightGroup}>
           <NavLinks isLoggedIn={!!user} displayName={displayName} username={username} />
-          {user && (
-            <form action={logOut} className={styles.logoutForm}>
-              <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-            </form>
-          )}
         </div>
       </div>
 

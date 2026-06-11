@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { Send, ArrowLeft, MessageSquare } from 'lucide-react';
+import { Send, ArrowLeft, MessageSquare, User } from 'lucide-react';
 import Link from 'next/link';
 import styles from './ChatInterface.module.css';
 
@@ -112,10 +112,10 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
     }
   }, [activeProfile, messages, currentUser.id, supabase]);
 
-  // Scroll to bottom
+  // Scroll to bottom ONLY on initial load of activeProfile, NOT on every message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, activeProfile]);
+    messagesEndRef.current?.scrollIntoView();
+  }, [activeProfile]);
 
   // Compute conversations list
   const conversations = useMemo(() => {
@@ -222,11 +222,11 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
                   {c.user.avatar_url ? (
                     <img src={c.user.avatar_url} alt={c.user.username} className={styles.avatar} />
                   ) : (
-                    c.user.username[0].toUpperCase()
+                    <User size={24} color="var(--text-dim)" />
                   )}
                 </div>
                 <div className={styles.convoInfo}>
-                  <div className={styles.convoName}>{c.user.display_name}</div>
+                  <div className={styles.convoName}>@{c.user.username}</div>
                   <div className={styles.convoLastMsg}>
                     {c.lastMessage.sender_id === currentUser.id ? 'You: ' : ''}
                     {c.lastMessage.content}
@@ -255,11 +255,11 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
                 {activeProfile.avatar_url ? (
                   <img src={activeProfile.avatar_url} alt={activeProfile.username} className={styles.avatar} />
                 ) : (
-                  activeProfile.username[0].toUpperCase()
+                  <User size={20} color="var(--text-dim)" />
                 )}
               </div>
               <Link href={`/u/${activeProfile.username}`} className={styles.convoName} style={{textDecoration: 'none'}}>
-                {activeProfile.display_name}
+                @{activeProfile.username}
               </Link>
             </div>
 

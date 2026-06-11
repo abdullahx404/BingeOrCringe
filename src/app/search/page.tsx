@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { SearchX, TrendingUp, AlertCircle, Clapperboard } from 'lucide-react';
+import { SearchX, TrendingUp, AlertCircle, Clapperboard, User } from 'lucide-react';
 import {
   searchMulti,
   getTrending,
@@ -149,7 +149,7 @@ async function UserSearchResults({ query }: { query: string }) {
           <div key={p.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)' }}>
             <Link href={`/u/${p.username}`} style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
               <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                {p.avatar_url ? <img src={p.avatar_url} alt={p.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <SearchX size={20} />}
+                {p.avatar_url ? <img src={p.avatar_url} alt={p.username} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <User size={20} color="var(--text-muted)" />}
               </div>
               <div>
                 <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{p.display_name}</div>
@@ -201,11 +201,6 @@ export default async function SearchPage({ searchParams }: Props) {
 
           <div className={styles.headerLinks}>
             <NavLinks isLoggedIn={!!user} displayName={displayName} username={username} />
-            {user && (
-              <form action={logOut}>
-                <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-              </form>
-            )}
           </div>
         </div>
         {/* Mobile: search below nav row */}
@@ -240,7 +235,7 @@ export default async function SearchPage({ searchParams }: Props) {
             {type === 'users' ? (
               query ? <UserSearchResults query={query} /> : (
                 <div className={styles.emptyState}>
-                  <SearchX size={40} className={styles.emptyIcon} strokeWidth={1.5} />
+                  <User size={40} className={styles.emptyIcon} strokeWidth={1.5} color="var(--text-muted)" />
                   <h2 className={styles.emptyTitle}>Search for users</h2>
                   <p className={styles.emptyDesc}>Type a username or display name to find friends.</p>
                 </div>
