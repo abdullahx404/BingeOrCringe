@@ -44,7 +44,7 @@ export default function FollowButton({ followingId, initialIsFollowing }: Props)
       onClick={handleFollowToggle}
       disabled={isPending}
       className={`btn btn-sm ${isFollowing ? 'btn-secondary' : 'btn-primary'}`}
-      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: 'var(--radius-full)' }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderRadius: 'var(--radius-full)', width: '100%' }}
     >
       {isFollowing ? (
         <>

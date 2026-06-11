@@ -41,9 +41,9 @@
   color: var(--text-primary);
 }
 
-/* Search fills all middle space */
 .headerSearch {
   flex: 1;
+  max-width: 280px;
   min-width: 0;
 }
 

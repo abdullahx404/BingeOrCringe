@@ -59,6 +59,7 @@ export default function ChangePasswordForm() {
             type="password"
             required
             className={styles.input}
+            placeholder="********"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
           />
@@ -71,6 +72,7 @@ export default function ChangePasswordForm() {
             type="password"
             required
             className={styles.input}
+            placeholder="********"
             value={newPassword}
             onChange={(e) => { setNewPassword(e.target.value); setFieldErrors(prev => ({...prev, newPassword: undefined})); }}
           />
@@ -84,6 +86,7 @@ export default function ChangePasswordForm() {
             type="password"
             required
             className={styles.input}
+            placeholder="********"
             value={confirmPassword}
             onChange={(e) => { setConfirmPassword(e.target.value); setFieldErrors(prev => ({...prev, confirmPassword: undefined})); }}
           />

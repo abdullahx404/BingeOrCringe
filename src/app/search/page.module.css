@@ -49,7 +49,7 @@
 /* Search bar fills all available middle space */
 .headerSearch {
   flex: 1;
-  max-width: 380px;
+  max-width: 280px;
   min-width: 0;
 }
 

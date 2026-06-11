@@ -149,9 +149,6 @@ export default async function DashboardPage({ searchParams }: Props) {
 
           <div className={styles.headerRight}>
             <NavLinks isLoggedIn displayName={displayName} username={profile?.username} />
-            <form action={logOut}>
-              <button type="submit" className="btn btn-ghost btn-sm">Log out</button>
-            </form>
           </div>
         </div>
         {/* Mobile: search appears below nav row */}

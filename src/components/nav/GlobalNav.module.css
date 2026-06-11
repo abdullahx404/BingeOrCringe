@@ -38,7 +38,7 @@
 /* Desktop: search grows to fill all space between logo and right group */
 .search {
   flex: 1;
-  max-width: 380px;
+  max-width: 280px;
   min-width: 0;
 }
 

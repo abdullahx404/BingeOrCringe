@@ -71,8 +71,8 @@ export default function UpdatePasswordPage() {
         <div className="form-group">
           <label htmlFor="new-password" className="form-label">New Password</label>
           <input
-            id="new-password" name="newPassword" type="password"
-            autoComplete="new-password" placeholder="Your new password"
+            id="new-password" name="newPassword" type="password" placeholder="********"
+            autoComplete="new-password"
             value={newPassword} 
             onChange={(e) => { setNewPassword(e.target.value); setPasswordError(undefined); }} 
             onBlur={handleBlur}
@@ -88,8 +88,8 @@ export default function UpdatePasswordPage() {
         <div className="form-group">
           <label htmlFor="confirm-password" className="form-label">Confirm Password</label>
           <input
-            id="confirm-password" name="confirmPassword" type="password"
-            autoComplete="new-password" placeholder="Confirm new password"
+            id="confirm-password" name="confirmPassword" type="password" placeholder="********"
+            autoComplete="new-password"
             value={confirmPassword} 
             onChange={(e) => { setConfirmPassword(e.target.value); setPasswordError(undefined); }}
             className={`form-input ${passwordError ? styles.inputError : ''}`}

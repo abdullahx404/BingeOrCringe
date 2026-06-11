@@ -274,7 +274,7 @@
 @media (max-width: 768px) {
   .container {
     border: none;
-    width: 100vw;
+    width: 100%;
     overflow-x: hidden;
   }
   .sidebar {

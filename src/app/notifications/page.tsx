@@ -15,6 +15,14 @@ export default async function NotificationsPage() {
     redirect('/login');
   }
 
+  // Delete notifications older than 24 hours
+  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  await supabase
+    .from('notifications')
+    .delete()
+    .eq('user_id', user.id)
+    .lt('created_at', yesterday);
+
   const { data: notifications } = await supabase
     .from('notifications')
     .select(`

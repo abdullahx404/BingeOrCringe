@@ -4,15 +4,15 @@ import './globals.css';
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: {
-    default: 'BingeOrCringe — Rank Movies Your Way',
+    default: 'BingeOrCringe - Rank Movies Your Way',
     template: '%s | BingeOrCringe',
   },
   description:
-    'Forget star ratings — rank movies and shows into tiers that actually reflect your taste. Goated, Binge, Mid, Cringe, or Trash.',
+    'Forget star ratings - rank movies and shows into tiers that actually reflect your taste. Goated, Binge, Mid, Cringe, or Trash.',
   keywords: ['movie ranking', 'tier list', 'movies', 'tv shows', 'watchlist', 'social'],
   authors: [{ name: 'BingeOrCringe' }],
   openGraph: {
-    title: 'BingeOrCringe — Rank Movies Your Way',
+    title: 'BingeOrCringe - Rank Movies Your Way',
     description:
       'Forget star ratings. Rank movies into tiers: Goated, Binge, Mid, Cringe, or Trash.',
     type: 'website',
@@ -28,6 +28,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   themeColor: '#080810',
 };
 

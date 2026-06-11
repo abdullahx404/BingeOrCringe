@@ -9,7 +9,7 @@ import styles from './Footer.module.css';
 export default function Footer() {
   const pathname = usePathname();
 
-  if (pathname === '/login' || pathname === '/signup' || pathname === '/settings' || pathname.startsWith('/messages') || pathname === '/notifications' || pathname.startsWith('/u/')) {
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/settings' || pathname.startsWith('/messages') || pathname === '/notifications' || pathname.startsWith('/u/') || pathname.startsWith('/dashboard')) {
     return null;
   }
   return (

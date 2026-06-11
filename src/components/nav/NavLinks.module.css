@@ -6,6 +6,13 @@
   flex-shrink: 0;
 }
 
+.authLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-shrink: 0;
+}
+
 .navLink {
   position: relative;
   font-size: var(--text-sm);

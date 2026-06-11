@@ -13,7 +13,7 @@ interface TopRanker {
 
 export default async function TopRankers() {
   const supabase = await createClient();
-  const { data } = await supabase.from('top_rankers').select('*').limit(5);
+  const { data } = await supabase.rpc('get_top_rankers');
   const rankers = (data as TopRanker[]) || [];
 
   if (rankers.length === 0) return null;
@@ -36,7 +36,7 @@ export default async function TopRankers() {
               )}
             </div>
             <div className={styles.info}>
-              <div className={styles.name}>{ranker.display_name}</div>
+              <div className={styles.name}>@{ranker.username}</div>
               <div className={styles.stats}>{ranker.total_rankings} rankings</div>
             </div>
           </Link>

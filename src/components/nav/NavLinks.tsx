@@ -76,14 +76,14 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
       )}
     </div>
   ) : (
-    <div className={styles.desktopLinks}>
+    <div className={styles.authLinks}>
       <Link href="/login"  className="btn btn-ghost btn-sm">Log In</Link>
       <Link href="/signup" className="btn btn-primary btn-sm">Sign Up</Link>
     </div>
   );
 
   // ── Mobile hamburger ─────────────────────────────────────
-  const mobileNav = (
+  const mobileNav = isLoggedIn ? (
     <div className={styles.hamburgerWrapper} ref={menuRef}>
       <button
         className={`${styles.hamburgerBtn} ${menuOpen ? styles.open : ''}`}
@@ -153,7 +153,7 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
         </div>
       </div>
     </div>
-  );
+  ) : null;
 
   return (
     <>

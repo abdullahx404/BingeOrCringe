@@ -10,6 +10,14 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Delete notifications older than 24 hours
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    await supabase
+      .from('notifications')
+      .delete()
+      .eq('user_id', user.id)
+      .lt('created_at', yesterday);
+
     // Get notifications and join with actor profile
     const { data, error } = await supabase
       .from('notifications')
