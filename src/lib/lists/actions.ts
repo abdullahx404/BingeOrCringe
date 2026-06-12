@@ -23,6 +23,24 @@ export async function getLists(): Promise<ApiResponse<CustomList[]>> {
   return { data: data as CustomList[], error: null };
 }
 
+export async function getListIdsForRanking(rankingId: string): Promise<ApiResponse<string[]>> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { data: null, error: 'Not authenticated.' };
+
+  const { data, error } = await supabase
+    .from('list_items')
+    .select('list_id')
+    .eq('ranking_id', rankingId);
+
+  if (error) {
+    return { data: null, error: 'Failed to fetch lists for ranking.' };
+  }
+
+  return { data: data.map(d => d.list_id), error: null };
+}
+
 export async function createList(formData: FormData): Promise<ApiResponse<CustomList>> {
   const name = (formData.get('name') as string)?.trim();
   const is_public = formData.get('is_public') === 'true';

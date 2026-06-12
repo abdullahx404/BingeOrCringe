@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useTransition } from 'react';
 import { X, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { createRanking, updateRanking } from '@/lib/rankings/actions';
-import { getLists, addToList, createList } from '@/lib/lists/actions';
+import { getLists, addToList, createList, getListIdsForRanking, removeFromList } from '@/lib/lists/actions';
 import { TIERS, TIER_CONFIG } from '@/lib/utils/tiers';
 import { TAGS } from '@/lib/utils/tags';
 import type { TierType } from '@/lib/utils/tiers';
@@ -44,13 +44,23 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
   const [isCreatingList, setIsCreatingList] = useState(false);
   const [newListName, setNewListName] = useState('');
 
+  const [initialListIds, setInitialListIds] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     async function loadLists() {
       const res = await getLists();
       if (res.data) setUserLists(res.data);
+      if (existing) {
+        const listsRes = await getListIdsForRanking(existing.id);
+        if (listsRes.data) {
+          const ids = new Set(listsRes.data);
+          setSelectedListIds(ids);
+          setInitialListIds(ids);
+        }
+      }
     }
     loadLists();
-  }, []);
+  }, [existing]);
 
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
@@ -120,9 +130,17 @@ export default function RankModal({ media, existing, onClose, onSuccess }: Props
       } else {
         const ranking = result.data;
         if (ranking) {
-          // Add to selected lists
+          // Add to newly selected lists
           for (const listId of Array.from(selectedListIds)) {
-            await addToList(listId, ranking.id);
+            if (!initialListIds.has(listId)) {
+              await addToList(listId, ranking.id);
+            }
+          }
+          // Remove from unselected lists that were previously selected
+          for (const listId of Array.from(initialListIds)) {
+            if (!selectedListIds.has(listId)) {
+              await removeFromList(listId, ranking.id);
+            }
           }
         }
         toast.success(`Saved "${media.title}" as ${TIER_CONFIG[selectedTier].label}`);

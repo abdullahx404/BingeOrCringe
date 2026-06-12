@@ -173,7 +173,10 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
     : tvGroups;
 
   const hasContent  = filteredMovies.length > 0 || filteredTvGroups.length > 0;
-  const totalRanked = allRankings.length;
+  
+  // Use RPC to bypass RLS and get the true total ranked count for private profiles
+  const { data: totalRankedRaw } = await supabase.rpc('get_user_total_rankings', { p_user_id: profile.id });
+  const totalRanked = totalRankedRaw ?? allRankings.length;
 
   return (
     <div className={styles.page}>
@@ -257,6 +260,12 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
               <Lock size={48} className={styles.privateIcon} style={{ margin: '0 auto var(--space-4)' }} />
               <h2 className={styles.privateTitle}>@{profile.username}&apos;s Collection is Private</h2>
               <p className={styles.privateDesc}>This user has chosen not to share their rankings publicly.</p>
+            </div>
+          ) : isOwnProfile ? (
+            <div className={styles.emptyState}>
+              <h2 className={styles.emptyTitle}>Manage your collection in Dashboard</h2>
+              <p className={styles.emptyDesc}>Head over to My Lists to view, filter, and share your ranked titles.</p>
+              <Link href="/dashboard" className="btn btn-primary" style={{ marginTop: 'var(--space-4)' }}>Go to Dashboard</Link>
             </div>
           ) : (
             <>

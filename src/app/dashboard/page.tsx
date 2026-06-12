@@ -15,7 +15,7 @@ import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import SearchInput from '@/components/search/SearchInput';
 import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
 import CollectionGrid from '@/components/dashboard/CollectionGrid';
-import NavLinks from '@/components/nav/NavLinks';
+import GlobalNav from '@/components/nav/GlobalNav';
 import CustomListsRow from '@/components/lists/CustomListsRow';
 import type { CustomList } from '@/types';
 import styles from './page.module.css';
@@ -133,31 +133,7 @@ export default async function DashboardPage({ searchParams }: Props) {
 
   return (
     <div className={styles.page}>
-      {/* ── Sticky header ────────────────────────────── */}
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link href="/search" className={styles.logo}>
-            <Clapperboard size={20} className={styles.logoIcon} />
-            <span className={styles.logoText}>BingeOrCringe</span>
-          </Link>
-
-          <div className={styles.headerSearch}>
-            <Suspense>
-              <SearchInput />
-            </Suspense>
-          </div>
-
-          <div className={styles.headerRight}>
-            <NavLinks isLoggedIn displayName={displayName} username={profile?.username} />
-          </div>
-        </div>
-        {/* Mobile: search appears below nav row */}
-        <div className={styles.mobileSearch}>
-          <Suspense>
-            <SearchInput />
-          </Suspense>
-        </div>
-      </header>
+      <GlobalNav />
 
       <main className={styles.main}>
         <div className="container">

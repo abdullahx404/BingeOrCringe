@@ -11,9 +11,11 @@ interface Props {
   displayName?: string | null;
   username?: string | null;
   isLoggedIn?: boolean;
+  unreadMessages?: number;
+  unreadNotifications?: number;
 }
 
-export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
+export default function NavLinks({ displayName, username, isLoggedIn, unreadMessages = 0, unreadNotifications = 0 }: Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -59,10 +61,16 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
                 Profile
               </Link>
               <Link href="/messages" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
-                Messages
+                <span className={styles.itemWithBadge}>
+                  Messages
+                  {unreadMessages > 0 && <span className={styles.redDot} />}
+                </span>
               </Link>
               <Link href="/notifications" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
-                Notifications
+                <span className={styles.itemWithBadge}>
+                  Notifications
+                  {unreadNotifications > 0 && <span className={styles.redDot} />}
+                </span>
               </Link>
               <div className={styles.dropdownDivider} />
               <form action={logOut} className={styles.logoutForm}>
@@ -118,14 +126,20 @@ export default function NavLinks({ displayName, username, isLoggedIn }: Props) {
                 className={`${styles.dropItem} ${pathname.startsWith('/messages') ? styles.active : ''}`}
                 onClick={() => setMenuOpen(false)}
               >
-                Messages
+                <span className={styles.itemWithBadge}>
+                  Messages
+                  {unreadMessages > 0 && <span className={styles.redDot} />}
+                </span>
               </Link>
               <Link
                 href="/notifications"
                 className={`${styles.dropItem} ${pathname === '/notifications' ? styles.active : ''}`}
                 onClick={() => setMenuOpen(false)}
               >
-                Notifications
+                <span className={styles.itemWithBadge}>
+                  Notifications
+                  {unreadNotifications > 0 && <span className={styles.redDot} />}
+                </span>
               </Link>
             </>
           )}

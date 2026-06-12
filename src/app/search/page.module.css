@@ -18,6 +18,7 @@
 .headerInner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-4);
   height: 64px;
   padding: 0 var(--space-6);

@@ -108,6 +108,20 @@
   color: var(--text-primary);
 }
 
+.itemWithBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.redDot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-error);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
 .dropdownDivider {
   height: 1px;
   background: var(--border-subtle);

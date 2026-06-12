@@ -13,7 +13,7 @@ import { createClient } from '@/lib/supabase/server';
 import { logOut } from '@/lib/auth/actions';
 import SearchResultCard from '@/components/search/SearchResultCard';
 import SearchInput from '@/components/search/SearchInput';
-import NavLinks from '@/components/nav/NavLinks';
+import GlobalNav from '@/components/nav/GlobalNav';
 import TopRankers from '@/components/search/TopRankers';
 import styles from './page.module.css';
 
@@ -167,49 +167,8 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
   const type = searchParams.type === 'users' ? 'users' : 'titles';
 
-  // Auth check
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let displayName: string | null = null;
-  let username: string | null = null;
-  if (user) {
-    const { data: prof } = await supabase
-      .from('profiles')
-      .select('display_name, username')
-      .eq('id', user.id)
-      .single();
-    displayName = prof?.display_name ?? null;
-    username = prof?.username ?? null;
-  }
-
-  return (
     <div className={styles.page}>
-      {/* ── Header with integrated search ─────────── */}
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <Link href={user ? '/search' : '/'} className={styles.logo}>
-            <Clapperboard size={20} className={styles.logoIcon} />
-            <span className={styles.logoText}>BingeOrCringe</span>
-          </Link>
-
-          <div className={styles.headerSearch}>
-            <Suspense>
-              <SearchInput />
-            </Suspense>
-          </div>
-
-          <div className={styles.headerLinks}>
-            <NavLinks isLoggedIn={!!user} displayName={displayName} username={username} />
-          </div>
-        </div>
-        {/* Mobile: search below nav row */}
-        <div className={styles.mobileSearch}>
-          <Suspense>
-            <SearchInput />
-          </Suspense>
-        </div>
-      </header>
+      <GlobalNav />
 
       {/* ── Main content ────────────────────────────── */}
       <main className={styles.main}>
