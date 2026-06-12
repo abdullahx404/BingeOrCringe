@@ -167,6 +167,7 @@ export default async function SearchPage({ searchParams }: Props) {
   const query = searchParams.q?.trim() ?? '';
   const type = searchParams.type === 'users' ? 'users' : 'titles';
 
+  return (
     <div className={styles.page}>
       <GlobalNav />
 
