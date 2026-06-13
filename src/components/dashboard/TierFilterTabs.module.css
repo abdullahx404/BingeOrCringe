@@ -36,9 +36,9 @@
 }
 
 .tierTab {
-  border-color: transparent;
+  border-color: var(--tab-color);
   background-color: transparent;
-  color: var(--text-muted);
+  color: var(--tab-color);
 }
 
 .tierTab .tabIcon {
