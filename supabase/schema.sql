@@ -431,7 +431,10 @@ BEGIN
   IF (TG_OP = 'INSERT' AND NEW.email_confirmed_at IS NOT NULL) OR 
      (TG_OP = 'UPDATE' AND OLD.email_confirmed_at IS NULL AND NEW.email_confirmed_at IS NOT NULL) THEN
     
-    base_username := NEW.raw_user_meta_data->>'username';
+    -- Extract username or fallback to email prefix. Make sure it's lowercase to pass our check.
+    base_username := COALESCE(NEW.raw_user_meta_data->>'username', split_part(NEW.email, '@', 1));
+    base_username := LOWER(REPLACE(base_username, ' ', '.'));
+    
     final_username := base_username;
 
     -- Ensure uniqueness in case the username was taken while they were unverified
@@ -440,11 +443,12 @@ BEGIN
       counter := counter + 1;
     END LOOP;
 
-    INSERT INTO public.profiles (id, username, display_name, is_public)
+    INSERT INTO public.profiles (id, username, display_name, avatar_url, is_public)
     VALUES (
       NEW.id,
       final_username,
-      NEW.raw_user_meta_data->>'displayName',
+      COALESCE(NEW.raw_user_meta_data->>'display_name', NEW.raw_user_meta_data->>'full_name', NEW.raw_user_meta_data->>'name', final_username),
+      NEW.raw_user_meta_data->>'avatar_url',
       true
     );
   END IF;
