@@ -27,12 +27,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
         setError(res.error);
       } else {
         setSuccess(true);
-        if (formData.username !== initialData.username) {
-          // If username changed, redirect to new profile URL to avoid 404
-          window.location.href = `/u/${formData.username}`;
-        } else {
-          setTimeout(() => setSuccess(false), 3000);
-        }
+        setTimeout(() => setSuccess(false), 3000);
       }
     });
   }

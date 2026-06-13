@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import type { ApiResponse } from '@/types';
 
@@ -53,6 +54,15 @@ export async function updateProfile(data: ProfileUpdateData): Promise<ApiRespons
     return { data: null, error: 'Username is already taken.' };
   }
 
+  // Get old username to check if it changed
+  const { data: oldProfile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', user.id)
+    .single();
+
+  const oldUsername = oldProfile?.username;
+
   const { error } = await supabase
     .from('profiles')
     .update({
@@ -69,5 +79,9 @@ export async function updateProfile(data: ProfileUpdateData): Promise<ApiRespons
   revalidatePath('/settings');
   revalidatePath(`/u/${data.username}`);
   
+  if (oldUsername && oldUsername !== data.username) {
+    redirect(`/u/${data.username}`);
+  }
+
   return { data: null, error: null };
 }
