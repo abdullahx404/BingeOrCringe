@@ -44,9 +44,34 @@ export default function NavLinks({ userId, displayName, username, isLoggedIn, un
   const [liveMsgCount, setLiveMsgCount] = useState(unreadMessages);
   const [liveNotifCount, setLiveNotifCount] = useState(unreadNotifications);
 
-  // Sync initial props
-  useEffect(() => { setLiveMsgCount(unreadMessages); }, [unreadMessages]);
-  useEffect(() => { setLiveNotifCount(unreadNotifications); }, [unreadNotifications]);
+  // Fetch fresh counts to ensure they are never stale from Next.js caching
+  useEffect(() => {
+    if (!userId) return;
+    let isMounted = true;
+    async function fetchCounts() {
+      const { createClient } = require('@/lib/supabase/client');
+      const supabase = createClient();
+      
+      const { count: msgCount } = await supabase
+        .from('messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('receiver_id', userId)
+        .eq('is_read', false);
+        
+      const { count: notifCount } = await supabase
+        .from('notifications')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('is_read', false);
+
+      if (isMounted) {
+        if (msgCount !== null) setLiveMsgCount(msgCount);
+        if (notifCount !== null) setLiveNotifCount(notifCount);
+      }
+    }
+    fetchCounts();
+    return () => { isMounted = false; };
+  }, [userId, pathname]);
 
   // Realtime subscription
   useEffect(() => {
@@ -138,12 +163,10 @@ export default function NavLinks({ userId, displayName, username, isLoggedIn, un
         onClick={() => setMenuOpen((v) => !v)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       >
-        <span className={styles.hamburgerInner}>
-          <div className={styles.hamburgerBar} />
-          <div className={styles.hamburgerBar} />
-          <div className={styles.hamburgerBar} />
-          {hasAnyUnread && <span className={styles.dropdownRedDot} />}
-        </span>
+        <div className={styles.hamburgerBar} />
+        <div className={styles.hamburgerBar} />
+        <div className={styles.hamburgerBar} />
+        {hasAnyUnread && <span className={styles.dropdownRedDot} />}
       </button>
 
       <div className={`${styles.menuOverlay} ${menuOpen ? styles.open : ''}`}>
