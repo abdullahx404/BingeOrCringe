@@ -112,11 +112,6 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
     }
   }, [activeProfile, messages, currentUser.id, supabase]);
 
-  // Scroll to bottom ONLY on initial load of activeProfile, NOT on every message
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView();
-  }, [activeProfile]);
-
   // Compute conversations list
   const conversations = useMemo(() => {
     const map = new Map<string, Conversation>();
@@ -167,6 +162,11 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
            (m.sender_id === activeProfile.id && m.receiver_id === currentUser.id)
     );
   }, [messages, activeProfile, currentUser.id]);
+
+  // Scroll to bottom on load and when new messages arrive in the active chat
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [activeProfile?.id, activeMessages.length]);
 
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();

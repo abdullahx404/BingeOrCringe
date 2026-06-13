@@ -183,6 +183,15 @@
   }
 
   /* Hamburger Lines */
+  .hamburgerInner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
   .hamburgerBar {
     width: 100%;
     height: 2.5px;

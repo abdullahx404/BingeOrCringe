@@ -58,14 +58,14 @@ export default function NavLinks({ userId, displayName, username, isLoggedIn, un
       .on('postgres_changes', { event: '*', schema: 'public', table: 'messages', filter: `receiver_id=eq.${userId}` }, (payload: any) => {
         if (payload.eventType === 'INSERT' && !payload.new.is_read) {
           setLiveMsgCount(p => p + 1);
-        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && !payload.old.is_read) {
+        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && (payload.old ? !payload.old.is_read : true)) {
           setLiveMsgCount(p => Math.max(0, p - 1));
         }
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` }, (payload: any) => {
         if (payload.eventType === 'INSERT' && !payload.new.is_read) {
           setLiveNotifCount(p => p + 1);
-        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && !payload.old.is_read) {
+        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && (payload.old ? !payload.old.is_read : true)) {
           setLiveNotifCount(p => Math.max(0, p - 1));
         }
       })
@@ -138,9 +138,12 @@ export default function NavLinks({ userId, displayName, username, isLoggedIn, un
         onClick={() => setMenuOpen((v) => !v)}
         aria-label={menuOpen ? 'Close menu' : 'Open menu'}
       >
-        <div className={styles.hamburgerBar} />
-        <div className={styles.hamburgerBar} />
-        <div className={styles.hamburgerBar} />
+        <span className={styles.hamburgerInner}>
+          <div className={styles.hamburgerBar} />
+          <div className={styles.hamburgerBar} />
+          <div className={styles.hamburgerBar} />
+          {hasAnyUnread && <span className={styles.dropdownRedDot} />}
+        </span>
       </button>
 
       <div className={`${styles.menuOverlay} ${menuOpen ? styles.open : ''}`}>
