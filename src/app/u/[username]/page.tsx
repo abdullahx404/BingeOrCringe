@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export const dynamic = 'force-dynamic';
 import GlobalNav from '@/components/nav/GlobalNav';
@@ -174,9 +175,14 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
 
   const hasContent  = filteredMovies.length > 0 || filteredTvGroups.length > 0;
   
-  // Use RPC to bypass RLS and get the true total ranked count for private profiles
-  const { data: totalRankedRaw } = await supabase.rpc('get_user_total_rankings', { p_user_id: profile.id });
-  const totalRanked = totalRankedRaw ?? allRankings.length;
+  // Use Admin Client to bypass RLS and get the true total ranked count for private profiles
+  const supabaseAdmin = createAdminClient();
+  const { count: totalRankedAdmin } = await supabaseAdmin
+    .from('rankings')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', profile.id);
+
+  const totalRanked = totalRankedAdmin ?? allRankings.length;
 
   return (
     <div className={styles.page}>

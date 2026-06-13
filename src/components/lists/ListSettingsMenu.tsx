@@ -76,7 +76,7 @@ export default function ListSettingsMenu({ listId, listName, isPublic }: Props) 
               right: 0,
               top: '100%',
               marginTop: '8px',
-              background: 'var(--bg-surface)',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border-subtle)',
               borderRadius: 'var(--radius-md)',
               padding: 'var(--space-2)',
