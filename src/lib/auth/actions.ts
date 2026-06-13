@@ -52,7 +52,7 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
     if (error.message.includes('username') && error.message.includes('duplicate')) {
       return { data: null, error: 'That username is already taken. Try another.' };
     }
-    return { data: null, error: 'Something went wrong. Please try again.' };
+    return { data: null, error: error.message || 'Something went wrong. Please try again.' };
   }
 
   return { data: null, error: null };
