@@ -38,6 +38,7 @@ export async function signUp(formData: FormData): Promise<ApiResponse<null> & { 
     password,
     options: {
       data: { username, display_name: displayName },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/login`,
     },
   });
 

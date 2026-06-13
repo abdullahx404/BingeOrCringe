@@ -41,3 +41,8 @@ BingeOrCringe is a highly interactive, social movie and TV show ranking platform
 * **v6.1.0** — Google OAuth login/signup support integrated into the authentication flow.
 * **v6.1.1** — Bug fixes resolving OAuth redirection loops and username uniqueness generation.
 * **v7.0.0** — **Stable Release:** Final security audits, HTTP security headers, and Vercel production deployment.
+* **v7.0.1** — Bug fixes: Resolved OAuth database trigger crashes and updated email verification redirect behavior.
+
+## Documents
+* [Architecture](./architecture.md)
+* [SRS](./SRS.md)
