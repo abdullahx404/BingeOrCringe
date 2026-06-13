@@ -44,6 +44,13 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Update active profile if initialActiveProfile changes via URL/Props
+  useEffect(() => {
+    if (initialActiveProfile) {
+      setActiveProfile(initialActiveProfile);
+    }
+  }, [initialActiveProfile]);
+
   // Fetch all messages for the current user
   useEffect(() => {
     async function fetchMessages() {

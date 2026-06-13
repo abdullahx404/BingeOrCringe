@@ -36,6 +36,7 @@ export const viewport: Viewport = {
 import Footer from '@/components/nav/Footer';
 import { Toaster } from 'sonner';
 import NextTopLoader from 'nextjs-toploader';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -56,11 +57,26 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           speed={200}
           shadow="0 0 10px var(--accent),0 0 5px var(--accent)"
         />
+        <ScrollToTop />
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
           {children}
           <Footer />
         </div>
-        <Toaster position="top-center" theme="dark" style={{ zIndex: 99999 }} />
+        <Toaster 
+          position="top-center" 
+          theme="dark" 
+          richColors
+          style={{ zIndex: 999999 }}
+          toastOptions={{
+            style: {
+              background: '#16162a', // var(--bg-card)
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              color: '#f0f0ff',
+              zIndex: 999999,
+            },
+            className: 'solid-toast'
+          }}
+        />
       </body>
     </html>
   );
