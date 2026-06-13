@@ -60,7 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Footer />
         </div>
-        <Toaster position="bottom-center" theme="dark" style={{ zIndex: 99999 }} />
+        <Toaster position="top-center" theme="dark" style={{ zIndex: 99999 }} />
       </body>
     </html>
   );

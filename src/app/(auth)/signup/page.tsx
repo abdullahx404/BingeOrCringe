@@ -190,7 +190,7 @@ export default function SignupPage() {
             name="username"
             type="text"
             autoComplete="username"
-            placeholder="e.g. movie.buff_404"
+            placeholder="username"
             value={fields.username}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -215,7 +215,7 @@ export default function SignupPage() {
             name="displayName"
             type="text"
             autoComplete="name"
-            placeholder="How others see you"
+            placeholder="Name"
             value={fields.displayName}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -240,7 +240,7 @@ export default function SignupPage() {
             name="email"
             type="email"
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder="Email"
             value={fields.email}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -264,7 +264,7 @@ export default function SignupPage() {
             name="password"
             type="password"
             autoComplete="new-password"
-            placeholder="Min 8 chars, 1 uppercase, 1 number"
+            placeholder="********"
             value={fields.password}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -278,8 +278,8 @@ export default function SignupPage() {
             </p>
           )}
           {/* Password strength hint */}
-          {fields.password && !errors.password && (
-            <p className={styles.hint}>Strong password — good to go.</p>
+          {fields.password && !validateField('password', fields.password) && (
+            <p className={styles.hint}>Strong password good to go.</p>
           )}
         </div>
 

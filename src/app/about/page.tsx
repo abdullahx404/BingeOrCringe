@@ -14,7 +14,7 @@ export default function AboutPage() {
             BingeOrCringe is the ultimate platform for movie and TV show enthusiasts who have strong opinions and aren't afraid to share them. Whether a show is absolute cinema (GOATED) or a complete waste of time (TRASH), we give you the tools to organize, rank, and showcase your watch history.
           </p>
           <p>
-            Tired of boring 5-star rating systems? So are we. BingeOrCringe lets you drop titles into 5 distinct tiers, slap custom tags on them (like "Brainrot" or "Overrated AF"), and build custom watchlists to share with your friends.
+            Tired of boring 5-star rating systems? So are we. BingeOrCringe lets you drop titles into 5 distinct tiers, slap custom tags on them (like "Brainrot" or "Overrated AF"), and build custom thematic watchlists. Plus, with our new Follow and Chat features, you can see your friends' hot takes on your feed and debate their rankings directly in the DMs.
           </p>
           <p>
             Our mission is to make organizing your entertainment as fun as watching it. Built for a generation that values hot takes and aesthetic collections.

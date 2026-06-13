@@ -34,8 +34,8 @@ export default function TermsPage() {
           <section className={styles.section}>
             <h2>3. Content and Conduct</h2>
             <p>
-              The Platform allows users to rank movies and TV shows, add custom tags, and share these lists publicly. 
-              You are solely responsible for the content you create. You agree not to post content that is illegal, abusive, harassing, or otherwise objectionable. 
+              The Platform allows users to rank movies and TV shows, build custom tier lists, follow friends, send direct messages, add custom tags, and share these lists publicly. 
+              You are solely responsible for the content you create, including messages sent to other users. You agree not to post or send content that is illegal, abusive, harassing, or otherwise objectionable. 
               We reserve the right to remove any content or terminate accounts that violate these guidelines without prior notice.
             </p>
           </section>

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, ListChecks, Share2, Crown, Play, Minus, ThumbsDown, Trash2 } from 'lucide-react';
+import { Search, ListChecks, Share2, Crown, Play, Minus, ThumbsDown, Trash2, Users, MessageSquare } from 'lucide-react';
 import GlobalNav from '@/components/nav/GlobalNav';
 import { getTrending, tmdbImage } from '@/lib/tmdb/client';
 import { createClient } from '@/lib/supabase/server';
@@ -115,25 +115,40 @@ export default async function LandingPage() {
           </section>
         )}
 
-        {/* ─── How it Works ─── */}
+        {/* ─── Features ─── */}
         <section className={styles.howItWorks}>
           <div className="container">
-            <h2 className={styles.sectionTitleCenter}>How It Works</h2>
+            <h2 className={styles.sectionTitleCenter}>Everything You Need</h2>
             <div className={styles.stepsGrid}>
               <div className={styles.stepCard}>
                 <div className={styles.stepIconWrap}><Search size={28} /></div>
-                <h3>1. Search</h3>
+                <h3>Search & Discover</h3>
                 <p>Find any movie, TV show, season, or specific episode using our TMDB-powered database.</p>
               </div>
               <div className={styles.stepCard}>
                 <div className={styles.stepIconWrap}><ListChecks size={28} /></div>
-                <h3>2. Rank</h3>
+                <h3>Rank & Tag</h3>
                 <p>Assign it to a tier. Is it Goated? Is it Trash? Add custom tags to categorize exactly why.</p>
               </div>
               <div className={styles.stepCard}>
                 <div className={styles.stepIconWrap}><Share2 size={28} /></div>
-                <h3>3. Share</h3>
+                <h3>Share Your Profile</h3>
                 <p>Generate your public profile. Share your definitive tier list and debate with friends.</p>
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepIconWrap}><Crown size={28} /></div>
+                <h3>Custom Tier Lists</h3>
+                <p>Create thematic lists like "Best Sci-Fi" or "Worst Sequels" and rank them exactly how you want.</p>
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepIconWrap}><Users size={28} /></div>
+                <h3>Follow Friends</h3>
+                <p>Follow other users to see their hot takes, rankings, and what they are currently watching on your feed.</p>
+              </div>
+              <div className={styles.stepCard}>
+                <div className={styles.stepIconWrap}><MessageSquare size={28} /></div>
+                <h3>Chat & Debate</h3>
+                <p>Slide into the DMs. Discuss, defend, and debate your rankings directly with your friends.</p>
               </div>
             </div>
           </div>

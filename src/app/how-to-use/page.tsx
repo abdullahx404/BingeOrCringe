@@ -49,6 +49,20 @@ export default function HowToUsePage() {
             </p>
           </section>
 
+          <section>
+            <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>5. Follow Friends</h2>
+            <p style={{ lineHeight: 1.6 }}>
+              Keep up with your friends' latest movie binges. Follow other users to see their rankings and hot takes directly on your Activity Feed.
+            </p>
+          </section>
+
+          <section>
+            <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-primary)', marginBottom: 'var(--space-2)' }}>6. Chat & Debate</h2>
+            <p style={{ lineHeight: 1.6 }}>
+              Disagree with a friend's trash ranking? Jump into their DMs! Use our built-in real-time chat to discuss and debate rankings.
+            </p>
+          </section>
+
         </div>
       </main>
     </div>
