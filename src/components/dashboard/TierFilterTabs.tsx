@@ -23,10 +23,11 @@ export default function TierFilterTabs({ activeTier, countByTier, total }: Props
       {/* All */}
       <Link
         href={pathname}
-        className={`${styles.tab} ${!activeTier ? styles.tabActive : ''}`}
+        className={`${styles.tab} ${styles.tierTab} ${!activeTier ? styles.tabActive : ''}`}
+        style={{ '--tab-color': 'var(--accent)' } as React.CSSProperties}
       >
         <span>All</span>
-        <span className={styles.count}>{total}</span>
+        <span className={`${styles.count} ${!activeTier ? styles.countActive : ''}`}>{total}</span>
       </Link>
 
       {TIERS.map((tier) => {
@@ -37,17 +38,13 @@ export default function TierFilterTabs({ activeTier, countByTier, total }: Props
           <Link
             key={tier}
             href={`${pathname}?tier=${tier}`}
-            className={`${styles.tab} ${isActive ? styles.tabActive : ''}`}
-            style={{
-              borderColor: cfg.color,
-              color: isActive ? cfg.color : undefined,
-              backgroundColor: isActive ? `${cfg.color}15` : undefined
-            }}
+            className={`${styles.tab} ${styles.tierTab} ${isActive ? styles.tabActive : ''}`}
+            style={{ '--tab-color': cfg.color } as React.CSSProperties}
           >
-            {Icon && <Icon size={14} style={{ color: isActive ? cfg.color : cfg.color }} />}
+            {Icon && <Icon size={14} className={styles.tabIcon} />}
             <span>{cfg.label}</span>
             {countByTier[tier] > 0 && (
-              <span className={styles.count}>{countByTier[tier]}</span>
+              <span className={`${styles.count} ${isActive ? styles.countActive : ''}`}>{countByTier[tier]}</span>
             )}
           </Link>
         );

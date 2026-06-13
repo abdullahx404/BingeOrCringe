@@ -42,7 +42,7 @@ function MovieCard({ ranking, isPublicView }: { ranking: Ranking; isPublicView?:
             {cfg && (
               <div
                 className={styles.tierBadge}
-                style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
+                style={{ background: cfg.color, color: '#000' }}
               >
                 {Icon && <Icon size={11} />}
                 <span>{cfg.label}</span>
@@ -124,7 +124,7 @@ function TvPosterCard({
             {cfg && (
               <div
                 className={styles.tierBadge}
-                style={{ color: cfg.color, borderColor: `${cfg.color}60`, background: cfg.bgColor }}
+                style={{ background: cfg.color, color: '#000' }}
               >
                 {Icon && <Icon size={11} />}
                 <span>{cfg.label}</span>

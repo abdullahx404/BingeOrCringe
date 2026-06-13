@@ -172,17 +172,16 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
+  background: #ffffff;
+  border: none;
+  color: #000000;
   text-decoration: none;
-  transition: background var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .overlayBtn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 /* Glass delete button — red tint */
@@ -193,17 +192,16 @@
   width: 30px;
   height: 30px;
   border-radius: 8px;
-  background: rgba(239, 68, 68, 0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(239, 68, 68, 0.5);
-  color: #ef4444;
+  background: #ef4444; /* solid red poppy */
+  border: none;
+  color: #000000; /* black icon */
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
 }
 
 .overlayDeleteBtn:hover {
-  background: rgba(239, 68, 68, 0.45);
+  opacity: 0.9;
+  transform: scale(1.05);
 }
 
 /* cardBody: wraps title + meta + tags inside the bordered card */
@@ -254,11 +252,10 @@
   padding: 4px 10px;
   border-radius: var(--radius-sm);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800; /* Bolder for poppy look */
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  border: 1px solid;
-  /* No backdrop-filter — solid bg keeps badge readable */
+  border: none; /* No border for solid look */
 }
 
 /* Card info */

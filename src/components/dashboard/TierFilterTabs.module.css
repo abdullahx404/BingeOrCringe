@@ -35,10 +35,32 @@
   color: var(--text-primary);
 }
 
-.tabActive {
-  border-color: var(--accent);
-  color: var(--accent-light);
-  background: rgba(108, 99, 255, 0.08);
+.tierTab {
+  border-color: transparent;
+  background-color: transparent;
+  color: var(--text-muted);
+}
+
+.tierTab .tabIcon {
+  color: var(--tab-color);
+  transition: color var(--transition-fast);
+}
+
+.tierTab:hover {
+  border-color: var(--tab-color);
+  background-color: color-mix(in srgb, var(--tab-color) 15%, transparent);
+  color: var(--text-primary);
+}
+
+.tierTab.tabActive {
+  background-color: var(--tab-color);
+  border-color: var(--tab-color);
+  color: #000;
+  font-weight: 800; /* poppy bold text */
+}
+
+.tierTab.tabActive .tabIcon {
+  color: #000;
 }
 
 .count {
@@ -53,6 +75,12 @@
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.countActive {
+  background: rgba(0, 0, 0, 0.2);
+  color: #000;
 }
 
 @media (max-width: 640px) {
