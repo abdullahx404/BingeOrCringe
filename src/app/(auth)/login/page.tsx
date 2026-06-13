@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { logIn, signInWithGoogle } from '@/lib/auth/actions';
 import { validateEmail, validatePassword } from '@/lib/utils/validators';
+import NProgress from 'nprogress';
 import styles from '../signup/page.module.css';
 
 /* ─── Inner form — needs Suspense because of useSearchParams ─ */
@@ -41,8 +42,13 @@ function LoginForm() {
   }
 
   async function handleGoogleSignIn() {
+    NProgress.start();
     const result = await signInWithGoogle();
-    if (result.error) { setServerError(result.error); return; }
+    if (result.error) { 
+      setServerError(result.error); 
+      NProgress.done();
+      return; 
+    }
     if (result.data?.url) window.location.href = result.data.url;
   }
 
@@ -57,6 +63,8 @@ function LoginForm() {
       return;
     }
 
+    NProgress.start();
+
     startTransition(async () => {
       const formData = new FormData();
       formData.append('email', fields.email.trim());
@@ -65,7 +73,10 @@ function LoginForm() {
       const nextUrl = searchParams.get('next') ?? '';
       if (nextUrl) formData.append('next', nextUrl);
       const result = await logIn(formData);
-      if (result?.error) setServerError(result.error);
+      if (result?.error) {
+        setServerError(result.error);
+        NProgress.done();
+      }
     });
   }
 

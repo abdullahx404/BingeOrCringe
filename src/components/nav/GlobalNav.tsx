@@ -60,6 +60,7 @@ export default async function GlobalNav() {
         <div className={styles.rightGroup}>
           <NavLinks 
             isLoggedIn={!!user} 
+            userId={user?.id}
             displayName={displayName} 
             username={username} 
             unreadMessages={unreadMessages}

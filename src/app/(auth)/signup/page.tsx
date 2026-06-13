@@ -12,6 +12,7 @@ import {
   validatePassword,
   type SignupFormErrors,
 } from '@/lib/utils/validators';
+import NProgress from 'nprogress';
 import styles from './page.module.css';
 
 export default function SignupPage() {
@@ -52,10 +53,11 @@ export default function SignupPage() {
   }
 
   async function handleGoogleSignIn() {
-    const formData = new FormData();
+    NProgress.start();
     const result = await signInWithGoogle();
     if (result.error) {
       setServerError(result.error);
+      NProgress.done();
       return;
     }
     if (result.data?.url) {
@@ -86,6 +88,8 @@ export default function SignupPage() {
       return;
     }
 
+    NProgress.start();
+
     startTransition(async () => {
       const formData = new FormData();
       formData.append('username', fields.username.trim().toLowerCase());
@@ -101,11 +105,13 @@ export default function SignupPage() {
         } else {
           setServerError(result.error);
         }
+        NProgress.done();
         return;
       }
 
       // Show "check your email" message
       setSuccess(true);
+      NProgress.done();
     });
   }
 

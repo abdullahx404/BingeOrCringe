@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown } from 'lucide-react';
 import { logOut } from '@/lib/auth/actions';
+import NProgress from 'nprogress';
 import styles from './NavLinks.module.css';
 
 interface Props {
+  userId?: string;
   displayName?: string | null;
   username?: string | null;
   isLoggedIn?: boolean;
@@ -15,7 +17,7 @@ interface Props {
   unreadNotifications?: number;
 }
 
-export default function NavLinks({ displayName, username, isLoggedIn, unreadMessages = 0, unreadNotifications = 0 }: Props) {
+export default function NavLinks({ userId, displayName, username, isLoggedIn, unreadMessages = 0, unreadNotifications = 0 }: Props) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -39,6 +41,41 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const [liveMsgCount, setLiveMsgCount] = useState(unreadMessages);
+  const [liveNotifCount, setLiveNotifCount] = useState(unreadNotifications);
+
+  // Sync initial props
+  useEffect(() => { setLiveMsgCount(unreadMessages); }, [unreadMessages]);
+  useEffect(() => { setLiveNotifCount(unreadNotifications); }, [unreadNotifications]);
+
+  // Realtime subscription
+  useEffect(() => {
+    if (!userId) return;
+    const { createClient } = require('@/lib/supabase/client');
+    const supabase = createClient();
+
+    const channel = supabase.channel('nav-badges')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages', filter: `receiver_id=eq.${userId}` }, (payload: any) => {
+        if (payload.eventType === 'INSERT' && !payload.new.is_read) {
+          setLiveMsgCount(p => p + 1);
+        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && !payload.old.is_read) {
+          setLiveMsgCount(p => Math.max(0, p - 1));
+        }
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications', filter: `user_id=eq.${userId}` }, (payload: any) => {
+        if (payload.eventType === 'INSERT' && !payload.new.is_read) {
+          setLiveNotifCount(p => p + 1);
+        } else if (payload.eventType === 'UPDATE' && payload.new.is_read && !payload.old.is_read) {
+          setLiveNotifCount(p => Math.max(0, p - 1));
+        }
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [userId]);
+
+  const hasAnyUnread = liveMsgCount > 0 || liveNotifCount > 0;
+
   // ── Desktop nav ──────────────────────────────────────────
   const desktopNav = isLoggedIn ? (
     <div className={styles.desktopLinks}>
@@ -51,7 +88,10 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
             className={styles.dropdownToggle} 
             onClick={() => setDropdownOpen((v) => !v)}
           >
-            {displayName || username}
+            <span className={styles.itemWithBadge}>
+              {displayName || username}
+              {hasAnyUnread && <span className={styles.dropdownRedDot} />}
+            </span>
             <ChevronDown size={16} />
           </button>
           
@@ -63,17 +103,17 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
               <Link href="/messages" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
                 <span className={styles.itemWithBadge}>
                   Messages
-                  {unreadMessages > 0 && <span className={styles.redDot} />}
+                  {liveMsgCount > 0 && <span className={styles.redDot} />}
                 </span>
               </Link>
               <Link href="/notifications" className={styles.dropdownItem} onClick={() => setDropdownOpen(false)}>
                 <span className={styles.itemWithBadge}>
                   Notifications
-                  {unreadNotifications > 0 && <span className={styles.redDot} />}
+                  {liveNotifCount > 0 && <span className={styles.redDot} />}
                 </span>
               </Link>
               <div className={styles.dropdownDivider} />
-              <form action={logOut} className={styles.logoutForm}>
+              <form action={logOut} className={styles.logoutForm} onSubmit={() => NProgress.start()}>
                 <button type="submit" className={`${styles.dropdownItem} ${styles.dropdownLogout}`}>
                   Log out
                 </button>
@@ -128,7 +168,7 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
               >
                 <span className={styles.itemWithBadge}>
                   Messages
-                  {unreadMessages > 0 && <span className={styles.redDot} />}
+                  {liveMsgCount > 0 && <span className={styles.redDot} />}
                 </span>
               </Link>
               <Link
@@ -138,7 +178,7 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
               >
                 <span className={styles.itemWithBadge}>
                   Notifications
-                  {unreadNotifications > 0 && <span className={styles.redDot} />}
+                  {liveNotifCount > 0 && <span className={styles.redDot} />}
                 </span>
               </Link>
             </>
@@ -153,7 +193,7 @@ export default function NavLinks({ displayName, username, isLoggedIn, unreadMess
             </Link>
           )}
           {isLoggedIn ? (
-            <form action={logOut} className={styles.dropLogout}>
+            <form action={logOut} className={styles.dropLogout} onSubmit={() => NProgress.start()}>
               <button type="submit" className={styles.logoutBtn} onClick={() => setMenuOpen(false)}>
                 Log out
               </button>

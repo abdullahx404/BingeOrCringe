@@ -22,6 +22,7 @@
   flex-direction: column;
   background: var(--bg-subtle);
   position: relative;
+  overflow: hidden;
 }
 
 .sidebarHeader {
@@ -103,8 +104,9 @@
 .unreadDot {
   width: 10px;
   height: 10px;
-  background: var(--primary);
+  background: var(--color-error);
   border-radius: 50%;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
   flex-shrink: 0;
 }
 

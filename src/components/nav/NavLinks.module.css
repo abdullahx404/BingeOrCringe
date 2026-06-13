@@ -122,6 +122,17 @@
   box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
 }
 
+.dropdownRedDot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-error);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+  position: absolute;
+  top: -4px;
+  right: -8px;
+}
+
 .dropdownDivider {
   height: 1px;
   background: var(--border-subtle);
