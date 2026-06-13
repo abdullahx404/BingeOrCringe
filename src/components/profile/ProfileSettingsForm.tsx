@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { updateProfile, type ProfileUpdateData } from '@/lib/profile/actions';
+import { useRouter } from 'next/navigation';
 import styles from './ProfileSettingsForm.module.css';
 
 interface Props {
@@ -13,6 +14,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,7 +27,12 @@ export default function ProfileSettingsForm({ initialData }: Props) {
         setError(res.error);
       } else {
         setSuccess(true);
-        setTimeout(() => setSuccess(false), 3000);
+        if (formData.username !== initialData.username) {
+          // If username changed, redirect to new profile URL to avoid 404
+          window.location.href = `/u/${formData.username}`;
+        } else {
+          setTimeout(() => setSuccess(false), 3000);
+        }
       }
     });
   }
@@ -51,13 +58,13 @@ export default function ProfileSettingsForm({ initialData }: Props) {
             id="username"
             type="text"
             required
-            pattern="^[a-zA-Z0-9_]{3,20}$"
-            title="3-20 characters, letters, numbers, and underscores only"
+            pattern="^[a-z0-9._]{3,20}$"
+            title="3-20 characters. Lowercase letters, numbers, dots, and underscores only"
             className={styles.input}
             value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value.toLowerCase() })}
           />
-          <p className={styles.hint}>3-20 characters. Letters, numbers, and underscores.</p>
+          <p className={styles.hint}>3-20 characters. Lowercase letters, numbers, dots, and underscores.</p>
         </div>
       </div>
 

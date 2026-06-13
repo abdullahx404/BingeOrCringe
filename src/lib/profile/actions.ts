@@ -33,9 +33,9 @@ export async function updateProfile(data: ProfileUpdateData): Promise<ApiRespons
 
   if (!user) return { data: null, error: 'Not signed in.' };
 
-  const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+  const usernameRegex = /^[a-z0-9._]{3,20}$/;
   if (!usernameRegex.test(data.username)) {
-    return { data: null, error: 'Username must be 3-20 characters long and can only contain letters, numbers, and underscores.' };
+    return { data: null, error: 'Username must be 3-20 characters long and can only contain lowercase letters, numbers, dots, and underscores.' };
   }
 
   // Check if username is taken by someone else
