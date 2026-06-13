@@ -169,7 +169,7 @@ export default async function ListPage({ params, searchParams }: Props) {
               </p>
             </div>
           ) : (
-            <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} />
+            <CollectionGrid movies={filteredMovies} tvGroups={filteredTvGroups} isPublicView={!isOwner} />
           )}
         </div>
       </main>

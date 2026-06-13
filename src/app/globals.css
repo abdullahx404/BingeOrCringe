@@ -573,7 +573,8 @@ input, textarea, select {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* Position z-index above body::before overlay */
-main, nav, footer, section, header, aside {
+/* Position z-index above body::before overlay */
+main, nav, footer, header, aside {
   position: relative;
   z-index: 1;
 }
