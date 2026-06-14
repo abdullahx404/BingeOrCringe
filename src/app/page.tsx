@@ -75,7 +75,19 @@ export default async function LandingPage() {
                 </div>
                 <span>Breaking Bad</span>
               </div>
-              <div className={styles.floatingCard} style={{ '--delay': '2s', '--y': '-5px', borderColor: 'var(--tier-trash)' } as React.CSSProperties}>
+              <div className={styles.floatingCard} style={{ '--delay': '2s', '--y': '-5px', borderColor: 'var(--tier-mid)' } as React.CSSProperties}>
+                <div className={styles.tierPill} style={{ background: 'var(--tier-mid)', color: '#000' }}>
+                  <Minus size={14} /> Mid
+                </div>
+                <span>Average Movie</span>
+              </div>
+              <div className={styles.floatingCard} style={{ '--delay': '0.5s', '--y': '10px', borderColor: 'var(--tier-cringe)' } as React.CSSProperties}>
+                <div className={styles.tierPill} style={{ background: 'var(--tier-cringe)', color: '#000' }}>
+                  <ThumbsDown size={14} /> Cringe
+                </div>
+                <span>That cheesy show</span>
+              </div>
+              <div className={styles.floatingCard} style={{ '--delay': '1.5s', '--y': '-15px', borderColor: 'var(--tier-trash)' } as React.CSSProperties}>
                 <div className={styles.tierPill} style={{ background: 'var(--tier-trash)', color: '#000' }}>
                   <Trash2 size={14} /> Trash
                 </div>

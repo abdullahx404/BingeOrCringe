@@ -8,13 +8,13 @@ export const metadata: Metadata = {
     template: '%s | BingeOrCringe',
   },
   description:
-    'Forget star ratings—curate your cinematic journey. Drop your favorite movies and shows into the tiers they truly deserve: Goated, Binge, Mid, Cringe, or Trash.',
+    'Curate your cinematic journey. Drop your favorite movies and shows into the tiers they truly deserve: Goated, Binge, Mid, Cringe, or Trash.',
   keywords: ['movie ranking', 'tier list', 'movies', 'tv shows', 'watchlist', 'social', 'film'],
   authors: [{ name: 'BingeOrCringe' }],
   openGraph: {
     title: 'BingeOrCringe - Rank Movies Your Way',
     description:
-      'Forget star ratings—curate your cinematic journey. Rank your obsessions and share your hot takes with the world.',
+      'Curate your cinematic journey. Rank your obsessions and share your hot takes with the world.',
     type: 'website',
     locale: 'en_US',
     siteName: 'BingeOrCringe',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'BingeOrCringe - Rank Movies Your Way',
-    description: 'Forget star ratings—curate your cinematic journey. Rank your obsessions and share your hot takes.',
+    description: 'Curate your cinematic journey. Rank your obsessions and share your hot takes.',
   },
 };
 

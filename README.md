@@ -2,7 +2,7 @@
 
 BingeOrCringe is a highly interactive, social movie and TV show ranking platform.
 
-*"Rank Movies Your Way. Forget ratings, ignite debates, and curate your cinematic soul. Whether it's a timeless masterpiece or a guilty pleasure, drop your obsessions into the tiers they truly deserve."*
+*"Rank Movies Your Way. Ignite debates and curate your cinematic soul. Drop your obsessions into the tiers they truly deserve."*
 
 Built with a deeply social focus, users can maintain public or private profiles, curate custom thematic lists, follow friends to see their hot takes, and engage in real-time ephemeral messaging.
 ## Features & Capabilities
