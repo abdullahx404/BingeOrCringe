@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
           <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-bright)', marginBottom: 'var(--space-2)' }}>4. How We Protect & Retain Your Data</h2>
           <ul style={{ paddingLeft: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
             <li><strong>Security:</strong> Your data is securely stored using Supabase (PostgreSQL), protected by strict Row Level Security (RLS) policies ensuring no one else can modify your private data.</li>
-            <li><strong>Data Retention:</strong> Temporary interaction data (such as social community exchanges) is designed to be ephemeral. It is automatically purged from our database after short periods or upon being viewed, ensuring minimal footprint.</li>
+            <li><strong>Data Retention:</strong> Temporary interaction data (such as social community exchanges) is designed to be ephemeral. It is automatically purged and permanently deleted from our database after 24 hours, ensuring a minimal footprint.</li>
           </ul>
         </section>
 
@@ -73,19 +73,6 @@ export default function PrivacyPolicy() {
             You have the right to access, update, or delete your personal information at any time. If you wish to permanently delete your account and all associated rankings and data, you can contact us.
           </p>
         </section>
-
-        <section>
-          <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-bright)', marginBottom: 'var(--space-2)' }}>8. Contact Us</h2>
-          <p>
-            If you have any questions about this Privacy Policy, please contact us at: <strong>abdullahkhanzia07@gmail.com</strong>
-          </p>
-        </section>
-      </div>
-
-      <div style={{ marginTop: 'var(--space-8)' }}>
-        <Link href="/" style={{ color: 'var(--tier-binge)', textDecoration: 'none' }}>
-          &larr; Back to Home
-        </Link>
       </div>
     </div>
   );

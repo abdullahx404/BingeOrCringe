@@ -40,7 +40,7 @@ export default function Footer() {
           </div>
 
           <div className={styles.linksCol}>
-            <h4 className={styles.linksTitle}>Social</h4>
+            <h4 className={styles.linksTitle}>Contacts & Social</h4>
             <div className={styles.socialLinks}>
               <Link href="https://github.com/abdullahx404/BingeOrCringe" target="_blank" rel="noopener noreferrer" aria-label="Github"><FaGithub size={20} /></Link>
               <Link href="https://www.linkedin.com/in/abdullahzia-linked/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={20} /></Link>
