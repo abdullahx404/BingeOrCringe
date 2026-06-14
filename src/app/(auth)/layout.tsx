@@ -6,9 +6,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
   return (
     <div className={styles.root}>
       <header className={styles.header}>
-        <Link href="/" className={styles.logo}>
-          <Clapperboard size={20} className={styles.logoIcon} />
-          <span className={styles.logoText}>BingeOrCringe</span>
+        <Link href="/" className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <img src="/logo.svg" alt="Logo" style={{ height: '36px', width: 'auto' }} />
+          <img src="/logo-text.svg" alt="BingeOrCringe" style={{ height: '24px', width: 'auto', marginTop: '3px' }} />
         </Link>
       </header>
 

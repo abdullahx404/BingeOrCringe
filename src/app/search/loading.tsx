@@ -6,9 +6,9 @@ export default function SearchLoading() {
     <div className={styles.page}>
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <div className={styles.logo}>
-            <Clapperboard size={20} className={styles.logoIcon} />
-            <span className={styles.logoText}>BingeOrCringe</span>
+          <div className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <img src="/logo.svg" alt="Logo" style={{ height: '36px', width: 'auto' }} />
+            <img src="/logo-text.svg" alt="BingeOrCringe" style={{ height: '24px', width: 'auto', marginTop: '3px' }} />
           </div>
           <div className={styles.headerSearch}>
             <div className={`skeleton`} style={{ width: '100%', height: '40px', borderRadius: '20px' }} />
