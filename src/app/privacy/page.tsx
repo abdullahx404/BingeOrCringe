@@ -7,7 +7,7 @@ export const metadata = {
 
 export default function PrivacyPolicy() {
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--space-8) var(--space-4)', color: 'var(--text-normal)' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: 'var(--space-8) 24px', color: 'var(--text-normal)' }}>
       <h1 style={{ fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-6)', color: 'var(--text-bright)' }}>
         Privacy Policy
       </h1>

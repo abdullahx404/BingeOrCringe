@@ -6,7 +6,7 @@ export default function HowToUsePage() {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <GlobalNav />
-      <main className="container" style={{ padding: 'var(--space-12) 0', flex: 1, maxWidth: '800px' }}>
+      <main className="container" style={{ padding: 'var(--space-12) 24px', flex: 1, maxWidth: '800px' }}>
         <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 800, marginBottom: 'var(--space-6)' }}>How To Use</h1>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)', color: 'var(--text-secondary)' }}>
