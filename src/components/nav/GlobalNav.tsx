@@ -45,8 +45,8 @@ export default async function GlobalNav() {
       {/* ── Main row ── */}
       <div className={styles.navInner}>
         <Link href={user ? '/search' : '/'} className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <img src="/logo.png" alt="Logo" style={{ height: '36px', width: 'auto' }} />
-          <img src="/logo-text.png" alt="BingeOrCringe" style={{ height: '24px', width: 'auto', marginTop: '3px' }} />
+          <img src="/logo.svg" alt="Logo" style={{ height: '36px', width: 'auto' }} />
+          <img src="/logo-text.svg" alt="BingeOrCringe" style={{ height: '24px', width: 'auto', marginTop: '3px' }} />
         </Link>
 
         {/* Desktop search — hidden on mobile via CSS, shown below */}

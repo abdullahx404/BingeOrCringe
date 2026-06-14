@@ -86,7 +86,7 @@
   min-width: 300px;
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--space-12);
   align-items: flex-end;
   position: relative;
   perspective: 1000px;
