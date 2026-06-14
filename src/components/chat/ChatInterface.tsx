@@ -6,6 +6,21 @@ import { Send, ArrowLeft, MessageSquare, User } from 'lucide-react';
 import Link from 'next/link';
 import styles from './ChatInterface.module.css';
 
+function renderMessageContent(text: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) => {
+    if (part.match(urlRegex)) {
+      return (
+        <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: 'inherit' }}>
+          {part}
+        </a>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
+
 interface Profile {
   id: string;
   username: string;
@@ -279,7 +294,7 @@ export default function ChatInterface({ currentUser, initialActiveProfile }: Pro
                 return (
                   <div key={msg.id} className={`${styles.messageRow} ${isMine ? styles.mine : styles.theirs}`}>
                     <div className={styles.messageBubble}>
-                      {msg.content}
+                      {renderMessageContent(msg.content)}
                     </div>
                     <div className={styles.messageTime}>{time}</div>
                   </div>
