@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   keywords: ['movie ranking', 'tier list', 'movies', 'tv shows', 'watchlist', 'social', 'film'],
   authors: [{ name: 'BingeOrCringe' }],
   openGraph: {
-    title: 'BingeOrCringe - Rank Movies Your Way',
+    title: 'BingeOrCringe',
     description:
       'Curate your cinematic journey. Rank your obsessions and share your hot takes with the world.',
     type: 'website',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BingeOrCringe - Rank Movies Your Way',
+    title: 'BingeOrCringe',
     description: 'Curate your cinematic journey. Rank your obsessions and share your hot takes.',
   },
 };

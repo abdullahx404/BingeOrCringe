@@ -8,7 +8,7 @@ import ActivityFeed from '@/components/feed/ActivityFeed';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'BingeOrCringe - Rank Movies Your Way',
+  title: 'BingeOrCringe',
 };
 
 export default async function LandingPage() {
