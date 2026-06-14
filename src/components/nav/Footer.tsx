@@ -17,9 +17,9 @@ export default function Footer() {
       <div className="container">
         <div className={styles.footerInner}>
           <div className={styles.brandCol}>
-            <Link href="/" className={styles.logo}>
-              <Clapperboard size={20} className={styles.logoIcon} />
-              <span className={styles.logoText}>BingeOrCringe</span>
+            <Link href="/" className={styles.logo} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img src="/logo.png" alt="Logo" style={{ height: '24px', width: 'auto' }} />
+              <img src="/logo-text.png" alt="BingeOrCringe" style={{ height: '18px', width: 'auto', marginTop: '2px' }} />
             </Link>
             <p className={styles.tagline}>
               Rank your obsessions. Organize your watchlist. 

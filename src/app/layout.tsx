@@ -8,20 +8,21 @@ export const metadata: Metadata = {
     template: '%s | BingeOrCringe',
   },
   description:
-    'Forget star ratings - rank movies and shows into tiers that actually reflect your taste. Goated, Binge, Mid, Cringe, or Trash.',
-  keywords: ['movie ranking', 'tier list', 'movies', 'tv shows', 'watchlist', 'social'],
+    'Forget star ratings—curate your cinematic journey. Drop your favorite movies and shows into the tiers they truly deserve: Goated, Binge, Mid, Cringe, or Trash.',
+  keywords: ['movie ranking', 'tier list', 'movies', 'tv shows', 'watchlist', 'social', 'film'],
   authors: [{ name: 'BingeOrCringe' }],
   openGraph: {
     title: 'BingeOrCringe - Rank Movies Your Way',
     description:
-      'Forget star ratings. Rank movies into tiers: Goated, Binge, Mid, Cringe, or Trash.',
+      'Forget star ratings—curate your cinematic journey. Rank your obsessions and share your hot takes with the world.',
     type: 'website',
     locale: 'en_US',
+    siteName: 'BingeOrCringe',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BingeOrCringe',
-    description: 'Rank movies your way. Goated, Binge, Mid, Cringe, or Trash.',
+    title: 'BingeOrCringe - Rank Movies Your Way',
+    description: 'Forget star ratings—curate your cinematic journey. Rank your obsessions and share your hot takes.',
   },
 };
 

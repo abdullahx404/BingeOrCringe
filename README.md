@@ -1,7 +1,10 @@
 # BingeOrCringe
 
-BingeOrCringe is a highly interactive, social movie and TV show ranking platform. It allows users to search for any title across the globe, rank it into personalized tiers reflecting their actual taste (Goated, Binge, Mid, Cringe, Trash), and organize their ultimate watchlist. Built with a deeply social focus, users can maintain public or private profiles, curate custom thematic lists, follow friends to see their hot takes, and engage in real-time ephemeral messaging.
+BingeOrCringe is a highly interactive, social movie and TV show ranking platform.
 
+*"Rank Movies Your Way. Forget ratings, ignite debates, and curate your cinematic soul. Whether it's a timeless masterpiece or a guilty pleasure, drop your obsessions into the tiers they truly deserve."*
+
+Built with a deeply social focus, users can maintain public or private profiles, curate custom thematic lists, follow friends to see their hot takes, and engage in real-time ephemeral messaging.
 ## Features & Capabilities
 * **Extensive Title Library:** Powered by the TMDB API, search for any movie, TV show, season, or individual episode.
 * **Tier-Based Ranking:** Ditch the basic 5-star system. Rank content on a vibrant, color-coded scale that matches how we actually talk about media.
