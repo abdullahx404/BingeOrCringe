@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Clapperboard } from 'lucide-react';
-import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import { FaGithub, FaInstagram, FaLinkedin, FaEnvelope } from 'react-icons/fa';
 import styles from './Footer.module.css';
 
 export default function Footer() {
@@ -35,6 +35,7 @@ export default function Footer() {
               <li><Link href="/how-to-use">How To Use</Link></li>
               <li><Link href="/search">Search</Link></li>
               <li><Link href="/terms">Terms & Conditions</Link></li>
+              <li><Link href="/privacy">Privacy Policy</Link></li>
             </ul>
           </div>
 
@@ -44,6 +45,7 @@ export default function Footer() {
               <Link href="https://github.com/abdullahx404/BingeOrCringe" target="_blank" rel="noopener noreferrer" aria-label="Github"><FaGithub size={20} /></Link>
               <Link href="https://www.linkedin.com/in/abdullahzia-linked/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><FaLinkedin size={20} /></Link>
               <Link href="https://www.instagram.com/abdullah.wtf/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram size={20} /></Link>
+              <Link href="mailto:abdullahkhanzia07@gmail.com" target="_blank" rel="noopener noreferrer" aria-label="Email"><FaEnvelope size={20} /></Link>
             </div>
           </div>
         </div>
