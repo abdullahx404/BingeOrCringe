@@ -33,7 +33,10 @@ Built with a deeply social focus, users can maintain public or private profiles,
 * **v2.0.2** — UI improvements to the dashboard grid and glassmorphism elements.
 * **v2.1.0** — Supabase Auth implementation with strict email verification constraints.
 * **v3.0.0** — Custom public and private list creation, with list-specific sharing functionality.
-* **v3.0.1 - v3.0.4** — Iterative bug fixes and UI improvements for the custom list grid and modal handling.
+* **v3.0.1** — UI improvements and visual enhancements for the custom list grid.
+* **v3.0.2** — Bug fixes surrounding modal handling and state transitions.
+* **v3.0.3** — Iterative layout adjustments and mobile responsiveness tweaks for lists.
+* **v3.0.4** — State management fixes for creating and updating custom collections.
 * **v4.0.0** — Following/Follower feature rollout, including follower statistics on profiles.
 * **v4.0.1** — Bug fixes for self-following constraints and database indexing.
 * **v4.0.2** — UI improvements to user search and top rankers components.
@@ -46,6 +49,7 @@ Built with a deeply social focus, users can maintain public or private profiles,
 * **v7.0.0** — **Stable Release:** Final security audits, HTTP security headers, and Vercel production deployment.
 * **v7.0.1** — Bug fixes: Resolved OAuth database trigger crashes and updated email verification redirect behavior.
 * **v7.0.2** — Updated Privacy Policy, footer links, and legal document generation.
+* **v7.0.3** — Logo & Fonts update, polishing the visual brand identity and SVG alignments.
 
 ## Documents
 * [Architecture](./architecture.md)
