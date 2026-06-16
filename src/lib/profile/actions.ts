@@ -85,3 +85,35 @@ export async function updateProfile(data: ProfileUpdateData): Promise<ApiRespons
 
   return { data: null, error: null };
 }
+
+export async function deleteAccount(): Promise<ApiResponse<null>> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return { data: null, error: 'Not signed in.' };
+
+  try {
+    const { createAdminClient } = await import('@/lib/supabase/admin');
+    const adminClient = createAdminClient();
+
+    // 1. Delete user from Supabase Auth via Admin API
+    // This will trigger ON DELETE CASCADE in the database, erasing all data associated with this user ID
+    const { error: deleteError } = await adminClient.auth.admin.deleteUser(user.id);
+    
+    if (deleteError) {
+      console.error('Account deletion error:', deleteError);
+      return { data: null, error: 'Failed to delete account. Please try again later.' };
+    }
+
+    // 2. Sign the user out from the current session
+    await supabase.auth.signOut();
+
+    // Revalidate global paths
+    revalidatePath('/', 'layout');
+    
+    return { data: null, error: null };
+  } catch (err: any) {
+    console.error('Account deletion exception:', err);
+    return { data: null, error: err.message || 'An unexpected error occurred during account deletion.' };
+  }
+}

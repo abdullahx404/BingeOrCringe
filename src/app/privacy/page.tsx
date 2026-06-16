@@ -69,8 +69,11 @@ export default function PrivacyPolicy() {
 
         <section>
           <h2 style={{ fontSize: 'var(--text-xl)', color: 'var(--text-bright)', marginBottom: 'var(--space-2)' }}>7. Your Rights & Account Deletion</h2>
+          <p style={{ marginBottom: 'var(--space-2)' }}>
+            You have the right to access, update, or permanently delete your personal information at any time.
+          </p>
           <p>
-            You have the right to access, update, or delete your personal information at any time. If you wish to permanently delete your account and all associated rankings and data, you can contact us.
+            <strong>Account Deletion:</strong> You may permanently delete your account through your Profile Settings. Upon deletion, your username, profile data, rankings, custom lists, and messages are instantly and permanently erased from our servers in a cascaded deletion process. This action cannot be undone.
           </p>
         </section>
       </div>

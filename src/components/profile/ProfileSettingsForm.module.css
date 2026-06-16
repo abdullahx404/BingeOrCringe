@@ -207,3 +207,78 @@ input:checked + .slider:before {
   justify-content: flex-end;
   margin-top: var(--space-4);
 }
+
+.dangerZone {
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dangerTitle {
+  color: var(--text-bright);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.dangerDesc {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  margin-bottom: var(--space-4);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.modalContent {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  text-align: center;
+}
+
+.modalTitle {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.modalText {
+  color: var(--text-normal);
+  font-size: var(--text-base);
+}
+
+.modalWarning {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  background: var(--bg-deep);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border-left: 3px solid #ef4444;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.modalActions button {
+  flex: 1;
+}

@@ -29,6 +29,9 @@ export default function TermsPage() {
               We collect basic information such as your email address, username, and public profile data to provide our services. 
               Your authentication is securely managed via Supabase, and we do not store raw passwords on our servers.
             </p>
+            <p style={{ marginTop: 'var(--space-4)' }}>
+              <strong>Account Deletion:</strong> You may delete your account at any time via your Profile Settings. Initiating account deletion will permanently and immediately wipe all associated data, including but not limited to rankings, custom lists, messages, and followers. You understand that this data cannot be recovered once deleted.
+            </p>
           </section>
 
           <section className={styles.section}>

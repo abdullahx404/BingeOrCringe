@@ -50,6 +50,7 @@ Built with a deeply social focus, users can maintain public or private profiles,
 * **v7.0.1** — Bug fixes: Resolved OAuth database trigger crashes and updated email verification redirect behavior.
 * **v7.0.2** — Updated Privacy Policy, footer links, and legal document generation.
 * **v7.0.3** — Logo & Fonts update, polishing the visual brand identity and SVG alignments.
+* **v7.0.4** — Account Deletion feature, allowing users to permanently erase their data directly from profile settings.
 
 ## Documents
 * [Architecture](./architecture.md)
