@@ -16,7 +16,6 @@ import FollowButton from '@/components/profile/FollowButton';
 import ProfileSettingsForm from '@/components/profile/ProfileSettingsForm';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
 import DeleteAccountSection from '@/components/profile/DeleteAccountSection';
-import UserSocialControls from '@/components/profile/UserSocialControls';
 import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
 import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import styles from './page.module.css';
