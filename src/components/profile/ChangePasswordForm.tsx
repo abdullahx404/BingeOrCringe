@@ -58,6 +58,7 @@ export default function ChangePasswordForm() {
             id="oldPassword"
             type="password"
             required
+            autoComplete="current-password"
             className={styles.input}
             placeholder="********"
             value={oldPassword}
@@ -71,6 +72,7 @@ export default function ChangePasswordForm() {
             id="newPassword"
             type="password"
             required
+            autoComplete="new-password"
             className={styles.input}
             placeholder="********"
             value={newPassword}
@@ -85,6 +87,7 @@ export default function ChangePasswordForm() {
             id="confirmPassword"
             type="password"
             required
+            autoComplete="new-password"
             className={styles.input}
             placeholder="********"
             value={confirmPassword}

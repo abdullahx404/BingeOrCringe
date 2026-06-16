@@ -15,6 +15,8 @@ import { type TvGroupData } from '@/components/dashboard/TvGroupAccordion';
 import FollowButton from '@/components/profile/FollowButton';
 import ProfileSettingsForm from '@/components/profile/ProfileSettingsForm';
 import ChangePasswordForm from '@/components/profile/ChangePasswordForm';
+import DeleteAccountSection from '@/components/profile/DeleteAccountSection';
+import UserSocialControls from '@/components/profile/UserSocialControls';
 import VisibilityToggle from '@/components/dashboard/VisibilityToggle';
 import ShareProfileButton from '@/components/profile/ShareProfileButton';
 import styles from './page.module.css';
@@ -300,6 +302,10 @@ export default async function PublicProfilePage({ params, searchParams }: Props)
                 <h3 className={styles.emptyTitle} style={{ fontSize: 'var(--text-lg)', marginBottom: 'var(--space-2)', textAlign: 'left' }}>Password & Security</h3>
                 <p className={styles.emptyDesc} style={{ marginBottom: 'var(--space-6)', textAlign: 'left' }}>Update your password.</p>
                 <ChangePasswordForm />
+              </div>
+
+              <div style={{ marginTop: 'var(--space-10)' }}>
+                <DeleteAccountSection />
               </div>
             </div>
           )}

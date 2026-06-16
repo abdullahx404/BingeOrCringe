@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { updateProfile, deleteAccount, type ProfileUpdateData } from '@/lib/profile/actions';
-import { useRouter } from 'next/navigation';
+import { updateProfile, type ProfileUpdateData } from '@/lib/profile/actions';
 import styles from './ProfileSettingsForm.module.css';
 
 interface Props {
@@ -14,10 +13,6 @@ export default function ProfileSettingsForm({ initialData }: Props) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
-  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-  const [isDeleting, startDeleteTransition] = useTransition();
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -89,64 +84,6 @@ export default function ProfileSettingsForm({ initialData }: Props) {
           {isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
-
-      <div className={styles.dangerZoneCard}>
-        <h3 className={styles.dangerTitle}>Danger Zone</h3>
-        <p className={styles.dangerDesc}>
-          This action cannot be undone. All your rankings, custom lists, messages, and followers will be permanently wiped from our servers immediately.
-        </p>
-        <button 
-          type="button" 
-          onClick={() => setShowDeleteModal(true)} 
-          className="btn btn-danger"
-          style={{ width: 'fit-content', backgroundColor: '#ef4444', color: 'white', fontWeight: 'bold' }}
-        >
-          Delete Account
-        </button>
-      </div>
-
-      {showDeleteModal && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <h2 className={styles.modalTitle}>Delete Account</h2>
-            <p className={styles.modalText}>
-              Are you sure you want to permanently delete your account?
-            </p>
-            
-            {deleteError && <div className={styles.error}>{deleteError}</div>}
-            
-            <div className={styles.modalActions}>
-              <button 
-                type="button" 
-                className="btn btn-secondary" 
-                onClick={() => setShowDeleteModal(false)}
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button 
-                type="button" 
-                className="btn btn-danger" 
-                disabled={isDeleting}
-                style={{ backgroundColor: '#ef4444', color: 'white', fontWeight: 'bold' }}
-                onClick={() => {
-                  setDeleteError(null);
-                  startDeleteTransition(async () => {
-                    const res = await deleteAccount();
-                    if (res.error) {
-                      setDeleteError(res.error);
-                    } else {
-                      router.push('/');
-                    }
-                  });
-                }}
-              >
-                {isDeleting ? 'Deleting...' : 'Yes, Delete My Account'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </form>
   );
 }
