@@ -93,19 +93,15 @@ export async function deleteAccount(): Promise<ApiResponse<null>> {
   if (!user) return { data: null, error: 'Not signed in.' };
 
   try {
-    const { createAdminClient } = await import('@/lib/supabase/admin');
-    const adminClient = createAdminClient();
-
-    // 1. Delete user from Supabase Auth via Admin API
-    // This will trigger ON DELETE CASCADE in the database, erasing all data associated with this user ID
-    const { error: deleteError } = await adminClient.auth.admin.deleteUser(user.id);
+    // Call the SQL RPC to delete the user using their own session context
+    const { error: deleteError } = await supabase.rpc('delete_user');
     
     if (deleteError) {
       console.error('Account deletion error:', deleteError);
       return { data: null, error: 'Failed to delete account. Please try again later.' };
     }
 
-    // 2. Sign the user out from the current session
+    // Sign the user out from the current session
     await supabase.auth.signOut();
 
     // Revalidate global paths

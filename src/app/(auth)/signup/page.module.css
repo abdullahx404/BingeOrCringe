@@ -92,6 +92,36 @@
   box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
 }
 
+.passwordChecklist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-xs);
+}
+
+.checkIconSuccess {
+  color: var(--tier-goated);
+}
+
+.checkIconError {
+  color: #ef4444; /* red, or an empty grey circle */
+}
+
+.checkTextSuccess {
+  color: var(--tier-goated);
+}
+
+.checkTextError {
+  color: #ef4444;
+}
+
 .hint {
   font-size: var(--text-xs);
   color: var(--color-success);

@@ -90,16 +90,16 @@ export default function ProfileSettingsForm({ initialData }: Props) {
         </button>
       </div>
 
-      <div className={styles.dangerZone}>
+      <div className={styles.dangerZoneCard}>
         <h3 className={styles.dangerTitle}>Danger Zone</h3>
         <p className={styles.dangerDesc}>
-          Permanently delete your account and all associated data. This action cannot be undone.
+          This action cannot be undone. All your rankings, custom lists, messages, and followers will be permanently wiped from our servers immediately.
         </p>
         <button 
           type="button" 
           onClick={() => setShowDeleteModal(true)} 
           className="btn btn-danger"
-          style={{ width: 'fit-content' }}
+          style={{ width: 'fit-content', backgroundColor: '#ef4444', color: 'white', fontWeight: 'bold' }}
         >
           Delete Account
         </button>
@@ -110,10 +110,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>Delete Account</h2>
             <p className={styles.modalText}>
-              Are you absolutely sure you want to permanently delete your account?
-            </p>
-            <p className={styles.modalWarning}>
-              This action <strong>cannot be undone</strong>. All your rankings, custom lists, messages, and followers will be permanently wiped from our servers immediately.
+              Are you sure you want to permanently delete your account?
             </p>
             
             {deleteError && <div className={styles.error}>{deleteError}</div>}
@@ -131,6 +128,7 @@ export default function ProfileSettingsForm({ initialData }: Props) {
                 type="button" 
                 className="btn btn-danger" 
                 disabled={isDeleting}
+                style={{ backgroundColor: '#ef4444', color: 'white', fontWeight: 'bold' }}
                 onClick={() => {
                   setDeleteError(null);
                   startDeleteTransition(async () => {

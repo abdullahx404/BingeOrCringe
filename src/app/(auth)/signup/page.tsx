@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail } from 'lucide-react';
+import { Mail, CheckCircle2, XCircle } from 'lucide-react';
 import { signUp, signInWithGoogle } from '@/lib/auth/actions';
 import {
   validateUsername,
@@ -277,10 +277,26 @@ export default function SignupPage() {
               {errors.password}
             </p>
           )}
-          {/* Password strength hint */}
-          {fields.password && !validateField('password', fields.password) && (
-            <p className={styles.hint}>Strong password good to go.</p>
-          )}
+          
+          {/* Live password checklist */}
+          <div className={styles.passwordChecklist}>
+            <div className={styles.checkItem}>
+              {fields.password.length >= 8 ? <CheckCircle2 size={14} className={styles.checkIconSuccess} /> : <XCircle size={14} className={styles.checkIconError} />}
+              <span className={fields.password.length >= 8 ? styles.checkTextSuccess : styles.checkTextError}>8+ characters</span>
+            </div>
+            <div className={styles.checkItem}>
+              {/[A-Z]/.test(fields.password) ? <CheckCircle2 size={14} className={styles.checkIconSuccess} /> : <XCircle size={14} className={styles.checkIconError} />}
+              <span className={/[A-Z]/.test(fields.password) ? styles.checkTextSuccess : styles.checkTextError}>One uppercase letter</span>
+            </div>
+            <div className={styles.checkItem}>
+              {/[0-9]/.test(fields.password) ? <CheckCircle2 size={14} className={styles.checkIconSuccess} /> : <XCircle size={14} className={styles.checkIconError} />}
+              <span className={/[0-9]/.test(fields.password) ? styles.checkTextSuccess : styles.checkTextError}>One number</span>
+            </div>
+            <div className={styles.checkItem}>
+              {/[!@#$%^&*(),.?":{}|<>]/.test(fields.password) ? <CheckCircle2 size={14} className={styles.checkIconSuccess} /> : <XCircle size={14} className={styles.checkIconError} />}
+              <span className={/[!@#$%^&*(),.?":{}|<>]/.test(fields.password) ? styles.checkTextSuccess : styles.checkTextError}>One special character</span>
+            </div>
+          </div>
         </div>
 
         <div className={`form-group ${styles.termsGroup}`}>
