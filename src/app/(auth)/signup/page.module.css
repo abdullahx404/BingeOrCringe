@@ -107,7 +107,7 @@
 }
 
 .checkIconSuccess {
-  color: var(--tier-goated);
+  color: var(--color-success);
 }
 
 .checkIconError {
@@ -115,7 +115,7 @@
 }
 
 .checkTextSuccess {
-  color: var(--tier-goated);
+  color: var(--color-success);
 }
 
 .checkTextError {
